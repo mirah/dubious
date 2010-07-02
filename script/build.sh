@@ -2,18 +2,20 @@
 OUTDIR=`pwd`/build
 WEB_INF_LIB=`pwd`/WEB-INF/lib
 
-### Construct what we need to set the classpath
+### Construct the path to jars we need
 SDK_DIR="/usr/local/appengine-java-sdk-1.3.5"
-export APPENGINE_SDK_ROOT=$SDK_DIR
+export APPENGINE_JAVA_SDK=$SDK_DIR
 SERVLET="$SDK_DIR/lib/shared/geronimo-servlet_2.5_spec-1.2.jar"
 SDK_API="$WEB_INF_LIB/appengine-api-1.0-sdk-1.3.5.jar"
 LABSJAR="$WEB_INF_LIB/user/appengine-api-labs-1.3.5.jar"
 DBMODEL="$WEB_INF_LIB/dubydatastore.jar"
 
-### Generate class files
+### Make sure we have the jars we need
 mkdir -p $OUTDIR
 mkdir -p $WEB_INF_LIB
 script/environment.rb # copy dubydatastore.jar (unless exists)
+
+### Generate class files
 CP=$SERVLET:$SDK_API:$OUTDIR:$DBMODEL:.
 cd lib
 javac -classpath $CP -d $OUTDIR testing/Dir.java
