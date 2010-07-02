@@ -1,6 +1,10 @@
 =Dubious for App Engine
 
-This is s starter project for a framework called Dubious
+==Introducing Dubious
+This is s starter project for Duby on App Engine. Dubious provide a way to build apps in Duby, with conventions familiar to Rails and Sinatra developers. Duby has no runtime dependencies, everything is compiled ahead-of-time. Duby apps have *none of the initialization costs* associated with JRuby. Dubious supports ERb and has a simple datastore adapter that uses a syntax similar to DataMapper, but the form and tag helpers are currently missing.
+
+==Introducing Duby
+Duby is a new language with Ruby-inspired syntax that compiles to JVM bytecode. Duby is statically typed, with local type inference, and a simple macro system. The goal is to make Duby as expressive as Ruby without introducing any runtime library and while maintaining Java’s level of performance. Just write code that looks like Ruby, but reference the Java docs to find out what method calls to make. Duby uses the Java type system. Join the *duby-dev mailing list* to get involved: http://kenai.com/projects/duby/lists/dev/archive
 
 ==Setup the Duby development environment 
 

@@ -1,5 +1,5 @@
-application: application-id
-version: 1
+application: dubious-demo
+version: duby
 runtime: java
 public_root: /public
 
