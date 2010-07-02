@@ -6,12 +6,13 @@ WEB_INF_LIB=`pwd`/WEB-INF/lib
 SDK_DIR="/usr/local/appengine-java-sdk-1.3.4"
 SERVLET="$SDK_DIR/lib/shared/geronimo-servlet_2.5_spec-1.2.jar"
 SDK_API="$SDK_DIR/lib/user/appengine-api-1.0-sdk-1.3.4.jar"
-# ~duby/examples/appengine/war/WEB-INF/lib/dubydatastore.jar
 DBMODEL="$WEB_INF_LIB/dubydatastore.jar"
 #COMMONS="/usr/local/apache/commons-io-1.4.jar"
 
 ### Generate class files
 mkdir -p $OUTDIR
+mkdir -p $WEB_INF_LIB
+script/environment.rb # copy dubydatastore.jar (unless exists)
 CP=$SERVLET:$SDK_API:$OUTDIR:$DBMODEL:.
 cd lib
 javac -classpath $CP -d $OUTDIR testing/Dir.java
@@ -28,4 +29,3 @@ dubyc -c $CP -d $OUTDIR controllers/info_properties_controller.duby
 cd $OUTDIR
 jar -cf ../WEB-INF/lib/application.jar *
 cd ..
-script/environment.rb

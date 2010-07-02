@@ -12,13 +12,19 @@ def git_data(dir)
   end
 end
 
-conf_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'config'))
+data_jar = File.expand_path(File.join(File.dirname(__FILE__),
+    '..', 'WEB-INF', 'lib', 'dubydatastore.jar'))
+conf_dir = File.expand_path(File.join(File.dirname(__FILE__),
+     '..', 'config'))
 prop_file = File.join(conf_dir, 'build.properties')
 duby_cmd = IO.popen("which duby") { |f| f.gets.chop }
 duby_dir = File.join(File.dirname(duby_cmd), '..')
 duby_data = git_data(duby_dir)
 bite_dir = File.join(duby_dir, '..', 'bitescript')
 bite_data = git_data(bite_dir)
+data_src = File.join(duby_dir, 'examples', 'appengine', 'war',
+                               'WEB-INF', 'lib', 'dubydatastore.jar')
+FileUtils.cp(data_src, data_jar) unless File.exists?(data_jar)
 
 properties = <<EOF
 # the current build environment
