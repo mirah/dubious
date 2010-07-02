@@ -3,11 +3,10 @@ OUTDIR=`pwd`/build
 WEB_INF_LIB=`pwd`/WEB-INF/lib
 
 ### Construct what we need to set the classpath
-SDK_DIR="/usr/local/appengine-java-sdk-1.3.4"
+SDK_DIR="/usr/local/appengine-java-sdk-1.3.5"
 SERVLET="$SDK_DIR/lib/shared/geronimo-servlet_2.5_spec-1.2.jar"
-SDK_API="$SDK_DIR/lib/user/appengine-api-1.0-sdk-1.3.4.jar"
+SDK_API="$SDK_DIR/lib/user/appengine-api-1.0-sdk-1.3.5.jar"
 DBMODEL="$WEB_INF_LIB/dubydatastore.jar"
-#COMMONS="/usr/local/apache/commons-io-1.4.jar"
 
 ### Generate class files
 mkdir -p $OUTDIR

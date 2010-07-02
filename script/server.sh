@@ -1,2 +1,2 @@
 #!/bin/sh
-dev_appserver.rb -a 0.0.0.0 .
+dev_appserver.sh -a 0.0.0.0 .

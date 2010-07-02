@@ -1,2 +1,2 @@
 #!/bin/sh
-appcfg.rb update .
+appcfg.sh update .
