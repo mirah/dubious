@@ -1,4 +1,4 @@
-=Duby on App Engine
+=Dubious for App Engine
 
 This is s starter project for a framework called Dubious
 
@@ -24,6 +24,15 @@ Edit .bash_profile to find these
    export DUBY_HOME=/Users/username/mystuff/duby
    export APPENGINE_JAVA_SDK=/usr/local/appengine-java-sdk-1.3.5
    export PATH=$PATH:$JRUBY_HOME/bin:$DUBY_HOME/bin:$APPENGINE_JAVA_SDK/bin
+
+Now build and run the app locally
+
+   ./script/build.sh
+   ./script/server.sh
+
+Then publish to appspot.com
+
+   ./script/publish.sh
 
 == Apache License 2.0
 
