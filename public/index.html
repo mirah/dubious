@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>Duby Primer</title>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css"> 
+    <script type="text/javascript" src="javascripts/prototype.js"></script>
+    <script type="text/javascript" src="javascripts/effects.js"></script>
+    <script type="text/javascript">
+      function about() {
+        if (Element.empty('about-content')) {
+          new Ajax.Updater('about-content', 'info/properties', {
+            method:     'get',
+            onFailure:  function() {Element.classNames('about-content').add('failure')},
+            onComplete: function() {new Effect.BlindDown('about-content', {duration: 0.25})}
+          });
+        } else {
+          new Effect[Element.visible('about-content') ? 
+            'BlindUp' : 'BlindDown']('about-content', {duration: 0.25});
+        }
+      }
+      
+    </script>
+  </head>
+  <body>
+    <div id="page">
+      <div id="sidebar">
+
+        <br/>
+        <img src="images/appengine_duby.png">
+        <br/>
+
+        <ul id="sidebar-items">
+
+          <li>
+            <h3>Join the community</h3>
+            <ul class="links">
+              <li><a 
+      href="http://wiki.github.com/headius/duby"
+      target="_new">Home Page</a></li>
+              <li><a 
+      href="http://wiki.github.com/headius/duby/resources"
+      target="_new">Resources</a></li>
+              <li><a 
+      href="mailto:appengine-jruby@googlegroups.com"
+      target="_new">Send Feedback</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <h3>Sample Appps</h3>
+            <ul class="links">
+              <li><a href="http://github.com/headius/duby/tree/master/examples/appengine">Guestbook</a> |
+                  <a href="http://github.com/jacortinas/appengine-rails-jquery-demo">Mustache</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <h3>Duby Videos</h3>
+            <ul class="links">
+              <li><a href="http://www.youtube.com/watch?v=08rNKxW0PPo">ribrdb</a> |
+                  <a href="http://rubyconf2009.confreaks.com/21-nov-2009-14-10-ruby-mutants-charles-nutter.html">headius</a></li>
+            </ul>
+          </li>
+
+      </div>
+
+      <div id="content">
+        <div id="header">
+          <h1>Prepare for takeoff</h1>
+          <h2>This is Duby on App Engine</h2>
+        </div>
+
+        <div id="about">
+          <h3><a href="rails/info/properties" onclick="about(); return false">About this app&rsquo;s environment</a> or
+          <a href="/source/">view source</a></h3>
+          <div id="about-content" style="display: none"></div>
+        </div>
+
+        <div id="getting-started"> 
+          <h1>Getting started</h1> 
+          <h2>Here&rsquo;s how to get rolling:</h2> 
+          
+          <ol>          
+            <li><h2>Assign an app identifier</h2>
+            <p>Simply <a href="http://appengine.google.com/start/createapp"
+            target="_new">create an application</a> at appspot.com,<br>
+            
+            <li> 
+              <h2>Publish this sample app</h2> 
+              <p>Take a look at <a href="/source/">the source</a></p> 
+            </li> 
+ 
+            <li> 
+              <h2>Leave a comment</h2> 
+              <p>We have a pure Duby <a href="/shout/">shout demo</a></p> 
+            </li> 
+ 
+          </ol> 
+        </div> 
+      </div> 
+      
+      <div id="footer">&nbsp;</div>
+    </div>
+  </body>
+</html>

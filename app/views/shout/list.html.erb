@@ -1,0 +1,12 @@
+
+  <h1>All Shouts:</h1>
+  <% for shout in @shouts %>
+    <p><b><%=h shout.title %></b> &mdash; <%=h shout.body %></p>
+  <% end %>
+  <hr>
+  <h1>New Shout:</h1>
+  <form method=post>
+    Title: <input id='shout_title' type='text' name='title' /><br/>
+    Body: <input id='shout_body' type='text' name='body' /><br/>
+    <input type=submit>
+  </form>

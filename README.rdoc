@@ -1,0 +1,19 @@
+=Duby on App Engine
+
+Setup the Duby development environment 
+
+* Fetch App Engine Java SDK 1.3.5, and install it in /usr/local
+
+http://googleappengine.googlecode.com/files/appengine-java-sdk-1.3.5_prerelease.zip
+
+* Fetch JRuby 1.5.1, and install is as well
+
+http://jruby.org.s3.amazonaws.com/downloads/1.5.1/jruby-bin-1.5.1.tar.gz
+
+* Now git clone bitescript and duby to your drive.
+
+   cd ~/mystuff
+   git clone http://github.com/headius/duby.git
+   git clone http://github.com/headius/bitescript.git
+
+* Edit .bash_profile to find these (see example)

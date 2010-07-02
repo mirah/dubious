@@ -1,0 +1,28 @@
+application: duby-primer
+version: duby
+runtime: java
+public_root: /public
+
+resource_files:
+  - exclude: /build/**
+
+handlers:
+  - url: /info/properties
+    servlet: controllers.InfoPropertiesController
+    name: info_properties
+
+  - url: /source/*
+    servlet: controllers.SourceController
+    name: source
+
+  - url: /shout/*
+    servlet: controllers.ShoutController
+    name: shout
+
+  - url: /simple_duby/*
+    servlet: testing.SimpleDuby
+    name: dimple_duby
+
+  - url: /simple_java/*
+    servlet: testing.SimpleJava
+    name: simple_java
