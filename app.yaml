@@ -15,9 +15,9 @@ handlers:
     servlet: controllers.ContactsController
     name: contacts
 
-  - url: /shout/*
-    servlet: controllers.ShoutController
-    name: shout
+  - url: /source/*
+    servlet: controllers.SourceController
+    name: source
 
   - url: /shout/*
     servlet: controllers.ShoutController

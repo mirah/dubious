@@ -17,12 +17,12 @@
     <url-pattern>/contacts/*</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>shout</servlet-name>
-    <servlet-class>controllers.ShoutController</servlet-class>
+    <servlet-name>source</servlet-name>
+    <servlet-class>controllers.SourceController</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>shout</servlet-name>
-    <url-pattern>/shout/*</url-pattern>
+    <servlet-name>source</servlet-name>
+    <url-pattern>/source/*</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>shout</servlet-name>
