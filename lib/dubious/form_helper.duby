@@ -3,16 +3,16 @@ import dubious.Params
 
 
 class FormHelper
-  def initialize(name:String, params:Params)
+  def initialize(name:String, action:String)
     @m = name.toLowerCase
-    @params = params
+    @action = action
+    @method = action.equals('edit') ? 'put' : 'post'
     @token = '123456'
   end
 
   def form_for
-    method = @params.action.equals('edit') ? 'put' : 'post'
     return <<EOF
-<form action="/#{@m}" class="#{@params.action}_" id="#{@params.action}_#{@m}" method="post"><input name="_method" type="hidden" value="#{method}" /><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="#{@token}" /></div>
+<form action="/#{@m}" class="#{@action}_" id="#{@action}_#{@m}" method="post"><input name="_method" type="hidden" value="#{@method}" /><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="#{@token}" /></div>
 EOF
   end
 
@@ -22,7 +22,7 @@ EOF
 
   def submit(name:String)
     code = name.toLowerCase
-    commit = @params.action.equals('edit') ? 'Update' : 'Create'
+    commit = @action.equals('edit') ? 'Update' : 'Create'
     return <<EOF
 <input id="#{@m}_submit" name="commit" type="submit" value="#{commit}" /> 
 EOF

@@ -31,7 +31,7 @@ dubyc -c $CP -d $OUTDIR controllers/application_controller.duby
 dubyc -c $CP -d $OUTDIR controllers/shout_controller.duby
 dubyc -c $CP -d $OUTDIR controllers/source_controller.duby
 dubyc -c $CP -d $OUTDIR controllers/info_properties_controller.duby
-#dubyc -c $CP -d $OUTDIR controllers/contacts_controller.duby
+dubyc -c $CP -d $OUTDIR controllers/contacts_controller.duby
 cd $OUTDIR
 jar -cf ../WEB-INF/lib/application.jar *
 cd ..

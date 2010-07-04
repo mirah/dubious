@@ -1,4 +1,7 @@
 import javax.servlet.http.HttpServletRequest
+import com.google.appengine.api.datastore.Key
+import com.google.appengine.api.datastore.KeyFactory
+
 
 class Params
   def initialize(request:HttpServletRequest, layout:String)
@@ -8,23 +11,26 @@ class Params
     slices = uri.substring(@controller.length, uri.length).split('/')
     i = 0
     while i < keys.length
-      @action = slices[i] || nil if keys[i].equals('action')
-      @id     = slices[i] || nil if keys[i].equals('id')
+      @action  = slices[i] || nil if keys[i].equals('action')
+      @encoded = slices[i] || nil if keys[i].equals('key')
+      @id      = slices[i] || nil if keys[i].equals('id')
     end
   end
 
   def controller
-    returns String
     @controller
   end
 
   def action
-    returns String
     @action
   end
 
+  def key
+    return nil if @encoded.nil?
+    KeyFactory.stringToKey(@encoded) 
+  end
+
   def id
-    returns String
     @id
   end
 end

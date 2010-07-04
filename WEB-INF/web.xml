@@ -9,12 +9,20 @@
     <url-pattern>/info/properties</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>source</servlet-name>
-    <servlet-class>controllers.SourceController</servlet-class>
+    <servlet-name>contacts</servlet-name>
+    <servlet-class>controllers.ContactsController</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>source</servlet-name>
-    <url-pattern>/source/*</url-pattern>
+    <servlet-name>contacts</servlet-name>
+    <url-pattern>/contacts/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>shout</servlet-name>
+    <servlet-class>controllers.ShoutController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>shout</servlet-name>
+    <url-pattern>/shout/*</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>shout</servlet-name>

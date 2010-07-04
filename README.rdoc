@@ -1,6 +1,6 @@
 =Dubious for App Engine
 
-See the published demo: http://dubious-demo.appspot.com/
+See the published demo: http://dubious-demo.appspot.com
 
 ===Introducing Dubious
 This is s starter project for Duby on App Engine. Dubious provide a way to 

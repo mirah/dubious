@@ -11,9 +11,13 @@ handlers:
     servlet: controllers.InfoPropertiesController
     name: info_properties
 
-  - url: /source/*
-    servlet: controllers.SourceController
-    name: source
+  - url: /contacts/*
+    servlet: controllers.ContactsController
+    name: contacts
+
+  - url: /shout/*
+    servlet: controllers.ShoutController
+    name: shout
 
   - url: /shout/*
     servlet: controllers.ShoutController

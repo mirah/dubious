@@ -1,3 +1,4 @@
+import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.Text
 import com.google.appengine.api.datastore.Link
 import com.google.appengine.api.datastore.PostalAddress
@@ -30,8 +31,8 @@ class ContactsController < ApplicationController
   end
 
   # GET /contacts/1
-  def show(id:String)
-    @contact = Contact.get(id)
+  def show(key:Key)
+    @contact = Contact.get(key)
     @page_content = _show
   end
 
@@ -42,28 +43,29 @@ class ContactsController < ApplicationController
   end
 
   # GET /contacts/1/edit
-  def edit(id:String)
-    @contact = Contact.get(id)
+  def edit(key:Key)
+    @contact = Contact.get(key)
     @page_content = _edit
   end
 
   # GET /contacts/*
   def doGet(request, response)
     @method = request.getParameter('_method') || 'get'
-    params = Params.new(request, 'id/action')
+    params = Params.new(request, 'key/action')
     invalid_action_url = "/404.html"
     @page_title   = 'Contacts'
     @page_charset = 'UTF-8'
-    if params.action.nil? and params.id.nil?
+    if params.action.nil? and params.key.nil?
       index
-    elsif params.action.nil? and params.id.length > 0
-      show(params.id)
+    elsif params.action.nil? and params.key
+      show(params.key)
     elsif params.action.equals('new')
       new
-    elsif params.action.equals('edit') and params.id.length > 0
-      edit(params.id)
+    elsif params.action.equals('edit') and params.key
+      edit(params.key)
     else
-      return response.sendRedirect(invalid_action_url); nil
+      response.sendRedirect(invalid_action_url)
+      return nil
     end      
     response.setContentType("text/html; charset=#{@page_charset}")
     response.getWriter.write(_main)
@@ -72,16 +74,16 @@ class ContactsController < ApplicationController
   # POST /contacts/*
   def doPost(request, response)
     @method = request.getParameter('_method') || 'post'
-    params = Params.new(request, 'id/action')
+    params = Params.new(request, 'key/action')
     invalid_token_url = "/422.html"
-    contacts_url      = "/contacts"              # TODO
-    contacts_id_url   = "/contacts/#{params.id}" # TODO
+    contacts_url      = "/contacts"               # TODO
+    contacts_id_url   = "/contacts/#{params.key}" # TODO
     # Process request
     if invalid_authenticity_token request.getParameter('authenticity_token')
       response.sendRedirect invalid_token_url
     elsif @method.equals('delete')
       # DELETE /contacts/1
-      Contact.delete(params.id)
+#     Contact.delete(params.key)
       response.sendRedirect contacts_url
     elsif @method.equals('post')
       # POST /contacts
@@ -89,7 +91,7 @@ class ContactsController < ApplicationController
       response.sendRedirect contacts_id_url
     elsif @method.equals('put')
       # PUT /contacts/1
-      update_attributes request, Contact.get(params.id)
+      update_attributes request, Contact.get(params.key)
       response.sendRedirect contacts_id_url
     end
   end

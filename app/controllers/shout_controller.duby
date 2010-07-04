@@ -1,7 +1,7 @@
 import com.google.appengine.api.datastore.Text
 import com.google.appengine.ext.duby.db.Model
-import javax.servlet.ServletConfig
-import java.lang.System
+import java.util.Collections
+import java.util.ArrayList
 
 
 class Shout < Model
@@ -25,10 +25,10 @@ class ShoutController < ApplicationController
 
   # POST /shout
   def doPost(request, response)
-    post = Shout.new
-    post.title = request.getParameter('title')
-    post.body  = request.getParameter('body')
-    post.save
+    shout = Shout.new
+    shout.title = request.getParameter('title')
+    shout.body  = request.getParameter('body')
+    shout.save
     doGet(request, response)
   end
 end
