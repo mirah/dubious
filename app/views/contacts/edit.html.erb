@@ -1,0 +1,33 @@
+<h1>Editing contact</h1>
+
+<% f = FormHelper.new('contact', @params) %>
+  <% f.form_for %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label 'title' %><br />
+    <%= f.text_field 'title' %>
+  </p>
+  <p>
+    <%= f.label 'summary' %><br />
+    <%= f.text_area 'summary' %>
+  </p>
+  <p>
+    <%= f.label 'url' %><br />
+    <%= f.text_field 'url' %>
+  </p>
+  <p>
+    <%= f.label 'address' %><br />
+    <%= f.text_field 'address' %>
+  </p>
+  <p>
+    <%= f.label 'phone' %><br />
+    <%= f.text_field 'phone' %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% f.end %>
+
+<%= link_to 'Show', '@contact' %> |
+<%= link_to 'Back', 'contacts_path' %>

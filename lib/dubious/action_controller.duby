@@ -2,39 +2,9 @@ import javax.servlet.http.HttpServlet
 import java.io.File
 import java.util.HashMap
 import java.util.regex.Pattern
+import com.google.appengine.ext.duby.db.Model
 
 class ActionController < HttpServlet
-
-  ###
-  # ActionView::Helpers::FormHelper
-  #
-  # check_box
-  # fields_for
-  # file_field
-  # form_for
-  # hidden_field
-  # label
-  # password_field
-  # radio_button
-  # text_area
-  # text_field
-
-  ###
-  # ActionView::Helpers::FormTagHelper
-  #
-  # check_box_tag
-  # field_set_tag
-  # file_field_tag
-  # form_tag
-  # hidden_field_tag
-  # image_submit_tag
-  # label_tag
-  # password_field_tag
-  # radio_button_tag
-  # select_tag
-  # submit_tag
-  # text_area_tag
-  # text_field_tag
 
   ###
   # ActionView::Helpers::UrlHelper
@@ -42,6 +12,9 @@ class ActionController < HttpServlet
   # button_to
   # current_page?
   # link_to
+  def link_to(name:String, options:String)
+     "<a href='#{options}'>#{name}</a>" # TODO
+  end
   # link_to_if
   # link_to_unless
   # link_to_unless_current
