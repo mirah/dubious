@@ -9,7 +9,7 @@ class Params
     keys = layout.split('/')
     @controller = request.getServletPath
     slices = uri.substring(@controller.length, uri.length).split('/')
-    i = 0
+    @action = nil; @encoded = nil; @id = nil; i = 0
     while i < keys.length
       @action  = slices[i] || nil if keys[i].equals('action')
       @encoded = slices[i] || nil if keys[i].equals('key')
@@ -27,7 +27,7 @@ class Params
 
   def key
     return nil if @encoded.nil?
-    KeyFactory.stringToKey(@encoded) 
+    KeyFactory.stringToKey(@encoded)
   end
 
   def id
