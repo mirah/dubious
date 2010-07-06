@@ -27,7 +27,12 @@ class Params
 
   def key
     return nil if @encoded.nil?
-    KeyFactory.stringToKey(@encoded)
+    KeyFactory.stringToKey(String(@encoded))
+  end
+
+  def key_to_s
+    return nil if @encoded.nil?
+    KeyFactory.keyToString(Key(key))
   end
 
   def id

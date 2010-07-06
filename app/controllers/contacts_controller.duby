@@ -55,19 +55,22 @@ class ContactsController < ApplicationController
     invalid_action_url = "/404.html"
     @page_title   = 'Contacts'
     @page_charset = 'UTF-8'
+    response.setContentType("text/html; charset=#{@page_charset}")
     if params.action.nil? and params.key.nil?
       index
+      response.getWriter.write(_main)
     elsif params.action.nil? and params.key
       show(params.key)
+      response.getWriter.write(_main)
     elsif params.action.equals('new')
       new
+      response.getWriter.write(_main)
     elsif params.action.equals('edit') and params.key
       edit(params.key)
+      response.getWriter.write(_main)
     else
       response.sendRedirect(invalid_action_url); nil
     end      
-    response.setContentType("text/html; charset=#{@page_charset}")
-    response.getWriter.write(_main)
   end
 
   # POST /contacts/*
@@ -75,8 +78,8 @@ class ContactsController < ApplicationController
     params = Params.new(request, 'key/action')
     @method = request.getParameter('_method') || 'post'
     invalid_token_url = "/422.html"
-    contacts_url      = "/contacts"
-    contacts_id_url   = "/contacts/#{params.key}"
+    contacts_url      = "#{params.controller}"
+    contacts_id_url   = "#{contacts_url}/#{params.key_to_s}"
     # Process request
     if invalid_authenticity_token request.getParameter('authenticity_token')
       response.sendRedirect(invalid_token_url); nil
