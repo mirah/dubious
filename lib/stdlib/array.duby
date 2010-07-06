@@ -1,11 +1,18 @@
-import java.util.Arrays;
-import java.util.List;
-import java.util.Date;
-import java.io.File;
-import java.lang.String;
+import java.util.Arrays
+import java.lang.Integer
+import java.util.List
+import java.util.Date
+import java.io.File
+import java.lang.String
 
 
 class Array
+
+  def self.of_ints(list:List)
+    ints = int[list.size]
+    list.size.times { |i| ints[i] = Integer(list.get(i)).intValue }
+    ints
+  end  
 
   def self.of_strings(list:List)
     strings = String[list.size]
