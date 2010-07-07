@@ -23,6 +23,5 @@
   <%=h @contact.phone %>
 </p>
 
-
-<%= link_to 'Edit', @params.key_to_s + '/edit' %> |
+<%= link_to 'Edit', @params.controller + "/#{@params.id}/edit" %> |
 <%= link_to 'Back', @params.controller %>

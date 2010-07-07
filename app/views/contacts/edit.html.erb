@@ -29,5 +29,5 @@
   </p>
 <% f.end %>
 
-<%= link_to 'Show', @params.key_to_s %> |
+<%= link_to 'Show', @params.controller + "/#{@params.id}" %> |
 <%= link_to 'Back', @params.controller %>

@@ -16,10 +16,10 @@
     <td><%=h contact.url %></td>
     <td><%=h contact.address %></td>
     <td><%=h contact.phone %></td>
-    <!-- id = Long.valueOf(contact.key.getId).toString' -->
-                         <% id = '7' %>
-    <td><%= link_to 'Show', id %></td>
-    <td><%= link_to 'Edit', id + '/edit' %></td>
+                              <!-- id = contact.key.getName -->
+                              <% id = '2001' %>
+    <td><%= link_to 'Show', @params.controller + "/#{id}" %></td>
+    <td><%= link_to 'Edit', @params.controller + "/#{id}/edit" %></td>
     <td><%= link_to 'Destroy', "contact_confirm_delete" %></td>
   </tr>
 <% end %>
@@ -27,4 +27,4 @@
 
 <br />
 
-<%= link_to 'New contact', @params.controller + '/new' %>
+<%= link_to 'New contact', @params.controller + "/new" %>
