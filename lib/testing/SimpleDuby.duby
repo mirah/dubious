@@ -12,6 +12,10 @@ class SimpleDuby < HttpServlet
 app_id:  #{env.getAppId}
 version: #{version} 
 domain:  #{env.getAuthDomain}
+
+RequestURI:  #{req.getRequestURI}
+PathInfo:    #{req.getPathInfo || "nil"}
+ServletPath: #{req.getServletPath}
 EOF
     resp.setContentType("text/plain")
     resp.getWriter.println(message)

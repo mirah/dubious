@@ -1,7 +1,7 @@
 <h1>Editing contact</h1>
 
 <% f = FormHelper.new('contact', 'edit') %>
-  <% f.form_for %>
+  <%= f.form_for %>
   <%= f.error_messages %>
 
   <p>
@@ -29,5 +29,5 @@
   </p>
 <% f.end %>
 
-<%= link_to 'Show', '@contact' %> |
-<%= link_to 'Back', 'contacts_path' %>
+<%= link_to 'Show', @params.key_to_s %> |
+<%= link_to 'Back', @params.controller %>

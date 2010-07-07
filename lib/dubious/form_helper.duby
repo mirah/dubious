@@ -12,7 +12,7 @@ class FormHelper
 
   def form_for
     return <<EOF
-<form action="/#{@m}" class="#{@action}_" id="#{@action}_#{@m}" method="post"><input name="_method" type="hidden" value="#{@method}" /><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="#{@token}" /></div>
+<form action="/#{@m}s" class="#{@action}_" id="#{@action}_#{@m}" method="post"><input name="_method" type="hidden" value="#{@method}" /><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="#{@token}" /></div>
 EOF
   end
 
