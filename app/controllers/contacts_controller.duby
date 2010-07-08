@@ -1,3 +1,4 @@
+import com.google.appengine.api.datastore.KeyFactory
 import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.Text
 import com.google.appengine.api.datastore.Link
@@ -5,14 +6,14 @@ import com.google.appengine.api.datastore.PostalAddress
 import com.google.appengine.api.datastore.PhoneNumber
 import com.google.appengine.ext.duby.db.Model
 import javax.servlet.http.HttpServletRequest
-import dubious.Params
 import dubious.FormHelper
-import com.google.appengine.api.datastore.Key
-import com.google.appengine.api.datastore.KeyFactory
+import dubious.LinkTo
+import dubious.Params
 
 
 class Contact < Model
-# property 'key',     Key
+  def initialize; end
+
   property 'title',   String
   property 'summary', Text
   property 'url',     Link
@@ -30,34 +31,31 @@ class ContactsController < ApplicationController
   # GET /contacts/*
   def doGet(request, response)
     @params = Params.new(request)
+    @link_to = LinkTo.new(@params)
     @method = request.getParameter('_method') || 'get'
     @flash_notice = ""
     @page_charset = 'UTF-8'
     response.setContentType("text/html; charset=#{@page_charset}")
     invalid_action_url = "/404.html"
     # Process request
-    if @params.action.nil? and @params.id.nil?
+    if @params.action.nil?
       # GET /contacts
-      @action_name = 'index'
       @contacts = Contact.all.run
       @page_content = _index
       response.getWriter.write(_main)
-    elsif @params.id && @params.action.nil?
+    elsif @params.action.equals('show') && @params.id_s
       # GET /contacts/1
-      @action_name = 'show'
-      @contact = Contact.get(@params.key('Contact'))
+      @contact = Contact.get(@params.id)
       @page_content = _show
       response.getWriter.write(_main)
     elsif @params.action.equals('new')
       # GET /contacts/new
-      @action_name = 'new'
       @contact = Contact.new
       @page_content = _new
       response.getWriter.write(_main)
-    elsif @params.id && @params.action.equals('edit')
+    elsif @params.action.equals('edit') && @params.id_s
       # GET /contacts/1/edit
-      @action_name = 'edit'
-      @contact = Contact.get(@params.key('Contact'))
+      @contact = Contact.get(@params.id)
       @page_content = _edit
       response.getWriter.write(_main)
     else
@@ -76,7 +74,7 @@ class ContactsController < ApplicationController
       response.sendRedirect(invalid_token_url); nil
     elsif @method.equals('delete')
       # DELETE /contacts/1
-#     Contact.delete(@params.key('Contact')) # TODO: fix return type
+      #Contact.delete(#key) # TODO: fix return type
       response.sendRedirect(@params.controller); nil
     elsif @method.equals('post')
       # POST /contacts
@@ -84,7 +82,7 @@ class ContactsController < ApplicationController
       response.sendRedirect(@params.controller); nil
     elsif @method.equals('put')
       # PUT /contacts/1
-      update_attributes request, Contact.get(@params.key('Contact'))
+      update_attributes request, Contact.get(@params.id)
       response.sendRedirect("#{@params.controller}/#{@params.id}"); nil
     end
   end

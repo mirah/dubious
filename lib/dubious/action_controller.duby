@@ -13,7 +13,11 @@ class ActionController < HttpServlet
   # current_page?
   # link_to
   def link_to(name:String, options:String)
-     "<a href='#{options}'>#{name}</a>" # TODO
+     "<a href=\"#{options}\">#{name}</a>"
+  end
+  def link_to(name:String, map:HashMap)
+     "<a href=\"#{map.get('href')}\" " +
+     "onClick=\"#{map.get('onclick')}\">#{name}</a>"
   end
   # link_to_if
   # link_to_unless

@@ -16,15 +16,13 @@
     <td><%=h contact.url %></td>
     <td><%=h contact.address %></td>
     <td><%=h contact.phone %></td>
-                              <!-- id = contact.key.getName -->
-                              <% id = '2001' %>
-    <td><%= link_to 'Show', @params.controller + "/#{id}" %></td>
-    <td><%= link_to 'Edit', @params.controller + "/#{id}/edit" %></td>
-    <td><%= link_to 'Destroy', "contact_confirm_delete" %></td>
+    <td><%= link_to 'Show', @link_to.show(contact.key.getId) %></td>
+    <td><%= link_to 'Edit', @link_to.edit(contact.key.getId) %></td>
+    <td><%= link_to 'Destroy', @link_to.destroy(contact.key.getId) %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New contact', @params.controller + "/new" %>
+<%= link_to 'New contact', @link_to.new %>

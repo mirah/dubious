@@ -1,5 +1,4 @@
 import javax.servlet.http.HttpServletRequest
-import com.google.appengine.api.datastore.Key
 import com.google.appengine.api.datastore.KeyFactory
 
 
@@ -8,12 +7,16 @@ class Params
     path_info = request.getPathInfo || "/"
     uri_parts = path_info.substring(1, path_info.length).split('/')
     @controller = request.getServletPath
-    @action = @id = "";
+    @action = @id = "" # initialize as String
     if uri_parts.length == 0
-      # index when both nil
+      # index
     elsif uri_parts[0].matches("^\\d+$")
       @id = uri_parts[0]
-      @action = uri_parts[1] if uri_parts.length > 1
+      if uri_parts.length > 1
+        @action = uri_parts[1]
+      else
+        @action = 'show'
+      end
     else 
       @action = uri_parts[0]
     end
@@ -28,13 +31,13 @@ class Params
     @action
   end
 
-  def id
+  def id_s
     return nil if @id.equals("")
     @id
   end
 
-  def key(kind:String)
-    return nil if @id.equals("")
-    KeyFactory.createKey(kind, Integer.parseInt(@id))
+  def id
+    val = @id.equals("") ? "0" : @id
+    Long.parseLong(val)
   end
 end

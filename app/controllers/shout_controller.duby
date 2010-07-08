@@ -5,6 +5,8 @@ import java.util.ArrayList
 
 
 class Shout < Model
+  def initialize; end
+
   property 'title', String
   property 'body',  Text
 end
