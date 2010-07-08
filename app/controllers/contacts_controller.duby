@@ -43,7 +43,7 @@ class ContactsController < ApplicationController
       @contacts = Contact.all.run
       @page_content = _index
       response.getWriter.write(_main)
-    elsif @params.action.equals('show') && @params.id_s
+    elsif @params.action.equals('show')
       # GET /contacts/1
       @contact = Contact.get(@params.id)
       @page_content = _show
@@ -53,7 +53,7 @@ class ContactsController < ApplicationController
       @contact = Contact.new
       @page_content = _new
       response.getWriter.write(_main)
-    elsif @params.action.equals('edit') && @params.id_s
+    elsif @params.action.equals('edit')
       # GET /contacts/1/edit
       @contact = Contact.get(@params.id)
       @page_content = _edit

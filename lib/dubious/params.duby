@@ -31,11 +31,6 @@ class Params
     @action
   end
 
-  def id_s
-    return nil if @id.equals("")
-    @id
-  end
-
   def id
     val = @id.equals("") ? "0" : @id
     Long.parseLong(val)

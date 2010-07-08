@@ -38,6 +38,7 @@ sdk_jars(web_lib)
 prop_file = File.join(conf_dir, 'build.properties')
 mirah_dir = ENV['MIRAH_HOME'] # use the environment when possible
 mirah_dir = File.join(File.dirname(mirah_cmd), '..') if mirah_dir.nil?
+dubious_data = git_data(".")
 mirah_data = git_data(mirah_dir)
 bite_dir = File.join(mirah_dir, '..', 'bitescript')
 bite_data = git_data(bite_dir)
@@ -51,6 +52,8 @@ FileUtils.cp(model_src, model_jar) unless File.exists?(model_jar) and
 properties = <<EOF
 # the current build environment
 application.build.time=#{Time.now.xmlschema}
+dubious.version.commit=#{dubious_data[0][7..-1]}
+dubious.version.time=#{Time.parse(dubious_data[1]).xmlschema}
 mirah.version.commit=#{mirah_data[0][7..-1]}
 mirah.version.time=#{Time.parse(mirah_data[1]).xmlschema}
 bitescript.version.commit=#{bite_data[0][7..-1]}

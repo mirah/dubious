@@ -12,6 +12,7 @@ class InfoPropertiesController < HttpServlet
   def doGet(request, response)
     rows =  tr 'Mirah version',      build_info('mirah')
     rows += tr 'Bitescript version', build_info('bitescript')
+    rows += tr 'Dubious version',    build_info('dubious')
     rows += tr 'MirahModel version', build_info('model')
     rows += tr 'Java version',    prop('java.specification.version'),
                                   prop('java.vm.version')

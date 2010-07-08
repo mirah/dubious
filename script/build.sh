@@ -25,7 +25,6 @@ dubyc -c $CP -d $OUTDIR stdlib/array.duby
 dubyc -c $CP -d $OUTDIR stdlib/io.duby
 dubyc -c $CP -d $OUTDIR dubious/link_to.duby
 dubyc -c $CP -d $OUTDIR dubious/params.duby
-dubyc -c $CP -d $OUTDIR -j dubious/params.duby
 dubyc -c $CP -d $OUTDIR dubious/form_helper.duby
 dubyc -c $CP -d $OUTDIR dubious/action_controller.duby
 cd ../app
