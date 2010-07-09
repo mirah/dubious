@@ -63,7 +63,6 @@ class ContactsController < ApplicationController
     @link_to = LinkTo.new(@params)
     @flash_notice = ""
     response.setContentType("text/html; charset=UTF-8")
-    invalid_action_url = "/404.html"
     # Process request
     if @params.action.equals("")
       index
@@ -74,7 +73,7 @@ class ContactsController < ApplicationController
     elsif @params.action.equals('edit')
       edit
     else
-      response.sendRedirect(invalid_action_url); nil
+      response.sendRedirect("/404.html"); nil # INVALID URL
     end
   end
 
