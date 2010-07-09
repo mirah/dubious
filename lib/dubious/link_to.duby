@@ -31,35 +31,24 @@ class LinkTo
     "#{@base}/#{String.valueOf(id)}/edit"
   end
 
-  def destroy
-    destroy(@id)
+  def delete
+    delete(@id)
   end
 
-  def destroy(id:long)
-    token = '123' # TODO
-    href = show(id)
-    onclick = <<EOF
-if (confirm('Are you sure?')) {
-var f = document.createElement('form');
-f.style.display = 'none';
-this.parentNode.appendChild(f);
-f.method = 'POST';
-f.action = this.href;
-var m = document.createElement('input');
-m.setAttribute('type', 'hidden');
-m.setAttribute('name', '_method');
-m.setAttribute('value', 'delete');
-f.appendChild(m);
-var s = document.createElement('input');
-s.setAttribute('type', 'hidden');
-s.setAttribute('name', 'authenticity_token');
-s.setAttribute('value', '#{token}');
-f.appendChild(s);
-f.submit(); }; return false;)
-EOF
+  def delete(confirm:String)
+    delete(@id, confirm)
+  end
+
+  def delete(id:long)
+    delete(id, "Are you sure?")
+  end
+
+  def delete(id:long, confirm:String)
     hm = HashMap.new
-    hm.put("href", href)
-    hm.put("onclick", onclick.replace("\n"," "))
+    hm.put("href", show(id))
+    hm.put("data-confirm", confirm)
+    hm.put("data-method", "delete")
+    hm.put("rel", "nofollow")
     hm
   end
 end

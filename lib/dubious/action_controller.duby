@@ -16,8 +16,10 @@ class ActionController < HttpServlet
      "<a href=\"#{options}\">#{name}</a>"
   end
   def link_to(name:String, map:HashMap)
-     "<a href=\"#{map.get('href')}\" " +
-     "onClick=\"#{map.get('onclick')}\">#{name}</a>"
+    sb = StringBuilder.new("<a")
+    map.keySet.each { |key| sb.append(" #{key}=\"#{map.get(key)}\"") }
+    sb.append(">#{name}</a>")
+    sb.toString
   end
   # link_to_if
   # link_to_unless
@@ -34,9 +36,11 @@ class ActionController < HttpServlet
   # image_path
   # image_tag
   def javascript_include_tag(text:String)
-    stamp = File.new("public/javascripts/#{text}.js").lastModified
-    "<script src=\"/javascripts/#{text}.js?#{stamp}\" " +
-    'type="text/javascript"></script>'
+    src = text.startsWith("http") ? text : "/javascripts/#{text}"
+    src += ".js" unless src.endsWith(".js")
+    src += "?#{File.new("public#{src}").lastModified}" unless
+        src.startsWith("http")
+    "<script src=\"#{src}\" type=\"text/javascript\"></script>"
   end
   # javascript_path
   # path_to_image

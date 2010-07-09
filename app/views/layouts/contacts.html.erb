@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <head>
   <meta charset="UTF-8" /> 
+  <meta name="csrf-param" content="authenticity_token"/>
+  <meta name="csrf-token" content="123"/>
   <title>Contacts: <%= @params.action || 'index' %></title>
   <%= stylesheet_link_tag 'scaffold' %>
+  <%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" %>
+  <%= javascript_include_tag "jquery.rails.min" %>
 </head>
 <body>
 
