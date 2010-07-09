@@ -1,31 +1,29 @@
-import javax.servlet.http.*
-import dubious.* # Params LinkTo
-
+import dubious.*
 
 class ContactsController < ApplicationController
 
   # GET /contacts
   def index
     @contacts = Contact.all.run
-    render _index
+    render index_erb
   end
 
   # GET /contacts/1
   def show
     @contact = Contact.get(@params.id)
-    render _show
+    render show_erb
   end
 
   # GET /contacts/new
   def new
     @contact = Contact.new
-    render _new
+    render new_erb
   end
 
   # GET /contacts/1/edit
   def edit
     @contact = Contact.get(@params.id)
-    render _edit
+    render edit_erb
   end
 
   # DELETE /contacts/1
@@ -52,7 +50,7 @@ class ContactsController < ApplicationController
 
   def render(content:String)
     @page_content = content
-    @params.response.getWriter.write(_main)
+    @params.response.getWriter.write(main_erb)
   end
 
   def redirect_to(link:String)
@@ -83,6 +81,7 @@ class ContactsController < ApplicationController
   # POST /contacts/*
   def doPost(request, response)
     @params = Params.new(request, response)
+    @link_to = LinkTo.new(@params)
     @method = request.getParameter('_method') || 'post'
     # Process request
     if invalid_authenticity_token request.getParameter('authenticity_token')
@@ -100,10 +99,10 @@ class ContactsController < ApplicationController
     token.equals("") ? true : false 
   end
 
-  # render templates to _keys
-  def_edb(_index, 'views/contacts/index.html.erb')
-  def_edb(_show, 'views/contacts/show.html.erb')
-  def_edb(_new, 'views/contacts/new.html.erb')
-  def_edb(_edit, 'views/contacts/edit.html.erb')
-  def_edb(_main, 'views/layouts/contacts.html.erb')
+  # render templates
+  def_edb(index_erb, 'views/contacts/index.html.erb')
+  def_edb(show_erb, 'views/contacts/show.html.erb')
+  def_edb(new_erb, 'views/contacts/new.html.erb')
+  def_edb(edit_erb, 'views/contacts/edit.html.erb')
+  def_edb(main_erb, 'views/layouts/contacts.html.erb')
 end

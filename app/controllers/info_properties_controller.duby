@@ -1,12 +1,10 @@
-import javax.servlet.http.HttpServlet
 import com.google.apphosting.api.ApiProxy;
 import java.io.FileInputStream
 import java.util.Properties
-import java.lang.System
 import java.util.ArrayList
+import java.lang.System
 
-
-class InfoPropertiesController < HttpServlet
+class InfoPropertiesController < ApplicationController
 
   # GET /info/properties
   def doGet(request, response)

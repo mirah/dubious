@@ -3,7 +3,6 @@ import com.google.appengine.ext.duby.db.Model
 import java.util.Collections
 import java.util.ArrayList
 
-
 class Shout < Model
   def initialize; end
 
@@ -12,17 +11,14 @@ class Shout < Model
 end
 
 class ShoutController < ApplicationController
-  def_edb(list, 'views/shout/list.html.erb')
-  def_edb(main, 'views/layouts/application.html.erb')
 
   # GET /shout
   def doGet(request, response)
     @shouts = Shout.all.run
-    @page_charset = 'UTF-8'
     @page_title   = 'Shout'
-    @page_content = list
-    response.setContentType("text/html; charset=#{@page_charset}")
-    response.getWriter.write(main)
+    @page_content = list_erb
+    response.setContentType("text/html; charset=UTF-8")
+    response.getWriter.write(main_erb)
   end
 
   # POST /shout
@@ -33,4 +29,7 @@ class ShoutController < ApplicationController
     shout.save
     doGet(request, response)
   end
+
+  def_edb(list_erb, 'views/shout/list.html.erb')
+  def_edb(main_erb, 'views/layouts/application.html.erb')
 end
