@@ -1,18 +1,21 @@
 import com.google.appengine.ext.duby.db.Model
 import dubious.Params
+import dubious.LinkTo
 
 
 class FormHelper
-  def initialize(name:String, action:String)
-    @m = name.toLowerCase
-    @action = action
-    @method = action.equals('edit') ? 'put' : 'post'
+  def initialize(model:String, params:Params)
+    @m = model
+    link_to = LinkTo.new(params)
+    @params = params
+    @method = params.action.equals('edit') ? 'put' : 'post'
+    @action = params.action.equals('edit') ? link_to.show : link_to.index
     @token = '123456'
   end
 
   def form_for
     return <<EOF
-<form action="/#{@m}s" class="#{@action}_" id="#{@action}_#{@m}" method="post"><input name="_method" type="hidden" value="#{@method}" /><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="#{@token}" /></div>
+<form action="#{@action}" class="#{@params.action}_" id="#{@params.action}_#{@m}" method="post"><input name="_method" type="hidden" value="#{@method}" /><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="#{@token}" /></div>
 EOF
   end
 
@@ -22,7 +25,7 @@ EOF
 
   def submit(name:String)
     code = name.toLowerCase
-    commit = @action.equals('edit') ? 'Update' : 'Create'
+    commit = @params.action.equals('edit') ? 'Update' : 'Create'
     return <<EOF
 <input id="#{@m}_submit" name="commit" type="submit" value="#{commit}" /> 
 EOF
