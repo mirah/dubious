@@ -1,7 +1,7 @@
 import com.google.appengine.ext.duby.db.Model
 import com.google.appengine.api.datastore.*
+import java.util.HashMap
 import dubious.Params
-
 
 class Contact < Model
   def initialize; end
@@ -12,6 +12,17 @@ class Contact < Model
   property 'address', PostalAddress
   property 'phone',   PhoneNumber
 
+  def attributes      # empty strings best
+    hm = HashMap.new  # for form population
+    hm.put("title",   @title   || "")
+    hm.put("summary", @summary || "")
+    hm.put("url",     @url     || "")
+    hm.put("address", @address || "")
+    hm.put("phone",   @phone   || "")
+    hm.put("kind", 'contact') # reserved?
+    hm 
+  end
+
   def update_attributes(params:Params)
     returns void
     request = params.request
@@ -21,8 +32,8 @@ class Contact < Model
     self.address = request.getParameter('contact[address]') || ""
     self.phone   = request.getParameter('contact[phone]')   || ""
     self.url     = nil if self.url.equals("")
-    self.address = nil if self.address.equals("") 
-    self.phone   = nil if self.phone.equals("") 
+    self.address = nil if self.address.equals("")
+    self.phone   = nil if self.phone.equals("")
     self.save
   end
 end

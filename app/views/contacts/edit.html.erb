@@ -1,6 +1,6 @@
 <h1>Editing contact</h1>
 
-<% f = FormHelper.new('contact', @params) %>
+<% f = FormHelper.new(@contact.attributes, @params) %>
   <%= f.form_for %>
   <%= f.error_messages %>
 
