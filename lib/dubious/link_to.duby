@@ -1,7 +1,6 @@
 import dubious.Params
 import java.util.HashMap
 
-
 class LinkTo
   def initialize(params:Params)
     @id = params.id

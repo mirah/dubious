@@ -65,7 +65,7 @@ class ContactsController < ApplicationController
     response.setContentType("text/html; charset=UTF-8")
     invalid_action_url = "/404.html"
     # Process request
-    if @params.action.nil?
+    if @params.action.equals("")
       index
     elsif @params.action.equals('show')
       show

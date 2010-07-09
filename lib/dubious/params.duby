@@ -1,6 +1,5 @@
 import javax.servlet.http.*
 
-
 class Params
   def initialize(request:HttpServletRequest, response:HttpServletResponse)
     @request = request
@@ -36,12 +35,10 @@ class Params
   end
 
   def action
-    return nil if @action.equals("")
     @action
   end
 
   def id
-    val = @id.equals("") ? "0" : @id
-    Long.parseLong(val)
+    @id.equals("") ? long(0) : Long.parseLong(@id)
   end
 end
