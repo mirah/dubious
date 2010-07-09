@@ -1,9 +1,10 @@
-import javax.servlet.http.HttpServletRequest
-import com.google.appengine.api.datastore.KeyFactory
+import javax.servlet.http.*
 
 
 class Params
-  def initialize(request:HttpServletRequest)
+  def initialize(request:HttpServletRequest, response:HttpServletResponse)
+    @request = request
+    @response = response
     path_info = request.getPathInfo || "/"
     uri_parts = path_info.substring(1, path_info.length).split('/')
     @controller = request.getServletPath
@@ -20,6 +21,14 @@ class Params
     else 
       @action = uri_parts[0]
     end
+  end
+
+  def request
+    @request
+  end
+
+  def response
+    @response
   end
 
   def controller

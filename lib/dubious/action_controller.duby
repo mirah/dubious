@@ -34,7 +34,7 @@ class ActionController < HttpServlet
   # image_path
   # image_tag
   def javascript_include_tag(text:String)
-    stamp = File.new("public/javascripts/#{text}.js").lastModified()
+    stamp = File.new("public/javascripts/#{text}.js").lastModified
     "<script src=\"/javascripts/#{text}.js?#{stamp}\" " +
     'type="text/javascript"></script>'
   end
@@ -46,7 +46,7 @@ class ActionController < HttpServlet
   # register_javascript_include_default
   # register_stylesheet_expansion
   def stylesheet_link_tag(text:String)
-    stamp = File.new("public/stylesheets/#{text}.css").lastModified()
+    stamp = File.new("public/stylesheets/#{text}.css").lastModified
     "<link href=\"/stylesheets/#{text}.css?#{stamp}\" " +
     'media="screen" rel="stylesheet" type="text/css" />'
   end
@@ -57,7 +57,7 @@ class ActionController < HttpServlet
   # escape special characters
 
   def self.initialize
-    returns void
+    returns :void
     @escape_pattern = Pattern.compile("[<>&'\"]")
     @escaped = HashMap.new
     @escaped.put("<", "&lt;")
