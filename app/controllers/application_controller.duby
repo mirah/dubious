@@ -1,4 +1,4 @@
-import dubious.ActionController
+import dubious.*
 
 class ApplicationController < ActionController
 

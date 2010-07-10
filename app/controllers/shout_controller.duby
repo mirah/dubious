@@ -1,7 +1,5 @@
 import com.google.appengine.api.datastore.Text
 import com.google.appengine.ext.duby.db.Model
-import java.util.Collections
-import java.util.ArrayList
 
 class Shout < Model
   def initialize; end

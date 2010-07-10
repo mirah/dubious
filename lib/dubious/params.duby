@@ -1,9 +1,9 @@
 import javax.servlet.http.*
+import java.util.HashMap
 
 class Params
-  def initialize(request:HttpServletRequest, response:HttpServletResponse)
+  def initialize(request:HttpServletRequest)
     @request = request
-    @response = response
     path_info = request.getPathInfo || "/"
     uri_parts = path_info.substring(1, path_info.length).split('/')
     @controller = request.getServletPath
@@ -22,12 +22,10 @@ class Params
     end
   end
 
+  # uri slices
+
   def request
     @request
-  end
-
-  def response
-    @response
   end
 
   def controller
@@ -40,5 +38,54 @@ class Params
 
   def id
     @id.equals("") ? long(0) : Long.parseLong(@id)
+  end
+
+  # response helpers
+
+  # path helpers
+
+  def index
+    "#{@controller}"
+  end
+
+  def new
+    "#{@controller}/new"
+  end
+
+  def show
+    show(id)
+  end
+
+  def show(id:long)
+    "#{@controller}/#{String.valueOf(id)}"
+  end
+
+  def edit
+    edit(id)
+  end
+
+  def edit(id:long)
+    "#{@controller}/#{String.valueOf(id)}/edit"
+  end
+
+  def delete
+    delete(id)
+  end
+
+  def delete(confirm:String)
+    delete(id, confirm)
+  end
+
+  def delete(id:long)
+    delete(id, "Are you sure?")
+  end
+
+  def delete(id:long, confirm:String)
+    hm = HashMap.new
+    hm.put("href", show(id))
+    hm.put("data-confirm", confirm)
+    hm.put("data-method", "delete")
+    hm.put("rel", "nofollow")
+    hm
   end
 end

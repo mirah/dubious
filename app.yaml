@@ -1,4 +1,4 @@
-application: dubious-demo
+application: duby-primer # dubious-demo
 version: duby
 runtime: java
 public_root: /public

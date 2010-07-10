@@ -1,6 +1,6 @@
 <h1>New contact</h1>
 
-<% f = FormHelper.new(@contact.attributes, @params) %>
+<% f = FormHelper.new(@contact.attributes, params) %>
   <%= f.form_for %>
   <%= f.error_messages %>
 
@@ -29,4 +29,4 @@
   </p>
 <% f.end %>
 
-<%= link_to 'Back', @link_to.index %>
+<%= link_to 'Back', params.index %>

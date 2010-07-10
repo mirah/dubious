@@ -1,10 +1,86 @@
-import javax.servlet.http.HttpServlet
-import java.io.File
-import java.util.HashMap
+import javax.servlet.http.*
 import java.util.regex.Pattern
-import com.google.appengine.ext.duby.db.Model
+import java.util.HashMap
+import dubious.Params
+import java.io.File
 
 class ActionController < HttpServlet
+
+  def index;  returns :void; end
+  def show;   returns :void; end
+  def new;    returns :void; end
+  def edit;   returns :void; end
+  def delete; returns :void; end
+  def create; returns :void; end
+  def update; returns :void; end
+
+  def params; returns Params
+    @params
+  end
+
+  def yield_body(content:String); returns :void
+    @yield_str = content
+  end
+
+  def yield_body
+    @yield_str
+  end
+
+  def flash_notice(content:String); returns :void
+    @flash_str = content
+  end
+
+  def flash_notice
+    @flash_str || ""
+  end
+
+  def render(content:String); returns :void
+    @response.getWriter.write(content)
+  end
+
+  def render(content:String, layout:String); returns :void
+    yield_body(content)
+    @response.getWriter.write(layout)
+  end
+
+  def redirect_to(link:String); returns :void
+    @response.sendRedirect(link)
+  end
+
+  def action_router(request:HttpServletRequest,
+      response:HttpServletResponse, method:String); returns :void
+    method = request.getParameter('_method') || method
+    @response = response
+    @params = Params.new(request)
+    if method.equals('get')
+      response.setContentType("text/html; charset=UTF-8")
+      if @params.action.equals("")
+        index
+      elsif @params.action.equals('show')
+        show
+      elsif @params.action.equals('new')
+        new
+      elsif @params.action.equals('edit')
+        edit
+      else
+        redirect_to "/404.html"
+      end
+    else
+      if invalid_authenticity_token request.getParameter('authenticity_token')
+        redirect_to "/422.html"
+      elsif method.equals('delete')
+        delete
+      elsif method.equals('post')
+        create
+      elsif method.equals('put')
+        update
+      end
+    end
+  end
+
+  def invalid_authenticity_token(token:String) # TODO
+    token.equals("") ? true : false
+  end
 
   ###
   # ActionView::Helpers::UrlHelper
