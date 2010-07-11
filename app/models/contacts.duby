@@ -23,8 +23,7 @@ class Contact < Model
     hm 
   end
 
-  def update_attributes(params:Params)
-    returns void
+  def update_attributes(params:Params); returns :void
     request = params.request
     self.title   = request.getParameter('contact[title]')   || ""
     self.summary = request.getParameter('contact[summary]') || ""

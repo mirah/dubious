@@ -1,22 +1,29 @@
+import com.google.appengine.api.datastore.Link
 import javax.servlet.http.*
 import java.util.regex.Pattern
 import java.util.HashMap
 import dubious.Params
 import java.io.File
+import java.net.URI
 
-class ActionController < HttpServlet
+class ActionController < ActionServlet
 
-  def index;  returns :void; end
-  def show;   returns :void; end
-  def new;    returns :void; end
-  def edit;   returns :void; end
-  def delete; returns :void; end
-  def create; returns :void; end
-  def update; returns :void; end
+  # expect URI, String or Integer
+  def index;  returns Object; Integer.valueOf(404); end
+  def show;   returns Object; Integer.valueOf(404); end
+  def new;    returns Object; Integer.valueOf(404); end
+  def edit;   returns Object; Integer.valueOf(404); end
+  def delete; returns Object; Integer.valueOf(404); end
+  def create; returns Object; Integer.valueOf(404); end
+  def update; returns Object; Integer.valueOf(404); end
 
-  def params; returns Params
-    @params
-  end
+#  def set_params(params:Params); returns :void
+#    @params_obj = params
+#  end
+
+#  def params; returns Params
+#    @params_obj
+#  end
 
   def yield_body(content:String); returns :void
     @yield_str = content
@@ -34,40 +41,60 @@ class ActionController < HttpServlet
     @flash_str || ""
   end
 
-  def render(content:String); returns :void
-    @response.getWriter.write(content)
+  def redirect_to(link:String); returns URI
+    URI.new(link)
   end
 
-  def render(content:String, layout:String); returns :void
+  def render(content:String); returns String
+    content
+  end
+
+  def render(content:String, layout:String); returns String
     yield_body(content)
-    @response.getWriter.write(layout)
+    render(layout)
   end
 
-  def redirect_to(link:String); returns :void
-    @response.sendRedirect(link)
-  end
-
-  def action_router(request:HttpServletRequest,
-      response:HttpServletResponse, method:String); returns :void
-    method = request.getParameter('_method') || method
-    @response = response
-    @params = Params.new(request)
-    if method.equals('get')
+  # accepts various types, and creates the appropriate response
+  def action_response(response:HttpServletResponse, payload:Object)
+    returns :void
+    if payload.kind_of?(URI)
+      location = payload.toString
+      if location.startsWith('http') or location.startsWith('/')
+        response.sendRedirect(location); nil
+      else
+        response.setStatus(500) 
+        response.getWriter.write("Invalid redirect location")
+      end
+    elsif payload.kind_of?(String)
       response.setContentType("text/html; charset=UTF-8")
-      if @params.action.equals("")
+      response.getWriter.write(payload.toString)
+    elsif payload.kind_of?(Integer)
+      response.setStatus(Integer(payload).intValue) 
+      response.sendRedirect("#{payload}.html"); nil
+    else
+      response.setStatus(500) 
+      response.getWriter.write("Unsupported Response Type")
+    end
+  end
+
+  # route request to the approprite action
+  def action_request(request:HttpServletRequest, method:String); returns Object
+    method = request.getParameter('_method') || method
+    if method.equals('get')
+      if params.action.equals("")
         index
-      elsif @params.action.equals('show')
+      elsif params.action.equals('show')
         show
-      elsif @params.action.equals('new')
+      elsif params.action.equals('new')
         new
-      elsif @params.action.equals('edit')
+      elsif params.action.equals('edit')
         edit
       else
-        redirect_to "/404.html"
+        Object(Integer.valueOf(404))
       end
     else
       if invalid_authenticity_token request.getParameter('authenticity_token')
-        redirect_to "/422.html"
+        Object(Integer.valueOf(422))
       elsif method.equals('delete')
         delete
       elsif method.equals('post')
@@ -78,9 +105,13 @@ class ActionController < HttpServlet
     end
   end
 
+  private
+
   def invalid_authenticity_token(token:String) # TODO
     token.equals("") ? true : false
   end
+
+  public
 
   ###
   # ActionView::Helpers::UrlHelper

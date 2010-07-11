@@ -1,5 +1,5 @@
-import javax.servlet.http.*
 import java.util.HashMap
+import javax.servlet.http.HttpServletRequest
 
 class Params
   def initialize(request:HttpServletRequest)
@@ -24,10 +24,6 @@ class Params
 
   # uri slices
 
-  def request
-    @request
-  end
-
   def controller
     @controller
   end
@@ -40,7 +36,11 @@ class Params
     @id.equals("") ? long(0) : Long.parseLong(@id)
   end
 
-  # response helpers
+  #  request helpers
+
+  def request
+    @request
+  end
 
   # path helpers
 

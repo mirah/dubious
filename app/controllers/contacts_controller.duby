@@ -47,11 +47,13 @@ class ContactsController < ApplicationController
   # servlet routing
 
   def doGet(request, response)
-    action_router(request, response, 'get')
+    set_params(Params.new(request)) # @params = Params.new(request)
+    action_response(response, action_request(request, 'get'))
   end
 
   def doPost(request, response)
-    action_router(request, response, 'post')
+    set_params(Params.new(request)) # @params = Params.new(request)
+    action_response(response, action_request(request, 'post'))
   end
 
   # render templates

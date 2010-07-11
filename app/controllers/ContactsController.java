@@ -1,0 +1,195 @@
+// Generated from controllers/contacts_controller.duby
+package controllers;
+public class ContactsController extends controllers.ApplicationController {
+  private controllers.Contact[] contacts;
+  private controllers.Contact contact;
+  public static void main(java.lang.String[] argv) {
+  public java.lang.Object index() {
+    this.contacts = controllers.Contact.all().run();
+    return this.render(this.index_erb(), this.main_erb());
+  }
+  public java.lang.Object show() {
+    this.contact = controllers.Contact.get(this.params().id());
+    return this.render(this.show_erb(), this.main_erb());
+  }
+  public java.lang.Object new() {
+    this.contact = new controllers.Contact();
+    return this.render(this.new_erb(), this.main_erb());
+  }
+  public java.lang.Object edit() {
+    this.contact = controllers.Contact.get(this.params().id());
+    return this.render(this.edit_erb(), this.main_erb());
+  }
+  public java.lang.Object delete() {
+    controllers.Contact.delete(controllers.Contact.get(this.params().id()).key());
+    return this.redirect_to(this.params().index());
+  }
+  public java.lang.Object create() {
+    controllers.Contact temp$1 = new controllers.Contact();
+    temp$1.update_attributes(this.params());
+    return this.redirect_to(this.params().index());
+  }
+  public java.lang.Object update() {
+    controllers.Contact temp$1 = controllers.Contact.get(this.params().id());
+    temp$1.update_attributes(this.params());
+    return this.redirect_to(this.params().show());
+  }
+  public void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, java.io.IOException {
+    this.set_params(new dubious.Params(request));
+    this.action_response(response, this.action_request(request, "get"));
+  }
+  public void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, java.io.IOException {
+    this.set_params(new dubious.Params(request));
+    this.action_response(response, this.action_request(request, "post"));
+  }
+  public java.lang.String index_erb() {
+    java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
+    _edbout.append("<h1>Listing contacts</h1>\n\n<table>\n  <tr>\n    <th>Title</th>\n    <th>Summary</th>\n    <th>Url</th>\n    <th>Address</th>\n    <th>Phone</th>\n  </tr>\n\n");
+    int __xform_tmp_2 = 0;
+    controllers.Contact[] __xform_tmp_3 = this.contacts;
+    label1:
+    while ((__xform_tmp_2 < __xform_tmp_3.length)) {
+      controllers.Contact contact = __xform_tmp_3[__xform_tmp_2];
+      label2:
+       {
+        _edbout.append("\n  <tr>\n    <td>");
+        _edbout.append(this.h(contact.title()));
+        _edbout.append("</td>\n    <td>");
+        _edbout.append(this.h(contact.summary()));
+        _edbout.append("</td>\n    <td>");
+        _edbout.append(this.h(contact.url()));
+        _edbout.append("</td>\n    <td>");
+        _edbout.append(this.h(contact.address()));
+        _edbout.append("</td>\n    <td>");
+        _edbout.append(this.h(contact.phone()));
+        _edbout.append("</td>\n    <td>");
+        _edbout.append(this.link_to("Show", this.params().show(contact.key().getId())));
+        _edbout.append("</td>\n    <td>");
+        _edbout.append(this.link_to("Edit", this.params().edit(contact.key().getId())));
+        _edbout.append("</td>\n    <td>");
+        _edbout.append(this.link_to("Delete", this.params().delete(contact.key().getId())));
+        _edbout.append("</td>\n  </tr>\n");
+      }
+      __xform_tmp_2 = (__xform_tmp_2 + 1);
+    }
+    _edbout.append("\n</table>\n\n<br />\n\n");
+    _edbout.append(this.link_to("New contact", this.params().new()));
+    _edbout.append("\n");
+    return _edbout.toString();
+  }
+  public java.lang.String show_erb() {
+    java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
+    _edbout.append("<p>\n  <b>Title:</b>\n  ");
+    _edbout.append(this.h(this.contact.title()));
+    _edbout.append("\n</p>\n\n<p>\n  <b>Summary:</b>\n  ");
+    _edbout.append(this.h(this.contact.summary()));
+    _edbout.append("\n</p>\n\n<p>\n  <b>Url:</b>\n  ");
+    _edbout.append(this.h(this.contact.url()));
+    _edbout.append("\n</p>\n\n<p>\n  <b>Address:</b>\n  ");
+    _edbout.append(this.h(this.contact.address()));
+    _edbout.append("\n</p>\n\n<p>\n  <b>Phone:</b>\n  ");
+    _edbout.append(this.h(this.contact.phone()));
+    _edbout.append("\n</p>\n\n");
+    _edbout.append(this.link_to("Edit", this.params().edit()));
+    _edbout.append(" |\n");
+    _edbout.append(this.link_to("Back", this.params().index()));
+    _edbout.append("\n");
+    return _edbout.toString();
+  }
+  public java.lang.String new_erb() {
+    java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
+    _edbout.append("<h1>New contact</h1>\n\n");
+    dubious.FormHelper f = new dubious.FormHelper(this.contact.attributes(), this.params());
+    _edbout.append("\n  ");
+    _edbout.append(f.form_for());
+    _edbout.append("\n  ");
+    _edbout.append(f.error_messages());
+    _edbout.append("\n\n  <p>\n    ");
+    _edbout.append(f.label("title"));
+    _edbout.append("<br />\n    ");
+    _edbout.append(f.text_field("title"));
+    _edbout.append("\n  </p>\n  <p>\n    ");
+    _edbout.append(f.label("summary"));
+    _edbout.append("<br />\n    ");
+    _edbout.append(f.text_area("summary"));
+    _edbout.append("\n  </p>\n  <p>\n    ");
+    _edbout.append(f.label("url"));
+    _edbout.append("<br />\n    ");
+    _edbout.append(f.text_field("url"));
+    _edbout.append("\n  </p>\n  <p>\n    ");
+    _edbout.append(f.label("address"));
+    _edbout.append("<br />\n    ");
+    _edbout.append(f.text_field("address"));
+    _edbout.append("\n  </p>\n  <p>\n    ");
+    _edbout.append(f.label("phone"));
+    _edbout.append("<br />\n    ");
+    _edbout.append(f.text_field("phone"));
+    _edbout.append("\n  </p>\n  <p>\n    ");
+    _edbout.append(f.submit("Create"));
+    _edbout.append("\n  </p>\n");
+    f.end();
+    _edbout.append("\n\n");
+    _edbout.append(this.link_to("Back", this.params().index()));
+    _edbout.append("\n");
+    return _edbout.toString();
+  }
+  public java.lang.String edit_erb() {
+    java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
+    _edbout.append("<h1>Editing contact</h1>\n\n");
+    dubious.FormHelper f = new dubious.FormHelper(this.contact.attributes(), this.params());
+    _edbout.append("\n  ");
+    _edbout.append(f.form_for());
+    _edbout.append("\n  ");
+    _edbout.append(f.error_messages());
+    _edbout.append("\n\n  <p>\n    ");
+    _edbout.append(f.label("title"));
+    _edbout.append("<br />\n    ");
+    _edbout.append(f.text_field("title"));
+    _edbout.append("\n  </p>\n  <p>\n    ");
+    _edbout.append(f.label("summary"));
+    _edbout.append("<br />\n    ");
+    _edbout.append(f.text_area("summary"));
+    _edbout.append("\n  </p>\n  <p>\n    ");
+    _edbout.append(f.label("url"));
+    _edbout.append("<br />\n    ");
+    _edbout.append(f.text_field("url"));
+    _edbout.append("\n  </p>\n  <p>\n    ");
+    _edbout.append(f.label("address"));
+    _edbout.append("<br />\n    ");
+    _edbout.append(f.text_field("address"));
+    _edbout.append("\n  </p>\n  <p>\n    ");
+    _edbout.append(f.label("phone"));
+    _edbout.append("<br />\n    ");
+    _edbout.append(f.text_field("phone"));
+    _edbout.append("\n  </p>\n  <p>\n    ");
+    _edbout.append(f.submit("Update"));
+    _edbout.append("\n  </p>\n");
+    f.end();
+    _edbout.append("\n\n");
+    _edbout.append(this.link_to("Show", this.params().show()));
+    _edbout.append(" |\n");
+    _edbout.append(this.link_to("Back", this.params().index()));
+    _edbout.append("\n");
+    return _edbout.toString();
+  }
+  public java.lang.String main_erb() {
+    java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
+    _edbout.append("<!DOCTYPE html>\n<head>\n  <meta charset=\"UTF-8\" /> \n  <meta name=\"csrf-param\" content=\"authenticity_token\"/>\n  <meta name=\"csrf-token\" content=\"123\"/>\n  <title>Contacts: ");
+    _edbout.append(this.params().action());
+    _edbout.append("</title>\n  ");
+    _edbout.append(this.stylesheet_link_tag("scaffold"));
+    _edbout.append("\n  ");
+    _edbout.append(this.javascript_include_tag("http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"));
+    _edbout.append("\n  ");
+    _edbout.append(this.javascript_include_tag("jquery.rails.min"));
+    _edbout.append("\n</head>\n<body>\n\n<p style=\"color: green\">");
+    _edbout.append(this.flash_notice());
+    _edbout.append("</p>\n\n");
+    java.lang.String temp$1 = null;
+    java.lang.String __xform_tmp_1 = this.yield_body();
+    temp$1 = (__xform_tmp_1 != null) ? (__xform_tmp_1) : ("");
+    _edbout.append(temp$1);
+    _edbout.append("\n\n</body>\n</html>\n");
+    return _edbout.toString();
+  }
+}

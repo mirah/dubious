@@ -25,8 +25,10 @@ dubyc -c $CP -d $OUTDIR stdlib/array.duby
 dubyc -c $CP -d $OUTDIR stdlib/io.duby
 dubyc -c $CP -d $OUTDIR dubious/link_to.duby
 dubyc -c $CP -d $OUTDIR dubious/params.duby
+javac -classpath $CP -d $OUTDIR dubious/ActionServlet.java
 dubyc -c $CP -d $OUTDIR dubious/form_helper.duby
 dubyc -c $CP -d $OUTDIR dubious/action_controller.duby
+dubyc -c $CP -j dubious/action_controller.duby
 dubyc -c $CP -d $OUTDIR controllers/contacts.duby
 cd ../app
 dubyc -c $CP -d $OUTDIR controllers/application_controller.duby
@@ -34,6 +36,7 @@ dubyc -c $CP -d $OUTDIR controllers/shout_controller.duby
 dubyc -c $CP -d $OUTDIR controllers/source_controller.duby
 dubyc -c $CP -d $OUTDIR controllers/info_properties_controller.duby
 dubyc -c $CP -d $OUTDIR controllers/contacts_controller.duby
+dubyc -c $CP -j controllers/contacts_controller.duby
 cd $OUTDIR
 jar -cf ../WEB-INF/lib/application.jar *
 cd ..
