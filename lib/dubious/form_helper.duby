@@ -1,15 +1,13 @@
 import com.google.appengine.ext.duby.db.Model
 import java.util.HashMap
 import dubious.Params
-import dubious.LinkTo
 
 class FormHelper
   def initialize(attributes:HashMap, params:Params)
     @a = attributes
-    @link_to = LinkTo.new(params)
     @params = params
     @method = params.action.equals('edit') ? 'put' : 'post'
-    @action = params.action.equals('edit') ? @link_to.show : @link_to.index
+    @action = params.action.equals('edit') ? params.show : params.index
     @token = '123456'
   end
 
