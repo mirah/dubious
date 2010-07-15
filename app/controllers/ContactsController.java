@@ -95,9 +95,9 @@ public class ContactsController extends controllers.ApplicationController {
   public java.lang.String new_erb() {
     java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
     _edbout.append("<h1>New contact</h1>\n\n");
-    dubious.FormHelper f = new dubious.FormHelper(this.contact.properties(), this.params());
+    dubious.FormHelper f = new dubious.FormHelper(this.contact, this.params());
     _edbout.append("\n  ");
-    _edbout.append(f.form_for(this.contact.kind()));
+    _edbout.append(f.form_for());
     _edbout.append("\n  ");
     _edbout.append(f.error_messages());
     _edbout.append("\n\n  <p>\n    ");
@@ -132,9 +132,9 @@ public class ContactsController extends controllers.ApplicationController {
   public java.lang.String edit_erb() {
     java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
     _edbout.append("<h1>Editing contact</h1>\n\n");
-    dubious.FormHelper f = new dubious.FormHelper(this.contact.properties(), this.params());
+    dubious.FormHelper f = new dubious.FormHelper(this.contact, this.params());
     _edbout.append("\n  ");
-    _edbout.append(f.form_for(this.contact.kind()));
+    _edbout.append(f.form_for());
     _edbout.append("\n  ");
     _edbout.append(f.error_messages());
     _edbout.append("\n\n  <p>\n    ");

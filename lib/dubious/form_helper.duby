@@ -1,22 +1,24 @@
-import com.aetrion.activesupport.Inflection
+import com.google.appengine.ext.duby.db.Model
 import java.util.Map
 import stdlib.Title
+import stdlib.Array
 import dubious.Params
 
 class FormHelper
-  def initialize(properties:Map, params:Params)
-    @a = properties
-    @kind = "unknown"
+  def initialize(model:Model, params:Params)
+    @a = model.properties
+    @kind = model.kind.toLowerCase
     @params = params
     @method = params.action.equals('edit') ? 'put' : 'post'
     @action = params.action.equals('edit') ? params.show : params.index
     @token = '123456'
   end
 
-  def form_for(kind:String)
-    @kind = kind.toLowerCase
+  def form_for
+    _method = ["get" ,"post"].contains(@method) ? "" :
+        "<input name=\"_method\" type=\"hidden\" value=\"#{@method}\" />"
     return <<EOF
-<form action="#{@action}" class="#{@params.action}_" id="#{@params.action}_#{@kind}" method="post"><input name="_method" type="hidden" value="#{@method}" /><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="#{@token}" /></div>
+<form action="#{@action}" class="#{@params.action}_" id="#{@params.action}_#{@kind}" method="post">#{_method}<div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="#{@token}" /></div>
 EOF
   end
 
