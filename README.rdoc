@@ -8,7 +8,7 @@ build apps in Mirah, with conventions familiar to Rails and Sinatra developers.
 Mirah has no runtime dependencies, everything is compiled ahead-of-time. 
 Mirah apps have none of the initialization costs associated with JRuby. 
 Dubious supports ERb and has a simple datastore adapter that uses a syntax 
-similar to DataMapper, but the form and tag helpers are currently missing.
+similar to DataMapper.
 
 ===Introducing Mirah
 Mirah is a new language with Ruby-inspired syntax that compiles to JVM bytecode.
@@ -35,7 +35,7 @@ Now git clone bitescript, mirah and dubious to your drive
    mkdir -p ~/mystuff; cd ~/mystuff
    git clone http://github.com/headius/bitescript.git
    git clone http://github.com/headius/mirah.git
-   git clone http://github.com/takeru/dubious
+   git clone http://github.com/mirah/dubious
 
 Edit .bash_profile to find these tools
 
