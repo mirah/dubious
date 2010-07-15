@@ -71,6 +71,11 @@ public class Contact extends com.google.appengine.ext.duby.db.Model {
   }
   public java.util.Map properties() {
     java.util.Map result = super.properties();
+    result.put("title", this.title());
+    result.put("summary", this.summary());
+    result.put("url", this.url());
+    result.put("address", this.address());
+    result.put("phone", this.phone());
     return result;
   }
   public models.Contact update(java.util.Map properties) {
@@ -147,15 +152,6 @@ public class Contact extends com.google.appengine.ext.duby.db.Model {
   }
   public java.lang.String phone_set(java.lang.Object value) {
     return this.phone_set(this.coerce_string(value));
-  }
-  public java.util.HashMap get_properties() {
-    java.util.HashMap hm = new java.util.HashMap();
-    hm.put("title", this.title);
-    hm.put("summary", this.summary);
-    hm.put("url", this.url);
-    hm.put("address", this.address);
-    hm.put("phone", this.phone);
-    return hm;
   }
   public static class Query extends com.google.appengine.ext.duby.db.DQuery {
     public  Query() {

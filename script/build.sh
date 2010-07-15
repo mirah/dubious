@@ -26,7 +26,7 @@ dubyc -c $CP -d $OUTDIR stdlib/array.duby
 dubyc -c $CP -d $OUTDIR stdlib/time.duby
 dubyc -c $CP -d $OUTDIR stdlib/title.duby
 dubyc -c $CP -d $OUTDIR stdlib/io.duby
-javac -classpath $CP -d $OUTDIR -Xlint:unchecked dubious/ScopedParameterMap.java
+javac -classpath $CP -d $OUTDIR dubious/ScopedParameterMap.java
 dubyc -c $CP -d $OUTDIR dubious/params.duby
 dubyc -c $CP -d $OUTDIR dubious/form_helper.duby
 dubyc -c $CP -d $OUTDIR dubious/action_controller.duby
