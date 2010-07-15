@@ -1,55 +1,51 @@
 // Generated from controllers/contacts_controller.duby
 package controllers;
 public class ContactsController extends controllers.ApplicationController {
-  private controllers.Contact[] contacts;
-  private controllers.Contact contact;
+  private models.Contact[] contacts;
+  private models.Contact contact;
   public static void main(java.lang.String[] argv) {
   public java.lang.Object index() {
-    this.contacts = controllers.Contact.all().run();
+    this.contacts = models.Contact.all().run();
     return this.render(this.index_erb(), this.main_erb());
   }
   public java.lang.Object show() {
-    this.contact = controllers.Contact.get(this.params().id());
+    this.contact = models.Contact.get(this.params().id());
     return this.render(this.show_erb(), this.main_erb());
   }
   public java.lang.Object new() {
-    this.contact = new controllers.Contact();
+    this.contact = new models.Contact();
     return this.render(this.new_erb(), this.main_erb());
   }
   public java.lang.Object edit() {
-    this.contact = controllers.Contact.get(this.params().id());
+    this.contact = models.Contact.get(this.params().id());
     return this.render(this.edit_erb(), this.main_erb());
   }
   public java.lang.Object delete() {
-    controllers.Contact.delete(controllers.Contact.get(this.params().id()).key());
+    models.Contact.delete(models.Contact.get(this.params().id()).key());
     return this.redirect_to(this.params().index());
   }
   public java.lang.Object create() {
-    controllers.Contact temp$1 = new controllers.Contact();
-    temp$1.update_attributes(this.params());
+    new models.Contact().update(this.params().for("contact")).save();
     return this.redirect_to(this.params().index());
   }
   public java.lang.Object update() {
-    controllers.Contact temp$1 = controllers.Contact.get(this.params().id());
-    temp$1.update_attributes(this.params());
+    models.Contact.get(this.params().id()).update(this.params().for("contact")).save();
     return this.redirect_to(this.params().show());
   }
   public void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, java.io.IOException {
-    this.set_params(new dubious.Params(request));
     this.action_response(response, this.action_request(request, "get"));
   }
   public void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, java.io.IOException {
-    this.set_params(new dubious.Params(request));
     this.action_response(response, this.action_request(request, "post"));
   }
   public java.lang.String index_erb() {
     java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
     _edbout.append("<h1>Listing contacts</h1>\n\n<table>\n  <tr>\n    <th>Title</th>\n    <th>Summary</th>\n    <th>Url</th>\n    <th>Address</th>\n    <th>Phone</th>\n  </tr>\n\n");
-    int __xform_tmp_2 = 0;
-    controllers.Contact[] __xform_tmp_3 = this.contacts;
+    int __xform_tmp_1 = 0;
+    models.Contact[] __xform_tmp_2 = this.contacts;
     label1:
-    while ((__xform_tmp_2 < __xform_tmp_3.length)) {
-      controllers.Contact contact = __xform_tmp_3[__xform_tmp_2];
+    while ((__xform_tmp_1 < __xform_tmp_2.length)) {
+      models.Contact contact = __xform_tmp_2[__xform_tmp_1];
       label2:
        {
         _edbout.append("\n  <tr>\n    <td>");
@@ -70,7 +66,7 @@ public class ContactsController extends controllers.ApplicationController {
         _edbout.append(this.link_to("Delete", this.params().delete(contact.key().getId())));
         _edbout.append("</td>\n  </tr>\n");
       }
-      __xform_tmp_2 = (__xform_tmp_2 + 1);
+      __xform_tmp_1 = (__xform_tmp_1 + 1);
     }
     _edbout.append("\n</table>\n\n<br />\n\n");
     _edbout.append(this.link_to("New contact", this.params().new()));
@@ -99,9 +95,9 @@ public class ContactsController extends controllers.ApplicationController {
   public java.lang.String new_erb() {
     java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
     _edbout.append("<h1>New contact</h1>\n\n");
-    dubious.FormHelper f = new dubious.FormHelper(this.contact.attributes(), this.params());
+    dubious.FormHelper f = new dubious.FormHelper(this.contact.get_properties(), this.params());
     _edbout.append("\n  ");
-    _edbout.append(f.form_for());
+    _edbout.append(f.form_for(this.contact.kind()));
     _edbout.append("\n  ");
     _edbout.append(f.error_messages());
     _edbout.append("\n\n  <p>\n    ");
@@ -136,9 +132,9 @@ public class ContactsController extends controllers.ApplicationController {
   public java.lang.String edit_erb() {
     java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
     _edbout.append("<h1>Editing contact</h1>\n\n");
-    dubious.FormHelper f = new dubious.FormHelper(this.contact.attributes(), this.params());
+    dubious.FormHelper f = new dubious.FormHelper(this.contact.get_properties(), this.params());
     _edbout.append("\n  ");
-    _edbout.append(f.form_for());
+    _edbout.append(f.form_for(this.contact.kind()));
     _edbout.append("\n  ");
     _edbout.append(f.error_messages());
     _edbout.append("\n\n  <p>\n    ");
@@ -185,10 +181,7 @@ public class ContactsController extends controllers.ApplicationController {
     _edbout.append("\n</head>\n<body>\n\n<p style=\"color: green\">");
     _edbout.append(this.flash_notice());
     _edbout.append("</p>\n\n");
-    java.lang.String temp$1 = null;
-    java.lang.String __xform_tmp_1 = this.yield_body();
-    temp$1 = (__xform_tmp_1 != null) ? (__xform_tmp_1) : ("");
-    _edbout.append(temp$1);
+    _edbout.append(this.yield_body());
     _edbout.append("\n\n</body>\n</html>\n");
     return _edbout.toString();
   }

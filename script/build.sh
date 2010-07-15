@@ -17,19 +17,23 @@ script/environment.rb # copy dubydatastore.jar (unless exists)
 
 ### Generate class files
 CP=$SERVLET:$SDK_API:$OUTDIR:$DBMODEL:.
+javac -classpath $CP -d $OUTDIR com/aetrion/activesupport/Inflection.java
 cd lib
 javac -classpath $CP -d $OUTDIR testing/Dir.java
 javac -classpath $CP -d $OUTDIR testing/SimpleJava.java
 dubyc -c $CP -d $OUTDIR testing/SimpleDuby.duby
 dubyc -c $CP -d $OUTDIR stdlib/array.duby
+dubyc -c $CP -d $OUTDIR stdlib/time.duby
+dubyc -c $CP -d $OUTDIR stdlib/title.duby
 dubyc -c $CP -d $OUTDIR stdlib/io.duby
+javac -classpath $CP -d $OUTDIR -Xlint:unchecked dubious/ScopedParameterMap.java
 dubyc -c $CP -d $OUTDIR dubious/params.duby
-javac -classpath $CP -d $OUTDIR dubious/ActionServlet.java
 dubyc -c $CP -d $OUTDIR dubious/form_helper.duby
 dubyc -c $CP -d $OUTDIR dubious/action_controller.duby
-dubyc -c $CP -j dubious/action_controller.duby
-dubyc -c $CP -d $OUTDIR controllers/contacts.duby
+dubyc -c $CP -j         dubious/action_controller.duby
 cd ../app
+dubyc -c $CP -d $OUTDIR models/contacts.duby
+dubyc -c $CP -j         models/contacts.duby
 dubyc -c $CP -d $OUTDIR controllers/application_controller.duby
 dubyc -c $CP -d $OUTDIR controllers/shout_controller.duby
 dubyc -c $CP -d $OUTDIR controllers/source_controller.duby
@@ -37,5 +41,6 @@ dubyc -c $CP -d $OUTDIR controllers/info_properties_controller.duby
 dubyc -c $CP -d $OUTDIR controllers/contacts_controller.duby
 dubyc -c $CP -j controllers/contacts_controller.duby
 cd $OUTDIR
-jar -cf ../WEB-INF/lib/application.jar *
+jar -cf ../WEB-INF/lib/application.jar models/* controllers/*
+jar -cf ../WEB-INF/lib/dubious.jar com testing/* stdlib/* dubious/*
 cd ..

@@ -1,7 +1,7 @@
 <h1>New contact</h1>
 
-<% f = FormHelper.new(@contact.attributes, params) %>
-  <%= f.form_for %>
+<% f = FormHelper.new(@contact.get_properties, params) %>
+  <%= f.form_for(@contact.kind) %>
   <%= f.error_messages %>
 
   <p>

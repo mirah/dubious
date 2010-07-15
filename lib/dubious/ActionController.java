@@ -1,7 +1,7 @@
 // Generated from dubious/action_controller.duby
 package dubious;
-public class ActionController extends dubious.ActionServlet {
-  private java.lang.String yield_str;
+public class ActionController extends javax.servlet.http.HttpServlet {
+  private dubious.Params params_obj;
   private java.lang.String flash_str;
   private static java.util.regex.Pattern escape_pattern;
   private static java.util.HashMap escaped;
@@ -27,28 +27,31 @@ public class ActionController extends dubious.ActionServlet {
   public java.lang.Object update() {
     return java.lang.Integer.valueOf(404);
   }
-  public void yield_body(java.lang.String content) {
-    this.yield_str = content;
+  public void set_params(dubious.Params params) {
+    this.params_obj = params;
   }
-  public java.lang.String yield_body() {
-    return this.yield_str;
+  public dubious.Params params() {
+    return this.params_obj;
   }
-  public void flash_notice(java.lang.String content) {
+  public void set_flash_notice(java.lang.String content) {
     this.flash_str = content;
   }
   public java.lang.String flash_notice() {
     java.lang.String __xform_tmp_1 = this.flash_str;
     return (__xform_tmp_1 != null) ? (__xform_tmp_1) : ("");
   }
-  public java.net.URI redirect_to(java.lang.String link) {
-    return new java.net.URI(link);
+  public java.lang.String yield_body() {
+    return "@@_YIELD_BODY_@@";
+  }
+  public java.lang.String render(java.lang.String content, java.lang.String layout) {
+    java.lang.String[] wrapper = layout.split(this.yield_body());
+    return (wrapper.length == 2) ? (((wrapper[0] + content) + wrapper[1])) : ((layout + "\n\n<!-- Oops, yield_body missing -->"));
   }
   public java.lang.String render(java.lang.String content) {
     return content;
   }
-  public java.lang.String render(java.lang.String content, java.lang.String layout) {
-    this.yield_body(content);
-    return this.render(layout);
+  public java.net.URI redirect_to(java.lang.String link) {
+    return new java.net.URI(link);
   }
   public void action_response(javax.servlet.http.HttpServletResponse response, java.lang.Object payload) {
     if (payload instanceof java.net.URI) {
@@ -91,6 +94,7 @@ public class ActionController extends dubious.ActionServlet {
     }
   }
   public java.lang.Object action_request(javax.servlet.http.HttpServletRequest request, java.lang.String method) {
+    this.set_params(new dubious.Params(request));
     java.lang.String temp$1 = null;
     java.lang.String __xform_tmp_3 = request.getParameter("_method");
     temp$1 = (__xform_tmp_3 != null) ? (__xform_tmp_3) : (method);

@@ -1,5 +1,6 @@
-import java.util.HashMap
 import javax.servlet.http.HttpServletRequest
+import java.util.HashMap
+import java.util.Map
 
 class Params
   def initialize(request:HttpServletRequest)
@@ -34,6 +35,12 @@ class Params
 
   def id
     @id.equals("") ? long(0) : Long.parseLong(@id)
+  end
+
+  # query params
+
+  def for(model:String)
+    ScopedParameterMap.params(request, model)
   end
 
   #  request helpers

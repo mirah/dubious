@@ -2,8 +2,6 @@ import com.google.appengine.api.datastore.Text
 import com.google.appengine.ext.duby.db.Model
 
 class Shout < Model
-  def initialize; end
-
   property 'title', String
   property 'body',  Text
 end

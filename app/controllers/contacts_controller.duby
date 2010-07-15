@@ -1,4 +1,5 @@
 import dubious.*
+import models.*
 
 class ContactsController < ApplicationController
 
@@ -34,30 +35,25 @@ class ContactsController < ApplicationController
 
   # POST /contacts
   def create
-    Contact.new.update_attributes(params)
+    Contact.new.update(params.for('contact')).save
     redirect_to params.index
   end
 
   # PUT /contacts/1
   def update
-    Contact.get(params.id).update_attributes(params)
+    Contact.get(params.id).update(params.for('contact')).save
     redirect_to params.show
   end
 
-  # servlet routing
-
   def doGet(request, response)
-    set_params(Params.new(request)) # @params = Params.new(request)
     action_response(response, action_request(request, 'get'))
   end
 
   def doPost(request, response)
-    set_params(Params.new(request)) # @params = Params.new(request)
     action_response(response, action_request(request, 'post'))
   end
 
   # render templates
-
   def_edb(index_erb, 'views/contacts/index.html.erb')
   def_edb(show_erb, 'views/contacts/show.html.erb')
   def_edb(new_erb, 'views/contacts/new.html.erb')

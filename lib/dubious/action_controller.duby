@@ -1,4 +1,3 @@
-import com.google.appengine.api.datastore.Link
 import javax.servlet.http.*
 import java.util.regex.Pattern
 import java.util.HashMap
@@ -6,7 +5,7 @@ import dubious.Params
 import java.io.File
 import java.net.URI
 
-class ActionController < ActionServlet
+class ActionController < HttpServlet
 
   # expect URI, String or Integer
   def index;  returns Object; Integer.valueOf(404); end
@@ -17,23 +16,15 @@ class ActionController < ActionServlet
   def create; returns Object; Integer.valueOf(404); end
   def update; returns Object; Integer.valueOf(404); end
 
-#  def set_params(params:Params); returns :void
-#    @params_obj = params
-#  end
-
-#  def params; returns Params
-#    @params_obj
-#  end
-
-  def yield_body(content:String); returns :void
-    @yield_str = content
+  def set_params(params:Params); returns :void
+    @params_obj = params
   end
 
-  def yield_body
-    @yield_str
+  def params; returns Params
+    @params_obj
   end
 
-  def flash_notice(content:String); returns :void
+  def set_flash_notice(content:String); returns :void
     @flash_str = content
   end
 
@@ -41,17 +32,24 @@ class ActionController < ActionServlet
     @flash_str || ""
   end
 
-  def redirect_to(link:String); returns URI
-    URI.new(link)
+  # for simplicity, we split on this token
+  def yield_body; "@@_YIELD_BODY_@@"; end
+
+  def render(content:String, layout:String); returns String
+    wrapper = layout.split(yield_body)
+    if wrapper.length == 2
+      wrapper[0] + content + wrapper[1]
+    else
+       layout + "\n\n<!-- Oops, yield_body missing -->"
+    end
   end
 
   def render(content:String); returns String
     content
   end
 
-  def render(content:String, layout:String); returns String
-    yield_body(content)
-    render(layout)
+  def redirect_to(link:String); returns URI
+    URI.new(link)
   end
 
   # accepts various types, and creates the appropriate response
@@ -79,6 +77,7 @@ class ActionController < ActionServlet
 
   # route request to the approprite action
   def action_request(request:HttpServletRequest, method:String); returns Object
+    set_params Params.new(request)
     method = request.getParameter('_method') || method
     if method.equals('get')
       if params.action.equals("")

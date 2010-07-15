@@ -1,19 +1,22 @@
-import com.google.appengine.ext.duby.db.Model
-import java.util.HashMap
+import com.aetrion.activesupport.Inflection
+import java.util.Map
+import stdlib.Title
 import dubious.Params
 
 class FormHelper
-  def initialize(attributes:HashMap, params:Params)
-    @a = attributes
+  def initialize(properties:Map, params:Params)
+    @a = properties
+    @kind = "unknown"
     @params = params
     @method = params.action.equals('edit') ? 'put' : 'post'
     @action = params.action.equals('edit') ? params.show : params.index
     @token = '123456'
   end
 
-  def form_for
+  def form_for(kind:String)
+    @kind = kind.toLowerCase
     return <<EOF
-<form action="#{@action}" class="#{@params.action}_" id="#{@params.action}_#{@a.get('kind')}" method="post"><input name="_method" type="hidden" value="#{@method}" /><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="#{@token}" /></div>
+<form action="#{@action}" class="#{@params.action}_" id="#{@params.action}_#{@kind}" method="post"><input name="_method" type="hidden" value="#{@method}" /><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="#{@token}" /></div>
 EOF
   end
 
@@ -22,10 +25,9 @@ EOF
   end
 
   def submit(name:String)
-    code = name.toLowerCase
     commit = @params.action.equals('edit') ? 'Update' : 'Create'
     return <<EOF
-<input id="#{@a.get('kind')}_submit" name="commit" type="submit" value="#{commit}" /> 
+<input id="#{@kind}_submit" name="commit" type="submit" value="#{commit}" /> 
 EOF
   end
 
@@ -38,9 +40,8 @@ EOF
   end
 
   def fields_for(name:String)
-    code = name.toLowerCase
     return <<EOF
-<input id="#{@a.get('kind')}_#{code}" name="#{@a.get('kind')}[#{code}]" size="30" type="text" value="#{@a.get(name)}"/> 
+<input id="#{@kind}_#{name}" name="#{@kind}[#{name}]" size="30" type="text" value="#{@a.get(name) || ""}"/> 
 EOF
   end
 
@@ -49,23 +50,20 @@ EOF
   end
 
   def hidden_field(name:String)
-    code = name.toLowerCase
     return <<EOF
-<input name="#{@a.get('kind')}_#{code}" type="hidden" value="#{@a.get(name)}"/>
+<input name="#{@kind}_#{name}" type="hidden" value="#{@a.get(name) || ""}"/>
 EOF
   end
 
   def label(name:String)
-    code = name.toLowerCase
     return <<EOF
-<label for="#{@a.get('kind')}_#{code}">#{name}</label>
+<label for="#{@kind}_#{name}">#{Title.case(name)}</label>
 EOF
   end
 
   def password_field(name:String)
-    code = name.toLowerCase
     return <<EOF
-<input id="#{@a.get('kind')}_#{code}" name="#{@a.get('kind')}[#{code}]" size="30" type="password" value="#{@a.get(name)}"/> 
+<input id="#{@kind}_#{name}" name="#{@kind}[#{name}]" size="30" type="password" value="#{@a.get(name) || ""}"/> 
 EOF
   end
 
@@ -74,16 +72,14 @@ EOF
   end
 
   def text_area(name:String)
-    code = name.toLowerCase
     return <<EOF
-<textarea cols="40" id="#{@a.get('kind')}_#{code}" name="#{@a.get('kind')}[#{code}]" rows="20">#{@a.get(name)}</textarea> 
+<textarea cols="40" id="#{@kind}_#{name}" name="#{@kind}[#{name}]" rows="20">#{@a.get(name) || ""}</textarea> 
 EOF
   end
 
   def text_field(name:String)
-    code = name.toLowerCase
     return <<EOF
-<input id="#{@a.get('kind')}_#{code}" name="#{@a.get('kind')}[#{code}]" size="30" type="text" value="#{@a.get(name)}"/> 
+<input id="#{@kind}_#{name}" name="#{@kind}[#{name}]" size="30" type="text" value="#{@a.get(name) || ""}"/> 
 EOF
   end
 
