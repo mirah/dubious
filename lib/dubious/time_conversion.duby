@@ -1,4 +1,6 @@
 import java.util.HashMap
+import java.util.Date
+import java.text.SimpleDateFormat
 
 class TimeConversion
 
@@ -12,7 +14,16 @@ class TimeConversion
   #  "EEE, d MMM yyyy HH:mm:ss Z"    Wed, 4 Jul 2001 12:08:56 -0700
   #  "yyMMddHHmmssZ"                 010704120856-0700  
 
-  def self.for(token:String); returns String
+  def initialize(token:String)
+    pattern = TimeConversion.for(token)
+    @formatter = SimpleDateFormat.new(pattern)
+  end
+
+  def format(date:Date)
+    @formatter.format(date)
+  end
+
+  def self.for(token:String)
     hm = HashMap.new
     hm.put('datetime', "EEE, d MMM yyyy HH:mm:ss Z")
     hm.put('date',     "EEE, d MMM yyyy")      # Mon, 12 Nov 2007
@@ -29,6 +40,12 @@ class TimeConversion
 end
 
 __END__
+
+$ duby -e 'import dubious.*
+import java.util.Date
+date = Date.new
+puts TimeConversion.new("month").format(date)'
+Jul 2010
 
 $ duby -e 'import dubious.*
 import java.util.Date
