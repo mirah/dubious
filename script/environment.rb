@@ -17,7 +17,7 @@ def git_data(dir, file='')
 end
 
 def mirah_cmd
-  IO.popen("which duby") { |f| f.gets.chop }
+  IO.popen("which mirah") { |f| f.gets.chop }
 end
 
 def sdk_jars(web_inf_lib_dir)
