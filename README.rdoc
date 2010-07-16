@@ -35,7 +35,7 @@ Now git clone bitescript, mirah and dubious to your drive
    mkdir -p ~/mystuff; cd ~/mystuff
    git clone http://github.com/headius/bitescript.git
    git clone http://github.com/headius/mirah.git
-   git clone http://github.com/mirah/dubious
+   git clone http://github.com/mirah/dubious.git
 
 Edit .bash_profile to find these tools
 
