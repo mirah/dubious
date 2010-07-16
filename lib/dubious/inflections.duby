@@ -1,11 +1,34 @@
-import java.lang.StringBuffer
 import java.util.StringTokenizer
+import java.lang.StringBuffer
 
-class Title
-  def self.case(str:String)
+class Inflections
+
+  # camelize
+  # classify
+  # constantize
+  # dasherize
+  # demodulize
+  # foreign_key
+  # humanize
+  # parameterize
+  # tableize
+  # underscore
+
+  def self.pluralize(word:String)
+    Inflection.pluralize(word)
+  end
+
+  def self.singularize(word:String)
+    Inflection.singularize(word)
+  end
+
+  def self.titlecase(string:String)
+    titleize(string)
+  end
+
+  def self.titleize(phrase:String)
     StringBuffer sb = StringBuffer.new
-    str = str.toLowerCase
-    StringTokenizer strTitleCase = StringTokenizer.new(str)
+    StringTokenizer strTitleCase = StringTokenizer.new(phrase.toLowerCase)
     while strTitleCase.hasMoreTokens
       String s = strTitleCase.nextToken
       sb.append(s.replaceFirst(s.substring(0, 1),

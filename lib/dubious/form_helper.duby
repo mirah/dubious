@@ -59,7 +59,7 @@ EOF
 
   def label(name:String)
     return <<EOF
-<label for="#{@kind}_#{name}">#{Title.case(name)}</label>
+<label for="#{@kind}_#{name}">#{Inflections.titleize(name)}</label>
 EOF
   end
 
