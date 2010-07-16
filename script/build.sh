@@ -26,7 +26,7 @@ dubyc -c $CP -d $OUTDIR stdlib/io.duby
 javac -classpath $CP -d $OUTDIR dubious/ScopedParameterMap.java
 javac -classpath $CP -d $OUTDIR dubious/Inflection.java
 dubyc -c $CP -d $OUTDIR dubious/inflections.duby
-dubyc -c $CP -d $OUTDIR dubious/time_conversions.duby
+dubyc -c $CP -d $OUTDIR dubious/time_conversion.duby
 dubyc -c $CP -d $OUTDIR dubious/text_helper.duby
 dubyc -c $CP -d $OUTDIR dubious/params.duby
 dubyc -c $CP -d $OUTDIR dubious/form_helper.duby
@@ -43,5 +43,5 @@ dubyc -c $CP -d $OUTDIR controllers/contacts_controller.duby
 dubyc -c $CP -j controllers/contacts_controller.duby
 cd $OUTDIR
 jar -cf ../WEB-INF/lib/application.jar models/* controllers/*
-jar -cf ../WEB-INF/lib/dubious.jar com testing/* stdlib/* dubious/*
+jar -cf ../WEB-INF/lib/dubious.jar testing/* stdlib/* dubious/*
 cd ..
