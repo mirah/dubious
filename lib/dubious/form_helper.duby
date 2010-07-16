@@ -1,6 +1,6 @@
 import com.google.appengine.ext.duby.db.Model
 import java.util.Map
-import stdlib.Title
+import dubious.Inflections
 import stdlib.Array
 import dubious.Params
 
