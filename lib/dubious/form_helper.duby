@@ -14,7 +14,7 @@ class FormHelper
     @token = '123456'
   end
 
-  def form_for
+  def start_form
     _method = ["get" ,"post"].contains(@method) ? "" :
         "<input name=\"_method\" type=\"hidden\" value=\"#{@method}\" />"
     return <<EOF
@@ -22,7 +22,7 @@ class FormHelper
 EOF
   end
 
-  def end
+  def end_form
     "</form>"
   end
 

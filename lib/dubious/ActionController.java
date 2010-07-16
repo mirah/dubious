@@ -104,6 +104,9 @@ public class ActionController extends javax.servlet.http.HttpServlet {
   private boolean invalid_authenticity_token(java.lang.String token) {
     return token.equals("") ? (true) : (false);
   }
+  public dubious.FormHelper form_for(com.google.appengine.ext.duby.db.Model model) {
+    return new dubious.FormHelper(model, this.params());
+  }
   public java.lang.String link_to(java.lang.String name, java.lang.String options) {
     return "<a href=\"" + options + "\">" + name + "</a>";
   }

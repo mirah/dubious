@@ -95,12 +95,12 @@ public class ContactsController extends controllers.ApplicationController {
   public java.lang.String new_erb() {
     java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
     _edbout.append("<h1>New contact</h1>\n\n");
-    dubious.FormHelper f = new dubious.FormHelper(this.contact, this.params());
+    dubious.FormHelper f = this.form_for(this.contact);
     _edbout.append("\n  ");
-    _edbout.append(f.form_for());
+    _edbout.append(f.start_form());
     _edbout.append("\n  ");
     _edbout.append(f.error_messages());
-    _edbout.append("\n\n  <p>\n    ");
+    _edbout.append("\n  <p>\n    ");
     _edbout.append(f.label("title"));
     _edbout.append("<br />\n    ");
     _edbout.append(f.text_field("title"));
@@ -122,8 +122,8 @@ public class ContactsController extends controllers.ApplicationController {
     _edbout.append(f.text_field("phone"));
     _edbout.append("\n  </p>\n  <p>\n    ");
     _edbout.append(f.submit("Create"));
-    _edbout.append("\n  </p>\n");
-    f.end();
+    _edbout.append("\n  </p>\n  ");
+    _edbout.append(f.end_form());
     _edbout.append("\n\n");
     _edbout.append(this.link_to("Back", this.params().index()));
     _edbout.append("\n");
@@ -132,12 +132,12 @@ public class ContactsController extends controllers.ApplicationController {
   public java.lang.String edit_erb() {
     java.lang.StringBuilder _edbout = new java.lang.StringBuilder();
     _edbout.append("<h1>Editing contact</h1>\n\n");
-    dubious.FormHelper f = new dubious.FormHelper(this.contact, this.params());
+    dubious.FormHelper f = this.form_for(this.contact);
     _edbout.append("\n  ");
-    _edbout.append(f.form_for());
+    _edbout.append(f.start_form());
     _edbout.append("\n  ");
     _edbout.append(f.error_messages());
-    _edbout.append("\n\n  <p>\n    ");
+    _edbout.append("\n  <p>\n    ");
     _edbout.append(f.label("title"));
     _edbout.append("<br />\n    ");
     _edbout.append(f.text_field("title"));
@@ -159,8 +159,8 @@ public class ContactsController extends controllers.ApplicationController {
     _edbout.append(f.text_field("phone"));
     _edbout.append("\n  </p>\n  <p>\n    ");
     _edbout.append(f.submit("Update"));
-    _edbout.append("\n  </p>\n");
-    f.end();
+    _edbout.append("\n  </p>\n  ");
+    _edbout.append(f.end_form());
     _edbout.append("\n\n");
     _edbout.append(this.link_to("Show", this.params().show()));
     _edbout.append(" |\n");

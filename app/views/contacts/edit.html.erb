@@ -1,9 +1,8 @@
 <h1>Editing contact</h1>
 
-<% f = FormHelper.new(@contact, params) %>
-  <%= f.form_for %>
+<% f = form_for(@contact) %>
+  <%= f.start_form %>
   <%= f.error_messages %>
-
   <p>
     <%= f.label 'title' %><br />
     <%= f.text_field 'title' %>
@@ -27,7 +26,7 @@
   <p>
     <%= f.submit 'Update' %>
   </p>
-<% f.end %>
+  <%= f.end_form %>
 
 <%= link_to 'Show', params.show %> |
 <%= link_to 'Back', params.index %>

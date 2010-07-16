@@ -1,7 +1,9 @@
+import com.google.appengine.ext.duby.db.Model
 import javax.servlet.http.*
 import java.util.regex.Pattern
 import java.util.HashMap
 import dubious.Params
+import dubious.FormHelper
 import java.io.File
 import java.net.URI
 
@@ -111,6 +113,10 @@ class ActionController < HttpServlet
   end
 
   public
+
+  def form_for(model:Model)
+    FormHelper.new(model, params)
+  end
 
   ###
   # ActionView::Helpers::UrlHelper
