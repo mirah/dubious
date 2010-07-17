@@ -61,7 +61,7 @@ Until be have generators, just start by altering the main dubious app.
 When you create a new Mirah file, you needs to add it the the build script
 Run the build script whenever you modify a Mirah or ERb file. 
 
-   rake
+   rake jars
 
 Now run the app locally
 

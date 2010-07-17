@@ -94,7 +94,6 @@ end
 desc "compile app"
 task :compile => 'compile:app'
 
-
 task 'build/models/*' => 'compile:app'
 task 'build/controllers/*' => 'compile:app'
 
@@ -119,3 +118,6 @@ desc "publish to app engine"
 task :publish => :jars do
   sh "appcfg.sh update ."
 end
+
+task :app => :jars
+task :default => :server
