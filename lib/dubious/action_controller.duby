@@ -10,13 +10,13 @@ import java.net.URI
 class ActionController < HttpServlet
 
   # expect URI, String or Integer
-  def index; returns Object; Integer.valueOf(404); end
-  def show; returns Object; Integer.valueOf(404); end
-  def new; returns Object; Integer.valueOf(404); end
-  def edit; returns Object; Integer.valueOf(404); end
-  def delete; returns Object; Integer.valueOf(404); end
-  def create; returns Object; Integer.valueOf(404); end
-  def update; returns Object; Integer.valueOf(404); end
+  def index;  Object(Integer.valueOf(404)); end
+  def show;   Object(Integer.valueOf(404)); end
+  def new;    Object(Integer.valueOf(404)); end
+  def edit;   Object(Integer.valueOf(404)); end
+  def delete; Object(Integer.valueOf(404)); end
+  def create; Object(Integer.valueOf(404)); end
+  def update; Object(Integer.valueOf(404)); end
 
   def set_params(params:Params); returns :void
     @params_obj = params
@@ -122,7 +122,6 @@ class ActionController < HttpServlet
   #
   # button_to
   # current_page?
-  # link_to
   # link_to_if
   # link_to_unless
   # link_to_unless_current

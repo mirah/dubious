@@ -7,25 +7,25 @@ public class ActionController extends javax.servlet.http.HttpServlet {
   private static java.util.HashMap escaped;
   public static void main(java.lang.String[] argv) {
   public java.lang.Object index() {
-    return java.lang.Integer.valueOf(404);
+    return ((java.lang.Object)(java.lang.Integer.valueOf(404)));
   }
   public java.lang.Object show() {
-    return java.lang.Integer.valueOf(404);
+    return ((java.lang.Object)(java.lang.Integer.valueOf(404)));
   }
   public java.lang.Object new() {
-    return java.lang.Integer.valueOf(404);
+    return ((java.lang.Object)(java.lang.Integer.valueOf(404)));
   }
   public java.lang.Object edit() {
-    return java.lang.Integer.valueOf(404);
+    return ((java.lang.Object)(java.lang.Integer.valueOf(404)));
   }
   public java.lang.Object delete() {
-    return java.lang.Integer.valueOf(404);
+    return ((java.lang.Object)(java.lang.Integer.valueOf(404)));
   }
   public java.lang.Object create() {
-    return java.lang.Integer.valueOf(404);
+    return ((java.lang.Object)(java.lang.Integer.valueOf(404)));
   }
   public java.lang.Object update() {
-    return java.lang.Integer.valueOf(404);
+    return ((java.lang.Object)(java.lang.Integer.valueOf(404)));
   }
   public void set_params(dubious.Params params) {
     this.params_obj = params;
