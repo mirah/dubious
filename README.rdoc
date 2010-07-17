@@ -61,15 +61,15 @@ Until be have generators, just start by altering the main dubious app.
 When you create a new Mirah file, you needs to add it the the build script
 Run the build script whenever you modify a Mirah or ERb file. 
 
-   ./script/build.sh
+   rake
 
 Now run the app locally
 
-   ./script/server.sh
+   rake server
 
 Edit the app-id in app.yaml, then publish to appspot.com
 
-   ./script/publish.sh
+   rake publish
 
 ===Apache License 2.0
 
