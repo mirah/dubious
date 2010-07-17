@@ -6,12 +6,12 @@ developers to be able to create stand-alone Dubious apps. Here is the list
 of features I see as most critical.
 
 * Cookie-based sessions with support for flash[:notice]
-* Create and Validate csrf tokens (some plumbing in place)
+* Create and Validate csrf tokens (some plumbing is in place)
 * Rake task for continuous build and integrated testing tools
 * Packaging system (we could use gems that include jar files)
 * Generators for scaffold (as well as controllers and models)
 * Command to generate a new dubious app
-* Strategy to generate/publics documentation
+* Strategy to generate/publish documentation
 
 ==Mirah Features
 
@@ -24,4 +24,6 @@ We also need some new features from Mirah and MirahModel
 ====Mirah
 * Support for Hash Literals and symbols
 * Ability to add new methods to Java classes
-* Strategy to generate/publics documentation
+* Strategy to generate/publish documentation
+* Echo Java source fragments on compile errors
+* Better syntax for 'returns' and warning when Object
