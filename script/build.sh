@@ -23,6 +23,7 @@ javac -classpath $CP -d $OUTDIR testing/SimpleJava.java
 dubyc -c $CP -d $OUTDIR testing/SimpleDuby.duby
 dubyc -c $CP -d $OUTDIR stdlib/array.duby
 dubyc -c $CP -d $OUTDIR stdlib/io.duby
+dubyc -c $CP -d $OUTDIR stdlib/ha.duby
 javac -classpath $CP -d $OUTDIR dubious/ScopedParameterMap.java
 javac -classpath $CP -d $OUTDIR dubious/Inflection.java
 dubyc -c $CP -d $OUTDIR dubious/inflections.duby

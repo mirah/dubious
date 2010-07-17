@@ -118,28 +118,28 @@ class ActionController < HttpServlet
     FormHelper.new(model, params)
   end
 
-  ###
   # ActionView::Helpers::UrlHelper
   #
   # button_to
   # current_page?
   # link_to
-  def link_to(name:String, options:String)
-     "<a href=\"#{options}\">#{name}</a>"
-  end
-  def link_to(name:String, map:HashMap)
-    sb = StringBuilder.new("<a")
-    map.keySet.each { |key| sb.append(" #{key}=\"#{map.get(key)}\"") }
-    sb.append(">#{name}</a>")
-    sb.toString
-  end
   # link_to_if
   # link_to_unless
   # link_to_unless_current
   # mail_to
   # url_for
 
-  ###
+  def link_to(name:String, options:String)
+     "<a href=\"#{options}\">#{name}</a>"
+  end
+
+  def link_to(name:String, map:HashMap)
+    sb = StringBuilder.new("<a")
+    map.keySet.each { |key| sb.append(" #{key}=\"#{map.get(key)}\"") }
+    sb.append(">#{name}</a>")
+    sb.toString
+  end
+
   # ActionView::Helpers::AssetTagHelper
   #
   # auto_discovery_link_tag
@@ -147,13 +147,6 @@ class ActionController < HttpServlet
   # cache_asset_timestamps=
   # image_path
   # image_tag
-  def javascript_include_tag(text:String)
-    src = text.startsWith("http") ? text : "/javascripts/#{text}"
-    src += ".js" unless src.endsWith(".js")
-    src += "?#{File.new("public#{src}").lastModified}" unless
-        src.startsWith("http")
-    "<script src=\"#{src}\" type=\"text/javascript\"></script>"
-  end
   # javascript_path
   # path_to_image
   # path_to_javascript
@@ -161,15 +154,22 @@ class ActionController < HttpServlet
   # register_javascript_expansion
   # register_javascript_include_default
   # register_stylesheet_expansion
+  # stylesheet_path
+
+  def javascript_include_tag(text:String)
+    src = text.startsWith("http") ? text : "/javascripts/#{text}"
+    src += ".js" unless src.endsWith(".js")
+    src += "?#{File.new("public#{src}").lastModified}" unless
+        src.startsWith("http")
+    "<script src=\"#{src}\" type=\"text/javascript\"></script>"
+  end
+
   def stylesheet_link_tag(text:String)
     stamp = File.new("public/stylesheets/#{text}.css").lastModified
     "<link href=\"/stylesheets/#{text}.css?#{stamp}\" " +
     'media="screen" rel="stylesheet" type="text/css" />'
   end
-  # stylesheet_path
 
-
-  ###
   # escape special characters
 
   def self.initialize
