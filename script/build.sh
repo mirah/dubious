@@ -20,7 +20,6 @@ CP=$SERVLET:$SDK_API:$OUTDIR:$DBMODEL:.
 cd lib
 
 ### Dubious Tests
-javac -classpath $CP -d $OUTDIR testing/Dir.java
 javac -classpath $CP -d $OUTDIR testing/SimpleJava.java
 mirahc -c $CP -d $OUTDIR testing/SimpleDuby.duby
 
@@ -28,6 +27,7 @@ mirahc -c $CP -d $OUTDIR testing/SimpleDuby.duby
 
 mirahc -c $CP -d $OUTDIR stdlib/array.duby
 mirahc -c $CP -d $OUTDIR stdlib/io.duby
+mirahc -c $CP -d $OUTDIR stdlib/ha.duby
 javac -classpath $CP -d $OUTDIR dubious/ScopedParameterMap.java
 javac -classpath $CP -d $OUTDIR dubious/Inflection.java
 
