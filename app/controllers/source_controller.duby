@@ -1,7 +1,7 @@
 import java.lang.System
 import java.io.File
 import stdlib.Array
-import stdlib.IO
+import stdlib.Io
 
 class SourceController < ApplicationController
 
@@ -18,7 +18,7 @@ class SourceController < ApplicationController
       if @path.matches "^\/public\/.+\.(ico|gif|jpe?g|png)$"
         response.sendRedirect @path.substring(7, @path.length); nil
       else
-        @content = node.isFile ? IO.read(node) : 'Sorry, no file'
+        @content = node.isFile ? Io.read(node) : 'Sorry, no file'
         response.getWriter.write(show_erb)
       end
     end
