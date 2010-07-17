@@ -10,10 +10,10 @@ import java.net.URI
 class ActionController < HttpServlet
 
   # expect URI, String or Integer
-  def index;  returns Object; Integer.valueOf(404); end
-  def show;   returns Object; Integer.valueOf(404); end
-  def new;    returns Object; Integer.valueOf(404); end
-  def edit;   returns Object; Integer.valueOf(404); end
+  def index; returns Object; Integer.valueOf(404); end
+  def show; returns Object; Integer.valueOf(404); end
+  def new; returns Object; Integer.valueOf(404); end
+  def edit; returns Object; Integer.valueOf(404); end
   def delete; returns Object; Integer.valueOf(404); end
   def create; returns Object; Integer.valueOf(404); end
   def update; returns Object; Integer.valueOf(404); end
