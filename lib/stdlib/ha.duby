@@ -7,7 +7,7 @@ import java.util.HashMap
 class Ha
   def self.sh(list:List)
     m = HashMap.new
-    k = v = ""
+    k = ""
     list.size.times do |i|
       if k.equals("")
         k = String(list.get(i))
@@ -19,3 +19,9 @@ class Ha
     m
   end
 end
+
+__END__
+
+$ mirah -e 'import stdlib.Ha
+puts Ha.sh ["color", "red", "size", "XL", "parrern", "camouflage"]'
+{color=red, parrern=camouflage, size=XL}
