@@ -1,0 +1,27 @@
+=Dubious Roadmap
+
+We want developers to be able to merge Mirah code into existing Rails apps,
+so we should try to follow Rails conventions whenever possible. We also want
+developers to be able to create stand-alone Dubious apps. Here is the list
+of features I see as most critical.
+
+* Cookie-based sessions with support for flash[:notice]
+* Create and Validate csrf tokens (some plumbing in place)
+* Rake task for continuous build and integrated testing tools
+* Packaging system (we could use gems that include jar files)
+* Generators for scaffold (as well as controllers and models)
+* Command to generate a new dubious app
+* Strategy to generate/publics documentation
+
+==Mirah Features
+
+We also need some new features from Mirah and MirahModel
+
+====MirahModel
+* Validations starting with syntax for :required => true
+* Integrated JSON support for: respons_to :json
+
+====Mirah
+* Support for Hash Literals and symbols
+* Ability to add new methods to Java classes
+* Strategy to generate/publics documentation
