@@ -1,6 +1,7 @@
 import com.google.appengine.ext.duby.db.Model
 import javax.servlet.http.*
 import java.util.regex.Pattern
+import java.util.Arrays
 import java.util.HashMap
 import dubious.Params
 import dubious.FormHelper
@@ -128,15 +129,27 @@ class ActionController < HttpServlet
   # mail_to
   # url_for
 
-  def link_to(name:String, options:String)
-     "<a href=\"#{options}\">#{name}</a>"
+  def content_tag(name:String, value:String, map:HashMap)
+    sb = StringBuilder.new("<#{name}")
+    keys = map.keySet.toArray; Arrays.sort(keys)
+    keys.each { |k| sb.append(" #{k}=\"#{map.get(k)}\"") }
+    tail = value.nil? ? " />" : ">#{value}</#{name}>"
+    sb.append(tail)
+    sb.toString
   end
 
-  def link_to(name:String, map:HashMap)
-    sb = StringBuilder.new("<a")
-    map.keySet.each { |key| sb.append(" #{key}=\"#{map.get(key)}\"") }
-    sb.append(">#{name}</a>")
-    sb.toString
+  def tag(name:String, map:HashMap)
+    content_tag(name, nil, map)
+  end
+
+  def link_to(value:String, url:String)
+    options = HashMap.new
+    options.put("href", url)
+    content_tag("a", value, options)
+  end
+
+  def link_to(value:String, options:HashMap)
+    content_tag("a", value, options)
   end
 
   # ActionView::Helpers::AssetTagHelper
@@ -144,29 +157,68 @@ class ActionController < HttpServlet
   # auto_discovery_link_tag
   # cache_asset_timestamps
   # cache_asset_timestamps=
-  # image_path
-  # image_tag
-  # javascript_path
   # path_to_image
   # path_to_javascript
   # path_to_stylesheet
   # register_javascript_expansion
   # register_javascript_include_default
   # register_stylesheet_expansion
-  # stylesheet_path
+
+
+  def stifle_cache(source:String)
+    source += "?#{File.new("public#{source}").lastModified}"
+  end
+
+  def image_path(source:String)
+    source = "/images/#{source}" unless source.startsWith('/')
+    stifle_cache(source)
+  end
+
+  def javascript_path(source:String)
+    source += ".js" unless source.endsWith(".js")
+    source = "/javascripts/#{source}" unless source.startsWith('/')
+    stifle_cache(source)
+  end
+
+  def stylesheet_path(source:String)
+    source += ".css" unless source.endsWith(".css")
+    source = "/stylesheets/#{source}" unless source.startsWith('/')
+    stifle_cache(source)
+  end
+
+  def image_tag(source:String, options:HashMap)
+    options.put("src", image_path(source))
+    options.put("alt", "") unless options.containsKey("alt")
+    if options.containsKey("size") &&
+        String(options.get("size")).matches("\\d+x\\d+")
+      values = String(options.get("size")).split("x")
+      options.put("width", values[0])
+      options.put("height", values[1])
+      options.remove("size") 
+    end
+    tag("img", options)
+  end
+
+  def image_tag(source:String)
+    image_tag(source, HashMap.new)
+  end
 
   def javascript_include_tag(text:String)
-    src = text.startsWith("http") ? text : "/javascripts/#{text}"
-    src += ".js" unless src.endsWith(".js")
-    src += "?#{File.new("public#{src}").lastModified}" unless
-        src.startsWith("http")
-    "<script src=\"#{src}\" type=\"text/javascript\"></script>"
+    text = javascript_path(text) unless text.startsWith("http")
+    options = HashMap.new
+    options.put("src", text)
+    options.put("type", "text/javascript")
+    content_tag("script", "", options)
   end
 
   def stylesheet_link_tag(text:String)
-    stamp = File.new("public/stylesheets/#{text}.css").lastModified
-    "<link href=\"/stylesheets/#{text}.css?#{stamp}\" " +
-    'media="screen" rel="stylesheet" type="text/css" />'
+    text = stylesheet_path(text) unless text.startsWith("http")
+    options = HashMap.new
+    options.put("href", text)
+    options.put("rel", "stylesheet")
+    options.put("type", "text/css")
+    options.put("media", "screen")
+    tag("link", options)
   end
 
   # escape special characters

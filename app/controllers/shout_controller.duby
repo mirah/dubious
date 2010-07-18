@@ -1,5 +1,6 @@
 import com.google.appengine.api.datastore.Text
 import com.google.appengine.ext.duby.db.Model
+import java.util.HashMap
 
 class Shout < Model
   property 'title', String
