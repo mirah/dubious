@@ -108,9 +108,9 @@ public class ActionController extends javax.servlet.http.HttpServlet {
   public dubious.FormHelper form_for(com.google.appengine.ext.duby.db.Model model) {
     return new dubious.FormHelper(model, this.params());
   }
-  public java.lang.String tag(java.lang.String name, java.lang.String value, java.util.HashMap map) {
+  public java.lang.String tag(java.lang.String name, java.lang.String value, java.util.HashMap options, boolean open, boolean escape) {
     java.lang.StringBuilder sb = new java.lang.StringBuilder("<" + name);
-    java.lang.Object[] keys = map.keySet().toArray();
+    java.lang.Object[] keys = options.keySet().toArray();
     java.util.Arrays.sort(keys);
     int __xform_tmp_4 = 0;
     java.lang.Object[] __xform_tmp_5 = keys;
@@ -119,27 +119,52 @@ public class ActionController extends javax.servlet.http.HttpServlet {
       java.lang.Object k = __xform_tmp_5[__xform_tmp_4];
       label2:
        {
-        sb.append(" " + k + "=\"" + map.get(k) + "\"");
+        sb.append(" " + k + "=\"" + options.get(k) + "\"");
       }
       __xform_tmp_4 = (__xform_tmp_4 + 1);
     }
-    java.lang.String tail = (value == null) ? (" />") : (">" + value + "</" + name + ">");
-    sb.append(tail);
+    if ((value == null)) {
+      sb.append(open ? (">") : (" />"));
+    }
+    else {
+      sb.append(">" + escape ? (this.h(value)) : (value) + "</" + name + ">");
+    }
     return sb.toString();
   }
-  public java.lang.String tag(java.lang.String name, java.util.HashMap map) {
-    return this.tag(name, null, map);
+  public java.lang.String tag(java.lang.String name, java.util.HashMap options, boolean open, boolean escape) {
+    return this.tag(name, null, options, open, escape);
   }
-  public java.lang.String content_tag(java.lang.String name, java.lang.String value, java.util.HashMap map) {
-    return this.tag(name, value, map);
+  public java.lang.String tag(java.lang.String name, java.util.HashMap options, boolean open) {
+    return this.tag(name, null, options, open, true);
+  }
+  public java.lang.String tag(java.lang.String name, java.util.HashMap options) {
+    return this.tag(name, null, options, false, true);
+  }
+  public java.lang.String tag(java.lang.String name) {
+    return this.tag(name, null, new java.util.HashMap(), false, true);
+  }
+  public java.lang.String content_tag(java.lang.String name, java.lang.String value, java.util.HashMap options, boolean open, boolean escape) {
+    return this.tag(name, value, options, false, true);
+  }
+  public java.lang.String content_tag(java.lang.String name, java.lang.String value, java.util.HashMap options, boolean open) {
+    return this.tag(name, value, options, open, true);
+  }
+  public java.lang.String content_tag(java.lang.String name, java.lang.String value, java.util.HashMap options) {
+    return this.tag(name, value, options, false, true);
+  }
+  public java.lang.String content_tag(java.lang.String name, java.lang.String value) {
+    return this.tag(name, value, new java.util.HashMap(), false, true);
+  }
+  public java.lang.String content_tag(java.lang.String name) {
+    return this.tag(name, "", new java.util.HashMap(), false, true);
   }
   public java.lang.String link_to(java.lang.String value, java.lang.String url) {
     java.util.HashMap options = new java.util.HashMap();
     options.put("href", url);
-    return this.tag("a", value, options);
+    return this.content_tag("a", value, options);
   }
   public java.lang.String link_to(java.lang.String value, java.util.HashMap options) {
-    return this.tag("a", value, options);
+    return this.content_tag("a", value, options);
   }
   public java.lang.String add_asset_timestamp(java.lang.String source) {
     return this.asset_timestamps_cache.get(source);
@@ -205,7 +230,7 @@ public class ActionController extends javax.servlet.http.HttpServlet {
     java.util.HashMap options = new java.util.HashMap();
     options.put("src", text);
     options.put("type", "text/javascript");
-    return this.tag("script", "", options);
+    return this.content_tag("script", "", options);
   }
   public java.lang.String stylesheet_link_tag(java.lang.String text) {
     if (text.startsWith("http")) {

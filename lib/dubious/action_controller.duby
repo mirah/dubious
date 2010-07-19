@@ -120,6 +120,63 @@ class ActionController < HttpServlet
     FormHelper.new(model, params)
   end
 
+  # ActionView::Helpers::TagHelper
+  #
+  # cdata_section
+  # escape_once
+
+  # tag() and content_tag() are now the same method
+  # pass nil (instead of an empty string) to get tag()
+  def tag(name:String, value:String, options:HashMap,
+          open:boolean, escape:boolean)
+    sb = StringBuilder.new("<#{name}")
+    keys = options.keySet.toArray; Arrays.sort(keys)
+    keys.each { |k| sb.append(" #{k}=\"#{options.get(k)}\"") }
+    if value.nil?
+      sb.append(open ? ">" : " />")
+    else
+      sb.append(">#{escape ? h(value) : value}</#{name}>")
+    end
+    sb.toString
+  end
+
+  def tag(name:String, options:HashMap, open:boolean, escape:boolean)
+    tag(name, nil, options, open, escape)
+  end
+
+  def tag(name:String, options:HashMap, open:boolean)
+    tag(name, nil, options, open, true)
+  end
+
+  def tag(name:String, options:HashMap)
+    tag(name, nil, options, false, true)
+  end
+
+  def tag(name:String)
+    tag(name, nil, HashMap.new, false, true)
+  end
+
+  def content_tag(name:String, value:String, options:HashMap,
+                  open:boolean, escape:boolean)
+    tag(name, value, options, false, true)
+  end
+
+  def content_tag(name:String, value:String, options:HashMap, open:boolean)
+    tag(name, value, options, open, true)
+  end
+
+  def content_tag(name:String, value:String, options:HashMap)
+    tag(name, value, options, false, true)
+  end
+
+  def content_tag(name:String, value:String)
+    tag(name, value, HashMap.new, false, true)
+  end
+
+  def content_tag(name:String)
+    tag(name, "", HashMap.new, false, true)
+  end
+
   # ActionView::Helpers::UrlHelper
   #
   # button_to
@@ -130,34 +187,14 @@ class ActionController < HttpServlet
   # mail_to
   # url_for
 
-
-  # tag() and content_tag() are now the same method
-  # pass nil (instead of an empty string) to get tag()
-  def tag(name:String, value:String, map:HashMap)
-    sb = StringBuilder.new("<#{name}")
-    keys = map.keySet.toArray; Arrays.sort(keys)
-    keys.each { |k| sb.append(" #{k}=\"#{map.get(k)}\"") }
-    tail = value.nil? ? " />" : ">#{value}</#{name}>"
-    sb.append(tail)
-    sb.toString
-  end
-
-  def tag(name:String, map:HashMap)
-    tag(name, nil, map)
-  end
-
-  def content_tag(name:String, value:String, map:HashMap)
-    tag(name, value, map)
-  end
-
   def link_to(value:String, url:String)
     options = HashMap.new
     options.put("href", url)
-    tag("a", value, options)
+    content_tag("a", value, options)
   end
 
   def link_to(value:String, options:HashMap)
-    tag("a", value, options)
+    content_tag("a", value, options)
   end
 
   # ActionView::Helpers::AssetTagHelper
@@ -216,7 +253,7 @@ class ActionController < HttpServlet
     options = HashMap.new
     options.put("src", text)
     options.put("type", "text/javascript")
-    tag("script", "", options)
+    content_tag("script", "", options)
   end
 
   def stylesheet_link_tag(text:String)
