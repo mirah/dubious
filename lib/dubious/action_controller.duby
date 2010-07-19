@@ -1,4 +1,5 @@
 import com.google.appengine.ext.duby.db.Model
+import javax.servlet.ServletConfig
 import javax.servlet.http.*
 import java.util.regex.Pattern
 import java.util.Arrays
@@ -129,7 +130,10 @@ class ActionController < HttpServlet
   # mail_to
   # url_for
 
-  def content_tag(name:String, value:String, map:HashMap)
+
+  # tag() and content_tag() are now the same method
+  # pass nil (instead of an empty string) to get tag()
+  def tag(name:String, value:String, map:HashMap)
     sb = StringBuilder.new("<#{name}")
     keys = map.keySet.toArray; Arrays.sort(keys)
     keys.each { |k| sb.append(" #{k}=\"#{map.get(k)}\"") }
@@ -139,24 +143,28 @@ class ActionController < HttpServlet
   end
 
   def tag(name:String, map:HashMap)
-    content_tag(name, nil, map)
+    tag(name, nil, map)
+  end
+
+  def content_tag(name:String, value:String, map:HashMap)
+    tag(name, value, map)
   end
 
   def link_to(value:String, url:String)
     options = HashMap.new
     options.put("href", url)
-    content_tag("a", value, options)
+    tag("a", value, options)
   end
 
   def link_to(value:String, options:HashMap)
-    content_tag("a", value, options)
+    tag("a", value, options)
   end
 
   # ActionView::Helpers::AssetTagHelper
   #
-  # auto_discovery_link_tag
   # cache_asset_timestamps
   # cache_asset_timestamps=
+  # auto_discovery_link_tag
   # path_to_image
   # path_to_javascript
   # path_to_stylesheet
@@ -164,26 +172,26 @@ class ActionController < HttpServlet
   # register_javascript_include_default
   # register_stylesheet_expansion
 
-
-  def stifle_cache(source:String)
-    source += "?#{File.new("public#{source}").lastModified}"
+  # always use AssetTimestampsCache
+  def add_asset_timestamp(source:String)
+    @asset_timestamps_cache.get(source)
   end
 
   def image_path(source:String)
     source = "/images/#{source}" unless source.startsWith('/')
-    stifle_cache(source)
+    add_asset_timestamp(source)
   end
 
   def javascript_path(source:String)
     source += ".js" unless source.endsWith(".js")
     source = "/javascripts/#{source}" unless source.startsWith('/')
-    stifle_cache(source)
+    add_asset_timestamp(source)
   end
 
   def stylesheet_path(source:String)
     source += ".css" unless source.endsWith(".css")
     source = "/stylesheets/#{source}" unless source.startsWith('/')
-    stifle_cache(source)
+    add_asset_timestamp(source)
   end
 
   def image_tag(source:String, options:HashMap)
@@ -208,7 +216,7 @@ class ActionController < HttpServlet
     options = HashMap.new
     options.put("src", text)
     options.put("type", "text/javascript")
-    content_tag("script", "", options)
+    tag("script", "", options)
   end
 
   def stylesheet_link_tag(text:String)
@@ -221,10 +229,15 @@ class ActionController < HttpServlet
     tag("link", options)
   end
 
+  # init the servlet
+
+  def init(config:ServletConfig)
+    @asset_timestamps_cache = AssetTimestampsCache.new
+  end
+
   # escape special characters
 
-  def self.initialize
-    returns :void
+  def self.initialize; returns :void
     @escape_pattern = Pattern.compile("[<>&'\"]")
     @escaped = HashMap.new
     @escaped.put("<", "&lt;")

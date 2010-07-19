@@ -3,6 +3,7 @@ package dubious;
 public class ActionController extends javax.servlet.http.HttpServlet {
   private dubious.Params params_obj;
   private java.lang.String flash_str;
+  private dubious.AssetTimestampsCache asset_timestamps_cache;
   private static java.util.regex.Pattern escape_pattern;
   private static java.util.HashMap escaped;
   public static void main(java.lang.String[] argv) {
@@ -107,7 +108,7 @@ public class ActionController extends javax.servlet.http.HttpServlet {
   public dubious.FormHelper form_for(com.google.appengine.ext.duby.db.Model model) {
     return new dubious.FormHelper(model, this.params());
   }
-  public java.lang.String content_tag(java.lang.String name, java.lang.String value, java.util.HashMap map) {
+  public java.lang.String tag(java.lang.String name, java.lang.String value, java.util.HashMap map) {
     java.lang.StringBuilder sb = new java.lang.StringBuilder("<" + name);
     java.lang.Object[] keys = map.keySet().toArray();
     java.util.Arrays.sort(keys);
@@ -127,18 +128,21 @@ public class ActionController extends javax.servlet.http.HttpServlet {
     return sb.toString();
   }
   public java.lang.String tag(java.lang.String name, java.util.HashMap map) {
-    return this.content_tag(name, null, map);
+    return this.tag(name, null, map);
+  }
+  public java.lang.String content_tag(java.lang.String name, java.lang.String value, java.util.HashMap map) {
+    return this.tag(name, value, map);
   }
   public java.lang.String link_to(java.lang.String value, java.lang.String url) {
     java.util.HashMap options = new java.util.HashMap();
     options.put("href", url);
-    return this.content_tag("a", value, options);
+    return this.tag("a", value, options);
   }
   public java.lang.String link_to(java.lang.String value, java.util.HashMap options) {
-    return this.content_tag("a", value, options);
+    return this.tag("a", value, options);
   }
-  public java.lang.String stifle_cache(java.lang.String source) {
-    return (source = (source + "?" + new java.io.File("public" + source).lastModified()));
+  public java.lang.String add_asset_timestamp(java.lang.String source) {
+    return this.asset_timestamps_cache.get(source);
   }
   public java.lang.String image_path(java.lang.String source) {
     if (source.startsWith("/")) {
@@ -146,7 +150,7 @@ public class ActionController extends javax.servlet.http.HttpServlet {
     else {
       source = "/images/" + source;
     }
-    return this.stifle_cache(source);
+    return this.add_asset_timestamp(source);
   }
   public java.lang.String javascript_path(java.lang.String source) {
     if (source.endsWith(".js")) {
@@ -159,7 +163,7 @@ public class ActionController extends javax.servlet.http.HttpServlet {
     else {
       source = "/javascripts/" + source;
     }
-    return this.stifle_cache(source);
+    return this.add_asset_timestamp(source);
   }
   public java.lang.String stylesheet_path(java.lang.String source) {
     if (source.endsWith(".css")) {
@@ -172,7 +176,7 @@ public class ActionController extends javax.servlet.http.HttpServlet {
     else {
       source = "/stylesheets/" + source;
     }
-    return this.stifle_cache(source);
+    return this.add_asset_timestamp(source);
   }
   public java.lang.String image_tag(java.lang.String source, java.util.HashMap options) {
     options.put("src", this.image_path(source));
@@ -201,7 +205,7 @@ public class ActionController extends javax.servlet.http.HttpServlet {
     java.util.HashMap options = new java.util.HashMap();
     options.put("src", text);
     options.put("type", "text/javascript");
-    return this.content_tag("script", "", options);
+    return this.tag("script", "", options);
   }
   public java.lang.String stylesheet_link_tag(java.lang.String text) {
     if (text.startsWith("http")) {
@@ -215,6 +219,9 @@ public class ActionController extends javax.servlet.http.HttpServlet {
     options.put("type", "text/css");
     options.put("media", "screen");
     return this.tag("link", options);
+  }
+  public void init(javax.servlet.ServletConfig config) throws javax.servlet.ServletException {
+    this.asset_timestamps_cache = new dubious.AssetTimestampsCache();
   }
   public static void <clinit>() {
     ActionController.escape_pattern = java.util.regex.Pattern.compile("[<>&'\"]");
