@@ -36,58 +36,79 @@ LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
 LIB_CLASSES = class_files_for LIB_SRC
 STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'} 
 
-file "build/dubious/ActionController.class" => ["build/dubious/Params.class","build/dubious/FormHelper.class"]
+file "build/dubious/ActionController.class" => ["build/dubious/Params.class","build/dubious/FormHelper.class", "build/dubious/AssetTimestampsCache.class"]
 file "build/dubious/Inflections.class" => "build/dubious/Inflection.class"
 file "build/dubious/FormHelper.class" => ["build/dubious/Inflections.class",*STDLIB_CLASSES]
 file "build/dubious/Params.class" => "build/dubious/ScopedParameterMap.class"
+
 APP_CONTROLLER_CLASSES.each do |f|
   file f => APP_MODEL_CLASSES
 end
 
-def mirahc source
+APP_CLASSES.each do |f|
+  file f => LIB_CLASSES
+end
+
+def my_mirahc source
   sh "mirahc -c #{CP} -d #{OUTDIR} #{source}"
 end
 
-def mirahc_j src
+def my_mirahc_j src
   "mirahc -c #{CP} -j #{src}"
 end
 
-def javac source
+def my_javac source
   sh "javac -classpath #{CP} -d #{OUTDIR} #{source}"
 end
 
+API_JARS=["appengine-api-1.0-sdk-1.3.5.jar",
+	  "appengine-api-labs-1.3.5.jar",
+	  "dubydatastore.jar",
+	  "appengine-api.jar"]
 
-JARS = {  "#{WEB_INF_LIB}/application.jar" => FileList['models/*','controllers/*'],
-      "#{WEB_INF_LIB}/dubious.jar" => FileList['testing/*','dubious/*','stdlib/*']
+API_JARS.each { |j| file j => :move_jars } 
+
+JARS = {  "#{WEB_INF_LIB}/application.jar" => APP_CLASSES,
+      "#{WEB_INF_LIB}/dubious.jar" => LIB_CLASSES
 }
 
+directory OUTDIR
+directory WEB_INF_LIB
 
-task :init do
-  mkdir_p OUTDIR
-  mkdir_p WEB_INF_LIB
-  sh 'script/environment.rb'
+task :move_jars do
+ sh 'script/environment.rb'
 end
 
 namespace :compile do
   task :app => [:dubious, *APP_CLASSES]
-  task :dubious => [:init, *LIB_CLASSES]
+  task :dubious => API_JARS + LIB_CLASSES
 end
 
 desc "compile app"
 task :compile => 'compile:app'
 
-task 'build/models/*' => 'compile:app'
-task 'build/controllers/*' => 'compile:app'
-
-task 'build/testing/*' => 'compile:dubious'
-task 'build/dubious/*' => 'compile:dubious'
-task 'build/stdlib/*'  => 'compile:dubious'
-
 desc "creates jars"
-task :jars => :compile do
-  Dir.chdir OUTDIR do   
-    JARS.each do |jar,deps|
-      sh "jar -cf #{jar} #{deps.join(' ')}"
+task :jars => JARS.keys
+
+JARS.each do |jar, deps|
+  file jar => [WEB_INF_LIB,*deps] do
+    chdir OUTDIR do
+      sh "jar -cf #{jar} #{ deps.map{|d|d.sub 'build/',''}.join(' ')}"
+    end
+  end
+end
+  
+
+(LIB_SRC+APP_SRC).zip(LIB_CLASSES+APP_CLASSES).each do |src,obj|
+  file obj => [OUTDIR, *API_JARS]
+  file obj => src do |t|
+    m = t.prerequisites.find{ |s| s =~ /.*\.(duby|mirah)$/}
+    Dir.chdir src.split('/').first do
+      if m
+	my_mirahc m.pathmap.sub /^[^\/]+\//,''
+      else
+	my_javac t.prerequisites.select{|s| s =~ /.*\.java$/}.first.sub /^[^\/]+\//,''
+      end
     end
   end
 end
@@ -173,23 +194,12 @@ if defined? JRuby
   end
 
   appengine_app :app, 'app',''
-  Rake::Task[:app].enhance(APP_CLASSES)
+  Rake::Task[:app].enhance(JARS.keys)
+  Rake::Task[:app].enhance(APP_CLASSES+LIB_CLASSES)
+
   task :default => :server
 
 else # if mri
-
-  (LIB_SRC+APP_SRC).zip(LIB_CLASSES+APP_CLASSES).each do |src,obj|
-    file obj => src do |t|
-      m = t.prerequisites.find{ |s| s =~ /.*\.(duby|mirah)$/}
-      Dir.chdir src.split('/').first do
-	if m
-	  mirahc m.pathmap.sub /^[^\/]+\//,''
-	else
-	  javac t.prerequisites.first.sub /^[^\/]+\//,''
-	end
-      end
-    end
-  end
 
   desc "starts the dev server"
   task :server do
