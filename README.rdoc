@@ -58,14 +58,11 @@ Until be have generators, just start by altering the main dubious app.
 
    cd ~/mystuff/dubious
 
-When you create a new Mirah file, you needs to add it the the build script
-Run the build script whenever you modify a Mirah or ERb file. 
-
-   rake jars
-
 Now run the app locally
 
    rake server
+
+If you are using jruby's rake, the task will watch for source file changes and update the running class files. Otherwise, you need to restart the server when you have changes.
 
 Edit the app-id in app.yaml, then publish to appspot.com
 
