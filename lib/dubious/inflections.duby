@@ -27,10 +27,10 @@ class Inflections
   end
 
   def self.titleize(phrase:String)
-    StringBuffer sb = StringBuffer.new
-    StringTokenizer strTitleCase = StringTokenizer.new(phrase.toLowerCase)
+    sb = StringBuffer.new
+    strTitleCase = StringTokenizer.new(phrase.toLowerCase)
     while strTitleCase.hasMoreTokens
-      String s = strTitleCase.nextToken
+      s = strTitleCase.nextToken
       sb.append(s.replaceFirst(s.substring(0, 1),
           s.substring(0, 1).toUpperCase) + " ")
     end

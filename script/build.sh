@@ -30,7 +30,7 @@ mirahc -c $CP -d $OUTDIR stdlib/io.duby
 mirahc -c $CP -d $OUTDIR stdlib/ha.duby
 javac -classpath $CP -d $OUTDIR dubious/ScopedParameterMap.java
 javac -classpath $CP -d $OUTDIR dubious/Inflection.java
-
+mirahc -c $CP -d $OUTDIR dubious/asset_timestamps_cache.duby
 mirahc -c $CP -d $OUTDIR dubious/inflections.duby
 mirahc -c $CP -d $OUTDIR dubious/time_conversion.duby
 mirahc -c $CP -d $OUTDIR dubious/text_helper.duby

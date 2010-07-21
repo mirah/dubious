@@ -3,6 +3,7 @@ package dubious;
 public class ActionController extends javax.servlet.http.HttpServlet {
   private dubious.Params params_obj;
   private java.lang.String flash_str;
+  private dubious.AssetTimestampsCache asset_timestamps_cache;
   private static java.util.regex.Pattern escape_pattern;
   private static java.util.HashMap escaped;
   public static void main(java.lang.String[] argv) {
@@ -107,40 +108,145 @@ public class ActionController extends javax.servlet.http.HttpServlet {
   public dubious.FormHelper form_for(com.google.appengine.ext.duby.db.Model model) {
     return new dubious.FormHelper(model, this.params());
   }
-  public java.lang.String link_to(java.lang.String name, java.lang.String options) {
-    return "<a href=\"" + options + "\">" + name + "</a>";
-  }
-  public java.lang.String link_to(java.lang.String name, java.util.HashMap map) {
-    java.lang.StringBuilder sb = new java.lang.StringBuilder("<a");
-    java.util.Iterator __xform_tmp_4 = map.keySet().iterator();
+  public java.lang.String tag(java.lang.String name, java.lang.String value, java.util.HashMap options, boolean open, boolean escape) {
+    java.lang.StringBuilder sb = new java.lang.StringBuilder("<" + name);
+    java.lang.Object[] keys = options.keySet().toArray();
+    java.util.Arrays.sort(keys);
+    int __xform_tmp_4 = 0;
+    java.lang.Object[] __xform_tmp_5 = keys;
     label1:
-    while (__xform_tmp_4.hasNext()) {
-      java.lang.Object key = __xform_tmp_4.next();
+    while ((__xform_tmp_4 < __xform_tmp_5.length)) {
+      java.lang.Object k = __xform_tmp_5[__xform_tmp_4];
       label2:
        {
-        sb.append(" " + key + "=\"" + map.get(key) + "\"");
+        sb.append(" " + k + "=\"" + options.get(k) + "\"");
       }
+      __xform_tmp_4 = (__xform_tmp_4 + 1);
     }
-    sb.append(">" + name + "</a>");
+    if ((value == null)) {
+      sb.append(open ? (">") : (" />"));
+    }
+    else {
+      sb.append(">" + escape ? (this.h(value)) : (value) + "</" + name + ">");
+    }
     return sb.toString();
   }
+  public java.lang.String tag(java.lang.String name, java.util.HashMap options, boolean open, boolean escape) {
+    return this.tag(name, null, options, open, escape);
+  }
+  public java.lang.String tag(java.lang.String name, java.util.HashMap options, boolean open) {
+    return this.tag(name, null, options, open, true);
+  }
+  public java.lang.String tag(java.lang.String name, java.util.HashMap options) {
+    return this.tag(name, null, options, false, true);
+  }
+  public java.lang.String tag(java.lang.String name) {
+    return this.tag(name, null, new java.util.HashMap(), false, true);
+  }
+  public java.lang.String content_tag(java.lang.String name, java.lang.String value, java.util.HashMap options, boolean open, boolean escape) {
+    return this.tag(name, value, options, false, true);
+  }
+  public java.lang.String content_tag(java.lang.String name, java.lang.String value, java.util.HashMap options, boolean open) {
+    return this.tag(name, value, options, open, true);
+  }
+  public java.lang.String content_tag(java.lang.String name, java.lang.String value, java.util.HashMap options) {
+    return this.tag(name, value, options, false, true);
+  }
+  public java.lang.String content_tag(java.lang.String name, java.lang.String value) {
+    return this.tag(name, value, new java.util.HashMap(), false, true);
+  }
+  public java.lang.String content_tag(java.lang.String name) {
+    return this.tag(name, "", new java.util.HashMap(), false, true);
+  }
+  public java.lang.String link_to(java.lang.String value, java.lang.String url) {
+    java.util.HashMap options = new java.util.HashMap();
+    options.put("href", url);
+    return this.content_tag("a", value, options);
+  }
+  public java.lang.String link_to(java.lang.String value, java.util.HashMap options) {
+    return this.content_tag("a", value, options);
+  }
+  public java.lang.String add_asset_timestamp(java.lang.String source) {
+    return this.asset_timestamps_cache.get(source);
+  }
+  public java.lang.String image_path(java.lang.String source) {
+    if (source.startsWith("/")) {
+    }
+    else {
+      source = "/images/" + source;
+    }
+    return this.add_asset_timestamp(source);
+  }
+  public java.lang.String javascript_path(java.lang.String source) {
+    if (source.endsWith(".js")) {
+    }
+    else {
+      source = (source + ".js");
+    }
+    if (source.startsWith("/")) {
+    }
+    else {
+      source = "/javascripts/" + source;
+    }
+    return this.add_asset_timestamp(source);
+  }
+  public java.lang.String stylesheet_path(java.lang.String source) {
+    if (source.endsWith(".css")) {
+    }
+    else {
+      source = (source + ".css");
+    }
+    if (source.startsWith("/")) {
+    }
+    else {
+      source = "/stylesheets/" + source;
+    }
+    return this.add_asset_timestamp(source);
+  }
+  public java.lang.String image_tag(java.lang.String source, java.util.HashMap options) {
+    options.put("src", this.image_path(source));
+    if (options.containsKey("alt")) {
+    }
+    else {
+      options.put("alt", "");
+    }
+    if (options.containsKey("size") ? (((java.lang.String)(options.get("size"))).matches("\\d+x\\d+")) : (false)) {
+      java.lang.String[] values = ((java.lang.String)(options.get("size"))).split("x");
+      options.put("width", values[0]);
+      options.put("height", values[1]);
+      options.remove("size");
+    }
+    return this.tag("img", options);
+  }
+  public java.lang.String image_tag(java.lang.String source) {
+    return this.image_tag(source, new java.util.HashMap());
+  }
   public java.lang.String javascript_include_tag(java.lang.String text) {
-    java.lang.String src = text.startsWith("http") ? (text) : ("/javascripts/" + text);
-    if (src.endsWith(".js")) {
+    if (text.startsWith("http")) {
     }
     else {
-      src = (src + ".js");
+      text = this.javascript_path(text);
     }
-    if (src.startsWith("http")) {
-    }
-    else {
-      src = (src + "?" + new java.io.File("public" + src).lastModified());
-    }
-    return "<script src=\"" + src + "\" type=\"text/javascript\"></script>";
+    java.util.HashMap options = new java.util.HashMap();
+    options.put("src", text);
+    options.put("type", "text/javascript");
+    return this.content_tag("script", "", options);
   }
   public java.lang.String stylesheet_link_tag(java.lang.String text) {
-    long stamp = new java.io.File("public/stylesheets/" + text + ".css").lastModified();
-    return ("<link href=\"/stylesheets/" + text + ".css?" + stamp + "\" " + "media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />");
+    if (text.startsWith("http")) {
+    }
+    else {
+      text = this.stylesheet_path(text);
+    }
+    java.util.HashMap options = new java.util.HashMap();
+    options.put("href", text);
+    options.put("rel", "stylesheet");
+    options.put("type", "text/css");
+    options.put("media", "screen");
+    return this.tag("link", options);
+  }
+  public void init(javax.servlet.ServletConfig config) throws javax.servlet.ServletException {
+    this.asset_timestamps_cache = new dubious.AssetTimestampsCache();
   }
   public static void <clinit>() {
     ActionController.escape_pattern = java.util.regex.Pattern.compile("[<>&'\"]");
