@@ -1,6 +1,6 @@
 begin
   require 'ant'
-rescue
+rescue LoadError
   puts 'This Rakefile requires JRuby. Please use jruby -S rake.'
   exit 1
 end
