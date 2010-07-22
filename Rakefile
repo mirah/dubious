@@ -1,216 +1,138 @@
+begin
+  require 'ant'
+rescue
+  puts 'This Rakefile requires JRuby. Please use jruby -S rake.'
+  exit 1
+end
+
+if  ENV['MIRAH_HOME'] && File.exist?(ENV['MIRAH_HOME'] +'/lib/mirah.rb')
+  $: << File.expand_path(ENV['MIRAH_HOME'] +'/lib')
+end
+
+if File.exist?('../bitescript/lib/bitescript.rb')
+   $: << File.expand_path('../bitescript/lib/')
+end
+
+require 'mirah/appengine_tasks'
 require 'rake/clean'
 
-
-SDK_DIR="/usr/local/appengine-java-sdk-1.3.5"
-ENV['APPENGINE_JAVA_SDK']=SDK_DIR
-SERVLET="#{SDK_DIR}/lib/shared/geronimo-servlet_2.5_spec-1.2.jar"
-
-OUTDIR=File.expand_path 'build'
-WEB_INF_LIB= File.expand_path 'WEB-INF/lib'
-
-SDK_API="#{WEB_INF_LIB}/appengine-api-1.0-sdk-1.3.5.jar"
-LABSJAR="#{WEB_INF_LIB}/user/appengine-api-labs-1.3.5.jar"
-DBMODEL="#{WEB_INF_LIB}/dubydatastore.jar"
-CP=[SERVLET,SDK_API,OUTDIR,DBMODEL,'.'].join ':'
-
-CLEAN.include(OUTDIR)
-CLOBBER.include("#{WEB_INF_LIB}/*.jar", 'WEB-INF/appengine-generated')
+CLEAN.include('build')
+CLOBBER.include("WEB-INF/lib/*.jar", 'WEB-INF/appengine-generated')
 
 def class_files_for files
-  files.map{ |f|
+  files.map do |f|
     explode = f.split('/')[1..-1]
     explode.last.gsub!(/(^[a-z]|_[a-z])/) {|m|m.sub('_','').upcase}
     explode.last.sub! /\.(duby|java|mirah)$/, '.class'
-    OUTDIR.split('/').last + '/' + explode.join('/')
-  }
+    'build/' + explode.join('/')
+  end
 end
 
-APP_SRC = Dir["app/**/*.duby"]
+APP_SRC = Dir["app/**/{*.duby,*.mirah}"]
 APP_CLASSES = class_files_for APP_SRC
 APP_MODEL_CLASSES = APP_CLASSES.select {|app| app.include? '/models' }
 APP_CONTROLLER_CLASSES = APP_CLASSES.select {|app| app.include? '/controllers' }
+TEMPLATES = Dir["app/views/**/*.erb"]
 
+MODEL_JAR = "WEB-INF/lib/dubydatastore.jar"
 LIB_MIRAH_SRC = Dir["lib/**/*.duby"]
 LIB_JAVA_SRC  = Dir["lib/**/*.java"]
 LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
 LIB_CLASSES = class_files_for LIB_SRC
-STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'} 
 
-file "build/dubious/ActionController.class" => ["build/dubious/Params.class","build/dubious/FormHelper.class", "build/dubious/AssetTimestampsCache.class"]
+STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'}
+
+CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR].join(":")
+
+appengine_app :app, 'app', '' => ["WEB-INF/lib/application.jar",
+                                  "WEB-INF/lib/dubious.jar",
+                                  ]
+Duby.dest_paths << 'build'
+Duby.source_paths << 'lib'
+Duby.compiler_options << '--classpath' << [File.expand_path('build'),"WEB-INF/lib"].join(':')
+
+directory 'build'
+
+file "build/dubious/Inflection.class" => :'compile:java'
+file "build/dubious/ScopedParameterMap.class" => :'compile:java'
+file "build/dubious/ActionController.class" => ["build/dubious/Params.class", "build/dubious/FormHelper.class", "build/dubious/AssetTimestampsCache.class"]
 file "build/dubious/Inflections.class" => "build/dubious/Inflection.class"
-file "build/dubious/FormHelper.class" => ["build/dubious/Inflections.class",*STDLIB_CLASSES]
+file "build/dubious/FormHelper.class" => ["build/dubious/Inflections.class", *STDLIB_CLASSES]
 file "build/dubious/Params.class" => "build/dubious/ScopedParameterMap.class"
 
 APP_CONTROLLER_CLASSES.each do |f|
-  file f => APP_MODEL_CLASSES
+  file f => APP_MODEL_CLASSES + TEMPLATES
 end
 
 APP_CLASSES.each do |f|
   file f => LIB_CLASSES
 end
 
-def my_mirahc source
-  sh "mirahc -c #{CP} -d #{OUTDIR} #{source}"
-end
-
-def my_mirahc_j src
-  "mirahc -c #{CP} -j #{src}"
-end
-
-def my_javac source
-  sh "javac -classpath #{CP} -d #{OUTDIR} #{source}"
-end
-
-API_JARS=["appengine-api-1.0-sdk-1.3.5.jar",
-	  "appengine-api-labs-1.3.5.jar",
-	  "dubydatastore.jar",
-	  "appengine-api.jar"]
-
-API_JARS.each { |j| file j => :move_jars } 
-
-JARS = {  "#{WEB_INF_LIB}/application.jar" => APP_CLASSES,
-      "#{WEB_INF_LIB}/dubious.jar" => LIB_CLASSES
-}
-
-directory OUTDIR
-directory WEB_INF_LIB
-
-task :move_jars do
- sh 'script/environment.rb'
-end
-
 namespace :compile do
-  task :app => [:dubious, *APP_CLASSES]
-  task :dubious => API_JARS + LIB_CLASSES
+  task :app => [:dubious, "WEB-INF/lib/application.jar"]
+  task :dubious => "WEB-INF/lib/dubious.jar"
+  task :java => 'build' do
+    ant.javac :srcdir=>'lib', :destdir=>'build', :classpath=>CLASSPATH
+  end
 end
 
 desc "compile app"
 task :compile => 'compile:app'
 
-desc "creates jars"
-task :jars => JARS.keys
-
-JARS.each do |jar, deps|
-  file jar => [WEB_INF_LIB,*deps] do
-    chdir OUTDIR do
-      sh "jar -cf #{jar} #{ deps.map{|d|d.sub 'build/',''}.join(' ')}"
-    end
-  end
-end
-  
-
-(LIB_SRC+APP_SRC).zip(LIB_CLASSES+APP_CLASSES).each do |src,obj|
-  file obj => [OUTDIR, *API_JARS]
-  file obj => src do |t|
-    m = t.prerequisites.find{ |s| s =~ /.*\.(duby|mirah)$/}
-    Dir.chdir src.split('/').first do
-      if m
-	my_mirahc m.pathmap.sub /^[^\/]+\//,''
-      else
-	my_javac t.prerequisites.select{|s| s =~ /.*\.java$/}.first.sub /^[^\/]+\//,''
-      end
-    end
-  end
+file "WEB-INF/lib/dubious.jar" => [MODEL_JAR] + LIB_CLASSES do
+  includes = LIB_CLASSES.map {|d|d.sub 'build/',''}.join(',')
+  ant.jar :destfile=>"WEB-INF/lib/dubious.jar", :basedir=>'build',
+          :includes=>includes
 end
 
+file "WEB-INF/lib/application.jar" => APP_CLASSES do
+  includes = APP_CLASSES.map {|d|d.sub 'build/',''}.join(',')
+  ant.jar :destfile=>"WEB-INF/lib/application.jar", :basedir=>'build',
+          :includes=>includes
+end
 
-if defined? JRuby
-  if  ENV['MIRAH_HOME'] && File.exist?(ENV['MIRAH_HOME'] +'/lib/mirah.rb')
-    $: << File.expand_path(ENV['MIRAH_HOME'] +'/lib')
-  end
+task :default => :server
 
-  if File.exist?('../bitescript/lib/bitescript.rb')
-     $: << File.expand_path('../bitescript/lib/')
-  end
+MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').first.sub(/lib\/mirah.rb/,'')
+ 
+MODEL_SRC_JAR =  File.join(MIRAH_HOME, 'examples', 'appengine', 'war',
+                                 'WEB-INF', 'lib', 'dubydatastore.jar')
 
-  require 'mirah'
-  require 'mirah/appengine_tasks'
-  module AppEngine::Rake
-    class AppEngineTask < Rake::Task
-      def update
-	begin
-	  timestamp = app_yaml_timestamp
-	  @last_app_yaml_timestamp ||= timestamp
+file MODEL_JAR => MODEL_SRC_JAR do |t|
+  cp MODEL_SRC_JAR, MODEL_JAR
+end
 
-	  needed_prereqs = real_prerequisites.select { |dep| dep.needed? }
-	  needed_prereqs.each { |dep| dep.execute }
-
-	  updated = !needed_prereqs.empty? || timestamp > @last_app_yaml_timestamp
-
-	  if updated
-	    sh "touch #{@war}/WEB-INF/appengine-web.xml"
-	    @last_app_yaml_timestamp = timestamp
-	  end
-	rescue Exception
-	  puts $!, $@
-	end
-      end
-
-      def init(src, war)
-	@src = src
-	@war = war
-	unless $CLASSPATH.include?(webinf_classes)
-	  $CLASSPATH << webinf_classes
-	end
-	webinf_lib_jars.each do |jar|
-	  $CLASSPATH << jar unless $CLASSPATH.include?(jar)
-	end
-
-	Duby.compiler_options = ['-c',CP]
-	Duby.source_path = src
-	Duby.dest_path = OUTDIR
-
-	directory(webinf_classes)
-	directory(webinf_lib)
-
-	file_create api_jar => webinf_lib do
-	  puts 'Coping apis'
-	  cp APIS, api_jar
-        end
-        
-        desc "run dev server"
-        task :server => [name] do
-          check_for_updates
-          args = [
-	    'java', '-cp', TOOLS,
-	    'com.google.appengine.tools.KickStart',
-	    'com.google.appengine.tools.development.DevAppServerMain',
-	    @war
-	  ]
-	  sh *args
-	  @done = true
-	  @update_thread.join
-	end
-
-        desc "publish to appengine"
-	task :publish => [name] do
-	  Java::ComGoogleAppengineTools::AppCfg.main(
-	      ['update', @war].to_java(:string))
-	end
-
-	enhance([api_jar])
+task :generate_build_properties do
+  def git_data(dir, file='')
+    returning = nil
+    chdir dir do
+      # ["commit abc....123", "2010-06-23 12:58:06 -0700"]
+      IO.popen("git rev-list --pretty=format:%ci -1 HEAD #{file}") do |f|
+        returning = [f.gets.chomp, f.gets.chomp]
       end
     end
+    returning
   end
 
-  appengine_app :app, 'app',''
-  Rake::Task[:app].enhance(JARS.keys)
-  Rake::Task[:app].enhance(APP_CLASSES+LIB_CLASSES)
+  dubious_data = git_data(".")
+  mirah_data = git_data(MIRAH_HOME)
+  bite_data = git_data(MIRAH_HOME + '/../bitescript')
+  model_data = git_data(File.dirname(MODEL_SRC_JAR),File.basename(MODEL_SRC_JAR))
 
-  task :default => :server
-
-else # if mri
-
-  desc "starts the dev server"
-  task :server do
-    sh "dev_appserver.sh -a 0.0.0.0 ."
+  prop_file = "config/build.properties"
+  File.open(prop_file, 'w') do |f| 
+    f.write <<-EOF
+# the current build environment
+application.build.time=#{Time.now.xmlschema}
+dubious.version.commit=#{dubious_data[0][7..-1]}
+dubious.version.time=#{Time.parse(dubious_data[1]).xmlschema}
+mirah.version.commit=#{mirah_data[0][7..-1]}
+mirah.version.time=#{Time.parse(mirah_data[1]).xmlschema}
+bitescript.version.commit=#{bite_data[0][7..-1]}
+bitescript.version.time=#{Time.parse(bite_data[1]).xmlschema}
+model.version.commit=#{model_data[0][7..-1]}
+model.version.time=#{Time.parse(model_data[1]).xmlschema}
+    EOF
   end
 
-  desc "publish to app engine"
-  task :publish => :jars do
-    sh "appcfg.sh update ."
-  end
-
-  task :app => :jars
-  task :default => :server  
 end
