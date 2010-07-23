@@ -1,0 +1,28 @@
+<h1>Listing contacts</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Summary</th>
+    <th>Url</th>
+    <th>Address</th>
+    <th>Phone</th>
+  </tr>
+
+<% @contacts.each do |contact| %>
+  <tr>
+    <td><%=h contact.title %></td>
+    <td><%=h contact.summary %></td>
+    <td><%=h contact.url %></td>
+    <td><%=h contact.address %></td>
+    <td><%=h contact.phone %></td>
+    <td><%= link_to 'Show', params.show(contact.key.getId) %></td>
+    <td><%= link_to 'Edit', params.edit(contact.key.getId) %></td>
+    <td><%= link_to 'Delete', params.delete(contact.key.getId) %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New contact', params.new %>

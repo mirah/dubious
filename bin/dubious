@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require File.dirname(__FILE__) + '/../lib/dubious/cli'
+=begin
+require 'thor'
+require 'git'
+require 'yaml'
+
+class InitDubiousApp < Thor::Group
+  desc "init NAME","initialize a dubious project"
+  argument 'name'
+  include Thor::Actions
+
+
+  def mk_project_dir
+    mkdir name
+  end
+
+  def setup
+    destination_root = name
+  end
+  
+  def mk_dirs
+    in_project do
+      mkdir "app"
+      mkdir "lib"
+      mkdir "config"
+    end
+  end
+
+  def application_controller
+    in_project do
+      '...'
+    end
+  end
+
+  def readme
+    in_project do
+      copy_file "README", "
+    end
+  end
+end
+
+class Dubiousness < Thor
+  include Thor::Actions
+
+  desc "init NAME", "initialize a dubious project"
+  def init name='.'
+    Git.clone 'http://github.com/mirah/dubious.git', name
+    
+  end
+
+  def generate_controller name
+  end
+
+  def clear_app dir='.'
+    Dir.chdir dir do
+      rm_r 'app/models'
+      rm_r 'app/controllers'
+      rm_r 'app/views'
+      cfg = YAML.load_file('app.yaml')
+      cfg['handlers']=nil
+      cfg['application'] = '<changeme>'
+      File.open 'app.yaml', 'w' do |f|
+        YAML.dump cfg, f
+      end
+    end
+  end
+
+  def verify_tools
+   "which appcfg.sh
+   which dev_appserver.sh
+   which mirah
+   which jruby"
+  end
+end
+=end
+Dubious::CLI.start
