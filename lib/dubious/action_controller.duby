@@ -127,7 +127,7 @@ class ActionController < HttpServlet
 
   # tag() and content_tag() are now the same method
   # pass nil (instead of an empty string) to get tag()
-  def tag(name:String, value:String, options:HashMap,
+  def _tag(name:String, value:String, options:HashMap,
           open:boolean, escape:boolean)
     sb = StringBuilder.new("<#{name}")
     keys = options.keySet.toArray; Arrays.sort(keys)
@@ -140,41 +140,42 @@ class ActionController < HttpServlet
     sb.toString
   end
 
-  def tag(name:String, options:HashMap, open:boolean, escape:boolean)
-    tag(name, nil, options, open, escape)
+  def tag(name:String, options:HashMap,
+          open:boolean, escape:boolean)
+    _tag(name, nil, options, open, escape)
   end
 
   def tag(name:String, options:HashMap, open:boolean)
-    tag(name, nil, options, open, true)
+    _tag(name, nil, options, open, true)
   end
 
   def tag(name:String, options:HashMap)
-    tag(name, nil, options, false, true)
+    _tag(name, nil, options, false, true)
   end
 
   def tag(name:String)
-    tag(name, nil, HashMap.new, false, true)
+    _tag(name, nil, HashMap.new, false, true)
   end
 
   def content_tag(name:String, value:String, options:HashMap,
                   open:boolean, escape:boolean)
-    tag(name, value, options, false, true)
+    _tag(name, value, options, open, escape)
   end
 
   def content_tag(name:String, value:String, options:HashMap, open:boolean)
-    tag(name, value, options, open, true)
+    _tag(name, value, options, open, true)
   end
 
   def content_tag(name:String, value:String, options:HashMap)
-    tag(name, value, options, false, true)
+    _tag(name, value, options, false, true)
   end
 
   def content_tag(name:String, value:String)
-    tag(name, value, HashMap.new, false, true)
+    _tag(name, value, HashMap.new, false, true)
   end
 
   def content_tag(name:String)
-    tag(name, "", HashMap.new, false, true)
+    _tag(name, "", HashMap.new, false, true)
   end
 
   # ActionView::Helpers::UrlHelper
@@ -187,15 +188,25 @@ class ActionController < HttpServlet
   # mail_to
   # url_for
 
-  def link_to(value:String, url:String)
-    options = HashMap.new
-    options.put("href", url)
-    content_tag("a", value, options)
+  def link_to(value:String, options:HashMap, html_options:HashMap)
+    # TODO: parse options (:confirm, :popup, :method)
+    content_tag("a", value, html_options, false, false)
   end
 
   def link_to(value:String, options:HashMap)
-    content_tag("a", value, options)
+    link_to(value, options, HashMap.new)
   end
+
+  def link_to(value:String, url:String, html_options:HashMap)
+    html_options.put("href", url)
+    link_to(value, html_options, html_options)
+  end
+
+  def link_to(value:String, url:String)
+    link_to(value, url, HashMap.new)
+  end
+
+# "<a #{href_attr}#{tag_options}>#{name || url}</a>".html_safe
 
   # ActionView::Helpers::AssetTagHelper
   #
@@ -232,7 +243,8 @@ class ActionController < HttpServlet
   end
 
   def image_tag(source:String, options:HashMap)
-    options.put("src", image_path(source))
+    source = source.startsWith('http') ? source : image_path(source)
+    options.put("src", source)
     options.put("alt", "") unless options.containsKey("alt")
     if options.containsKey("size") &&
         String(options.get("size")).matches("\\d+x\\d+")

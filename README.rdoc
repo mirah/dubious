@@ -58,6 +58,10 @@ Until be have generators, just start by altering the main dubious app.
 
    cd ~/mystuff/dubious
 
+Compile the Mirah files and populate the WEB-INF/lib dir
+
+   ./script/build.sh
+
 Now run the app locally
 
    rake server
