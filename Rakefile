@@ -16,7 +16,9 @@ end
 require 'mirah/appengine_tasks'
 require 'rake/clean'
 
-CLEAN.include('build')
+OUTDIR = 'build'
+
+CLEAN.include(OUTDIR)
 CLOBBER.include("WEB-INF/lib/*.jar", 'WEB-INF/appengine-generated')
 
 def class_files_for files
@@ -24,7 +26,7 @@ def class_files_for files
     explode = f.split('/')[1..-1]
     explode.last.gsub!(/(^[a-z]|_[a-z])/) {|m|m.sub('_','').upcase}
     explode.last.sub! /\.(duby|java|mirah)$/, '.class'
-    'build/' + explode.join('/')
+    OUTDIR + '/' + explode.join('/')
   end
 end
 
@@ -47,18 +49,27 @@ CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR].join(":")
 appengine_app :app, 'app', '' => ["WEB-INF/lib/application.jar",
                                   "WEB-INF/lib/dubious.jar",
                                   ]
-Duby.dest_paths << 'build'
+
+Rake::Task[:app].enhance(APP_CLASSES+LIB_CLASSES)
+
+Duby.dest_paths << OUTDIR
 Duby.source_paths << 'lib'
-Duby.compiler_options << '--classpath' << [File.expand_path('build'),"WEB-INF/lib"].join(':')
+Duby.compiler_options << '--classpath' << [File.expand_path(OUTDIR),"WEB-INF/lib"].join(':')
 
 directory 'build'
 
-file "build/dubious/Inflection.class" => :'compile:java'
-file "build/dubious/ScopedParameterMap.class" => :'compile:java'
-file "build/dubious/ActionController.class" => ["build/dubious/Params.class", "build/dubious/FormHelper.class", "build/dubious/AssetTimestampsCache.class"]
-file "build/dubious/Inflections.class" => "build/dubious/Inflection.class"
-file "build/dubious/FormHelper.class" => ["build/dubious/Inflections.class", *STDLIB_CLASSES]
-file "build/dubious/Params.class" => "build/dubious/ScopedParameterMap.class"
+(APP_CLASSES+LIB_CLASSES).zip(APP_SRC+LIB_SRC).each do |klass,src|
+  file klass => src
+end
+
+file "#{OUTDIR}/dubious/Inflection.class" => :'compile:java'
+file "#{OUTDIR}/dubious/ScopedParameterMap.class" => :'compile:java'
+file "#{OUTDIR}/dubious/ActionController.class" => ["#{OUTDIR}/dubious/Params.class",
+                                                    "#{OUTDIR}/dubious/FormHelper.class", 
+                                                    "#{OUTDIR}/dubious/AssetTimestampsCache.class"]
+file "#{OUTDIR}/dubious/Inflections.class" => "#{OUTDIR}/dubious/Inflection.class"
+file "#{OUTDIR}/dubious/FormHelper.class" => ["#{OUTDIR}/dubious/Inflections.class", *STDLIB_CLASSES]
+file "#{OUTDIR}/dubious/Params.class" => "#{OUTDIR}/dubious/ScopedParameterMap.class"
 
 APP_CONTROLLER_CLASSES.each do |f|
   file f => APP_MODEL_CLASSES + TEMPLATES
@@ -71,24 +82,27 @@ end
 namespace :compile do
   task :app => [:dubious, "WEB-INF/lib/application.jar"]
   task :dubious => "WEB-INF/lib/dubious.jar"
-  task :java => 'build' do
-    ant.javac :srcdir=>'lib', :destdir=>'build', :classpath=>CLASSPATH
+  task :java => OUTDIR do
+    ant.javac :srcdir => 'lib', :destdir => OUTDIR, :classpath => CLASSPATH
   end
 end
+
 
 desc "compile app"
 task :compile => 'compile:app'
 
 file "WEB-INF/lib/dubious.jar" => [MODEL_JAR] + LIB_CLASSES do
-  includes = LIB_CLASSES.map {|d|d.sub 'build/',''}.join(',')
-  ant.jar :destfile=>"WEB-INF/lib/dubious.jar", :basedir=>'build',
-          :includes=>includes
+  includes =  FileList[OUTDIR+'/dubious/**/*', OUTDIR+'/stdlib/**/*', OUTDIR + '/testing/**/*'].map {|d|d.sub "#{OUTDIR}/",''}.join(',')
+  ant.jar :destfile => "WEB-INF/lib/dubious.jar", 
+          :basedir => OUTDIR,
+          :includes => includes
 end
 
 file "WEB-INF/lib/application.jar" => APP_CLASSES do
-  includes = APP_CLASSES.map {|d|d.sub 'build/',''}.join(',')
-  ant.jar :destfile=>"WEB-INF/lib/application.jar", :basedir=>'build',
-          :includes=>includes
+  includes = FileList[OUTDIR+'/controllers/**/*', OUTDIR+'/models/**/*'].map {|d|d.sub "#{OUTDIR}/",''}.join(',')
+  ant.jar :destfile => "WEB-INF/lib/application.jar", 
+          :basedir => OUTDIR,
+          :includes => includes
 end
 
 task :default => :server
