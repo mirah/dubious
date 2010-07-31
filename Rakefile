@@ -48,6 +48,12 @@ CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR].join(":")
 
 appengine_app :app, 'app', '' => APP_CLASSES+LIB_CLASSES
 
+#there is an upload task in appengine_tasks, but I couldn't get it to work
+desc "publish to appengine"
+task :publish => 'compile:app' do
+  sh "appcfg.sh update ."
+end
+
 Rake::Task[:app].enhance(APP_CLASSES+LIB_CLASSES)
 
 Duby.dest_paths << OUTDIR
