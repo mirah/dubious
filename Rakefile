@@ -16,10 +16,10 @@ end
 require 'mirah/appengine_tasks'
 require 'rake/clean'
 
-OUTDIR = 'build'
+OUTDIR = 'WEB-INF/classes'
 
 CLEAN.include(OUTDIR)
-CLOBBER.include("WEB-INF/lib/*.jar", 'WEB-INF/appengine-generated')
+CLOBBER.include("WEB-INF/lib/dubious.jar", 'WEB-INF/appengine-generated')
 
 def class_files_for files
   files.map do |f|
@@ -46,17 +46,15 @@ STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'}
 
 CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR].join(":")
 
-appengine_app :app, 'app', '' => ["WEB-INF/lib/application.jar",
-                                  "WEB-INF/lib/dubious.jar",
-                                  ]
+appengine_app :app, 'app', '' => APP_CLASSES+LIB_CLASSES
 
 Rake::Task[:app].enhance(APP_CLASSES+LIB_CLASSES)
 
 Duby.dest_paths << OUTDIR
 Duby.source_paths << 'lib'
-Duby.compiler_options << '--classpath' << [File.expand_path(OUTDIR),"WEB-INF/lib"].join(':')
+Duby.compiler_options << '--classpath' << [File.expand_path(OUTDIR),*FileList["WEB-INF/lib/*.jar"].map{|f|File.expand_path(f)}].join(':')
 
-directory 'build'
+directory OUTDIR
 
 (APP_CLASSES+LIB_CLASSES).zip(APP_SRC+LIB_SRC).each do |klass,src|
   file klass => src
@@ -80,7 +78,7 @@ APP_CLASSES.each do |f|
 end
 
 namespace :compile do
-  task :app => [:dubious, "WEB-INF/lib/application.jar"]
+  task :app => [:dubious, *APP_CLASSES]
   task :dubious => "WEB-INF/lib/dubious.jar"
   task :java => OUTDIR do
     ant.javac :srcdir => 'lib', :destdir => OUTDIR, :classpath => CLASSPATH
@@ -94,13 +92,6 @@ task :compile => 'compile:app'
 file "WEB-INF/lib/dubious.jar" => [MODEL_JAR] + LIB_CLASSES do
   includes =  FileList[OUTDIR+'/dubious/**/*', OUTDIR+'/stdlib/**/*', OUTDIR + '/testing/**/*'].map {|d|d.sub "#{OUTDIR}/",''}.join(',')
   ant.jar :destfile => "WEB-INF/lib/dubious.jar", 
-          :basedir => OUTDIR,
-          :includes => includes
-end
-
-file "WEB-INF/lib/application.jar" => APP_CLASSES do
-  includes = FileList[OUTDIR+'/controllers/**/*', OUTDIR+'/models/**/*'].map {|d|d.sub "#{OUTDIR}/",''}.join(',')
-  ant.jar :destfile => "WEB-INF/lib/application.jar", 
           :basedir => OUTDIR,
           :includes => includes
 end
