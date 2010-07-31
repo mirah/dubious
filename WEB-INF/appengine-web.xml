@@ -4,6 +4,13 @@
   <version>duby</version>
   <public-root>/public</public-root>
   <static-files>
+    <include path='/**/*.ico' expiration='365d'/>
+    <include path='/**/*.gif' expiration='365d'/>
+    <include path='/**/*.jpeg' expiration='365d'/>
+    <include path='/**/*.jpg' expiration='365d'/>
+    <include path='/**/*.png' expiration='365d'/>
+    <include path='/**/*.js' expiration='365d'/>
+    <include path='/**/*.css' expiration='365d'/>
   </static-files>
   <resource-files>
     <exclude path='/build/**'/>

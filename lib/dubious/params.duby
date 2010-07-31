@@ -88,6 +88,8 @@ class Params
   end
 
   def delete(id:long, confirm:String)
+    # {:href => show(id), 'data-confirm' => confirm,
+    #  :rel => 'nofollow', 'data-method' => 'delete'}
     hm = HashMap.new
     hm.put("href", show(id))
     hm.put("data-confirm", confirm)
