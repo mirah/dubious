@@ -7,7 +7,7 @@ SDK_DIR="/usr/local/appengine-java-sdk-1.3.5"
 export APPENGINE_JAVA_SDK=$SDK_DIR
 SERVLET="$SDK_DIR/lib/shared/geronimo-servlet_2.5_spec-1.2.jar"
 SDK_API="$WEB_INF_LIB/appengine-api-1.0-sdk-1.3.5.jar"
-LABSJAR="$WEB_INF_LIB/user/appengine-api-labs-1.3.5.jar"
+LABSJAR="$WEB_INF_LIB/appengine-api-labs-1.3.5.jar"
 DBMODEL="$WEB_INF_LIB/dubydatastore.jar"
 
 ### Make sure we have the jars we need
