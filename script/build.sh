@@ -41,7 +41,7 @@ mirahc -c $CP -d $OUTDIR dubious/action_controller.duby
 #### App classes 
 
 cd ../app
-mirahc -c $CP -d $OUTDIR models/contacts.duby
+mirahc -c $CP -d $OUTDIR models/contact.duby
 mirahc -c $CP -d $OUTDIR controllers/application_controller.duby
 mirahc -c $CP -d $OUTDIR controllers/shout_controller.duby
 mirahc -c $CP -d $OUTDIR controllers/source_controller.duby
