@@ -18,7 +18,7 @@
     <td><%=h contact.phone %></td>
     <td><%= link_to 'Show', params.show(contact.key.getId) %></td>
     <td><%= link_to 'Edit', params.edit(contact.key.getId) %></td>
-    <td><%= link_to 'Delete', params.delete(contact.key.getId) %></td>
+    <td><%= link_to 'Delete', {}, params.delete(contact.key.getId) %></td>
   </tr>
 <% end %>
 </table>
