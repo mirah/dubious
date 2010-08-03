@@ -4,26 +4,10 @@ import java.util.Map
 
 class Params
   def initialize(request:HttpServletRequest)
-    request_uri  = request.getRequestURI
-    servlet_path = request.getServletPath
-    path_info    = request.getPathInfo
-    # fix environment changes from rackup servlet 
-    if path_info.nil?
-      servlet_path = servlet_path[0, servlet_path.length - 5] if
-          servlet_path.endsWith('.html') &&
-              Boolean.new(request_uri.endsWith('.html')).FALSE
-      path_info = "/"
-    elsif request_uri.endsWith('/')
-      path_info = path_info[0, path_info.length - 10] if
-          path_info.endsWith('index.html') && request_uri.endsWith('/')
-    else 
-      path_info = path_info[0, path_info.length - 5] if
-          path_info.endsWith('.html') &&
-              Boolean.new(request_uri.endsWith('.html')).FALSE
-    end
     @request = request
-    @controller = servlet_path
+    path_info = request.getPathInfo || "/"
     uri_parts = path_info.substring(1, path_info.length).split('/')
+    @controller = request.getServletPath
     @action = @id = "" # initialize as String
     if uri_parts.length == 0
       # index
