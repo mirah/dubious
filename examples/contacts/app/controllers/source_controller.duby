@@ -9,7 +9,8 @@ class SourceController < ApplicationController
   def doGet(request, response)
     @base = request.getRequestURI
     @base += '/' unless @base.endsWith('/')
-    @path = request.getPathInfo || ""
+  # @path = request.getPathInfo || "" # (index).html added
+    @path = @base.substring(7, @base.length - 1)
     node = File.new(System.getProperty('user.dir') + @path)
     if node.isDirectory
       @entries = Array.sort(node.listFiles)

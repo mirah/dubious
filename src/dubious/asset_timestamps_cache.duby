@@ -1,5 +1,6 @@
 import java.io.FileInputStream
 import java.util.Properties
+import java.lang.System
 import java.io.File
 
 class AssetTimestampsCache
@@ -18,7 +19,7 @@ class AssetTimestampsCache
       "#{key}?#{@props.getProperty(key)}"
     else
       begin
-        milis = String.valueOf(File.new("public#{key}").lastModified)
+        milis = String.valueOf(System.currentTimeMillis)
         @props.setProperty(key, milis.substring(0,10))
       rescue
         @props.setProperty(key, "FAILURE") # indicate a problem

@@ -6,6 +6,22 @@ public_root: /public
 resource_files:
   - exclude: /build/**
 
+static_files:
+  - include: /**/*.ico
+    expiration: 365d
+  - include: /**/*.gif
+    expiration: 365d
+  - include: /**/*.jpeg
+    expiration: 365d
+  - include: /**/*.jpg
+    expiration: 365d
+  - include: /**/*.png
+    expiration: 365d
+  - include: /**/*.js
+    expiration: 365d
+  - include: /**/*.css
+    expiration: 365d
+
 handlers:
   - url: /info/properties
     servlet: controllers.InfoPropertiesController
