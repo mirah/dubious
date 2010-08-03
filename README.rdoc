@@ -19,6 +19,10 @@ looks like Ruby, but reference the Java docs to find out what method calls to
 make. Mirah uses the Java type system. Join the duby-dev mailing list to get 
 involved: http://kenai.com/projects/duby/lists/dev/archive
 
+===Creating a new Dubious Application
+
+    dubious init app-name
+
 ===Setup the Mirah development environment 
 
 Fetch App Engine Java SDK and JRuby, then install them into /usr/local
