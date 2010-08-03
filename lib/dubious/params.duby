@@ -7,11 +7,11 @@ class Params
     request_uri  = request.getRequestURI
     servlet_path = request.getServletPath
     path_info    = request.getPathInfo
-    # clean up asset paths
+    # fix environment changes from rackup servlet 
     if path_info.nil?
       servlet_path = servlet_path[0, servlet_path.length - 5] if
           servlet_path.endsWith('.html') &&
-          Boolean.new(request_uri.endsWith('.html')).FALSE
+              Boolean.new(request_uri.endsWith('.html')).FALSE
       path_info = "/"
     elsif request_uri.endsWith('/')
       path_info = path_info[0, path_info.length - 10] if
@@ -19,7 +19,7 @@ class Params
     else 
       path_info = path_info[0, path_info.length - 5] if
           path_info.endsWith('.html') &&
-          Boolean.new(request_uri.endsWith('.html')).FALSE
+              Boolean.new(request_uri.endsWith('.html')).FALSE
     end
     @request = request
     @controller = servlet_path
