@@ -4,11 +4,25 @@ import java.util.Map
 
 class Params
   def initialize(request:HttpServletRequest)
+    request_uri  = request.getRequestURI
+    servlet_path = request.getServletPath
+    path_info    = request.getPathInfo
+    # clean up asset paths
+    if path_info.nil?
+      servlet_path = servlet_path[0, servlet_path.length - 5] if
+          servlet_path.endsWith('.html') &&
+          Boolean.new(request_uri.endsWith('.html')).FALSE
+      path_info = "/"
+    elsif request_uri.endsWith('/')
+      path_info = path_info[0, path_info.length - 10] if
+          path_info.endsWith('index.html') && request_uri.endsWith('/')
+    else 
+      path_info = path_info[0, path_info.length - 5] if
+          path_info.endsWith('.html') &&
+          Boolean.new(request_uri.endsWith('.html')).FALSE
+    end
     @request = request
-    @controller = request.getServletPath
-    uri = request.getRequestURI # PathInfo cannot be trusted
-    path_info = uri.substring(@controller.length, uri.length)
-    path_info = "/" if path_info.equals("")
+    @controller = servlet_path
     uri_parts = path_info.substring(1, path_info.length).split('/')
     @action = @id = "" # initialize as String
     if uri_parts.length == 0
@@ -90,10 +104,9 @@ class Params
   end
 
   def delete(id:long, confirm:String)
-    hm = {:rel => 'nofollow'}
-    hm.put("href", show(id))
-    hm.put("data-confirm", confirm)
-    hm.put("data-method", "delete")
+    hm = {:rel => 'nofollow', 'data-method' => 'delete'}
+    hm.put('data-confirm', confirm)
+    hm.put('href', show(id))
     hm
   end
 end
