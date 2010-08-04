@@ -1,8 +1,8 @@
 import com.google.appengine.ext.duby.db.Model
 import com.google.appengine.api.datastore.*
 import dubious.TimeConversion
-import java.util.Map
 import java.util.Date
+import java.util.Map
 
 class Contact < Model
   property :title,    String
