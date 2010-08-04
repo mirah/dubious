@@ -1,6 +1,8 @@
 import com.google.appengine.ext.duby.db.Model
+import dubious.TimeConversion
 import java.util.Map
 import stdlib.Array
+import java.util.Date
 
 class FormHelper
   def initialize(model:Model, params:Params)
@@ -9,6 +11,7 @@ class FormHelper
     @params = params
     @method = params.action.equals('edit') ? 'put' : 'post'
     @action = params.action.equals('edit') ? params.show : params.index
+    @formatter = TimeConversion.new('jsdate')
     @token = '123456'
   end
 
@@ -84,7 +87,11 @@ EOF
   end
 
   def date_select(name:String)
-    "<!-- soon -->"
+    date = @a.get(name).nil? ? "" : @formatter.format(Date(@a.get(name)))
+    return <<EOF
+<script type="text/javascript"> $(function() { $("##{@kind}_#{name}").datepicker(); }); </script> 
+<input id="#{@kind}_#{name}" name="#{@kind}[#{name}]" size="30" type="text" value="#{date}"/> 
+EOF
   end
 
   def time_select(name:String)

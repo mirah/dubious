@@ -12,6 +12,10 @@ class TimeConversion
     @formatter.format(date)
   end
 
+  def parse(str:String)
+    @formatter.parse(str)
+  end
+
   def self.for(token:String)
     hm = HashMap.new
     hm.put('clock',    "h:mm a, z")            # 12:08 PM PDT
@@ -23,6 +27,7 @@ class TimeConversion
     hm.put('number',   "yyyyMMddHHmm")         # 20070118061017
     hm.put('offset',   "Z")                    # -0700
     hm.put('short',    "d MMM HH:mm")          # 18 Jan 06:10
+    hm.put('jsdate',   "MM/dd/yyyy")           # 03/31/2007
     hm.put('terse',    "yyyy-MM-dd")           # 2007-11-12
     hm.put('time',     "HH:mm:ss")             # 06:10:17
     hm.containsKey(token) ? String(hm.get(token)) : "HH:mm:ss Z"
