@@ -2,3 +2,5 @@ WEB-INF/appengine-generated/*
 WEB-INF/lib/*.jar
 config/build.properties
 build/**
+app/controllers/ContactsController.java
+app/models/Contact.java
