@@ -35,13 +35,13 @@ class ContactsController < ApplicationController
 
   # POST /contacts
   def create
-    Contact.new.update_plus(params.for('contact')).save
+    Contact.new.update(params.for('contact')).save
     redirect_to params.index
   end
 
   # PUT /contacts/1
   def update
-    Contact.get(params.id).update_plus(params.for('contact')).save
+    Contact.get(params.id).update(params.for('contact')).save
     redirect_to params.show
   end
 

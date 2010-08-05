@@ -87,7 +87,7 @@ EOF
   end
 
   def date_select(name:String)
-    date = @a.get(name).nil? ? "" : @formatter.format(Date(@a.get(name)))
+    date = @formatter.format(Date(@a.get(name)))
     return <<EOF
 <script type="text/javascript"> $(function() { $("##{@kind}_#{name}").datepicker(); }); </script> 
 <input id="#{@kind}_#{name}" name="#{@kind}[#{name}]" size="30" type="text" value="#{date}"/> 
