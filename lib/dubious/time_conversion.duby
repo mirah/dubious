@@ -55,15 +55,12 @@ end
 
 __END__
 
-$ duby -e 'import dubious.*
+$ mirah -e 'import dubious.*
 import java.util.Date
 date = Date.new
 puts TimeConversion.new("month").format(date)'
 Jul 2010
 
-$ duby -e 'import dubious.*
-import java.util.Date
-import java.text.SimpleDateFormat
-date = Date.new
-pattern = TimeConversion.for("month")
-puts SimpleDateFormat.new(pattern).format(date)'
+$ mirah -e 'import dubious.*
+puts TimeConversion.new("terse").parse("1967-03-02")'
+Thu Mar 02 00:00:00 PST 1967
