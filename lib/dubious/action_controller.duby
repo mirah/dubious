@@ -4,8 +4,10 @@ import javax.servlet.http.*
 import java.util.regex.Pattern
 import java.util.Arrays
 import java.util.HashMap
-import dubious.Params
+import dubious.SanitizeHelper
+import dubious.InstanceTag
 import dubious.FormHelper
+import dubious.Params
 import java.io.File
 import java.net.URI
 
@@ -80,7 +82,7 @@ class ActionController < HttpServlet
   end
 
   # route request to the approprite action
-  def action_request(request:HttpServletRequest, method:String); returns Object
+  def action_request(request:HttpServletRequest, method:String) returns Object
     set_params Params.new(request)
     method = request.getParameter('_method') || method
     if method.equals('get')
@@ -120,64 +122,6 @@ class ActionController < HttpServlet
     FormHelper.new(model, params)
   end
 
-  # ActionView::Helpers::TagHelper
-  #
-  # cdata_section
-  # escape_once
-
-  # tag() and content_tag() are now the same method
-  # pass nil (instead of an empty string) to get tag()
-  def _tag(name:String, value:String, options:HashMap,
-          open:boolean, escape:boolean)
-    sb = StringBuilder.new("<#{name}")
-    keys = options.keySet.toArray; Arrays.sort(keys)
-    keys.each { |k| sb.append(" #{k}=\"#{options.get(k)}\"") }
-    if value.nil?
-      sb.append(open ? ">" : " />")
-    else
-      sb.append(">#{escape ? h(value) : value}</#{name}>")
-    end
-    sb.toString
-  end
-
-  def tag(name:String, options:HashMap,
-          open:boolean, escape:boolean)
-    _tag(name, nil, options, open, escape)
-  end
-
-  def tag(name:String, options:HashMap, open:boolean)
-    _tag(name, nil, options, open, true)
-  end
-
-  def tag(name:String, options:HashMap)
-    _tag(name, nil, options, false, true)
-  end
-
-  def tag(name:String)
-    _tag(name, nil, HashMap.new, false, true)
-  end
-
-  def content_tag(name:String, value:String, options:HashMap,
-                  open:boolean, escape:boolean)
-    _tag(name, value, options, open, escape)
-  end
-
-  def content_tag(name:String, value:String, options:HashMap, open:boolean)
-    _tag(name, value, options, open, true)
-  end
-
-  def content_tag(name:String, value:String, options:HashMap)
-    _tag(name, value, options, false, true)
-  end
-
-  def content_tag(name:String, value:String)
-    _tag(name, value, HashMap.new, false, true)
-  end
-
-  def content_tag(name:String)
-    _tag(name, "", HashMap.new, false, true)
-  end
-
   # ActionView::Helpers::UrlHelper
   #
   # button_to
@@ -190,7 +134,7 @@ class ActionController < HttpServlet
 
   def link_to(value:String, options:HashMap, html_options:HashMap)
     # TODO: parse options (:confirm, :popup, :method)
-    content_tag("a", value, html_options, false, false)
+    @instance_tag.content_tag("a", value, html_options, false, false)
   end
 
   def link_to(value:String, options:HashMap)
@@ -253,7 +197,7 @@ class ActionController < HttpServlet
       options.put("height", values[1])
       options.remove("size") 
     end
-    tag("img", options)
+    @instance_tag.tag("img", options)
   end
 
   def image_tag(source:String)
@@ -265,7 +209,7 @@ class ActionController < HttpServlet
     options = HashMap.new
     options.put("src", text)
     options.put("type", "text/javascript")
-    content_tag("script", "", options)
+    @instance_tag.content_tag("script", "", options)
   end
 
   def stylesheet_link_tag(text:String)
@@ -275,49 +219,23 @@ class ActionController < HttpServlet
     options.put("rel", "stylesheet")
     options.put("type", "text/css")
     options.put("media", "screen")
-    tag("link", options)
+    @instance_tag.tag("link", options)
   end
 
   # init the servlet
 
   def init(config:ServletConfig)
     @asset_timestamps_cache = AssetTimestampsCache.new
+    @instance_tag = InstanceTag.new
   end
 
   # escape special characters
 
-  def self.initialize; returns :void
-    @escape_pattern = Pattern.compile("[<>&'\"]")
-    @escaped = HashMap.new
-    @escaped.put("<", "&lt;")
-    @escaped.put(">", "&gt;")
-    @escaped.put("&", "&amp;")
-    @escaped.put("\"", "&quot;")
-    @escaped.put("'", "&#39;")
-  end
-
-  def self.html_escape(text:String)
-    return "" unless text
-    matcher = @escape_pattern.matcher(text)
-    buffer = StringBuffer.new
-    while matcher.find
-      replacement = String(@escaped.get(matcher.group))
-      matcher.appendReplacement(buffer, replacement)
-    end
-    matcher.appendTail(buffer)
-    return buffer.toString
-  end
-
-  def self.html_escape(o:Object)
-    return "" unless o
-    html_escape(o.toString)
-  end
-
   def h(text:String)
-    ActionController.html_escape(text)
+    SanitizeHelper.html_escape(text)
   end
 
   def h(o:Object)
-    ActionController.html_escape(o)
+    SanitizeHelper.html_escape(o)
   end
 end
