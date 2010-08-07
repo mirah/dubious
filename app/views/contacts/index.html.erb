@@ -9,6 +9,7 @@
     <th>Editor</th>
     <th>Address</th>
     <th>Phone</th>
+    <th>Private</th>
   </tr>
 
 <% @contacts.each do |contact| %>
@@ -20,6 +21,7 @@
     <td><%= contact.editor || "" %></td>
     <td><%=h contact.address %></td>
     <td><%=h contact.phone %></td>
+    <td><%= contact.private %></td>
     <td><%= link_to 'Show', params.show(contact.key.getId) %></td>
     <td><%= link_to 'Edit', params.edit(contact.key.getId) %></td>
     <td><%= link_to 'Delete', {}, params.delete(contact.key.getId) %></td>

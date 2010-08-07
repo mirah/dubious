@@ -64,8 +64,16 @@ class FormHelper
     "<!-- soon -->"
   end
 
+  def check_box(name:String, html_options:HashMap)
+    add_default_name_and_id(name, html_options)
+    html_options.put('type', 'checkbox')
+    html_options.put('value', 'TRUE') unless html_options.containsKey('value')
+    html_options.put('checked', 'checked') if Boolean(@a.get(name)).booleanValue
+    @t.tag("input", html_options)
+  end
+
   def check_box(name:String)
-    "<!-- soon -->"
+    check_box(name, HashMap.new)
   end
 
   def fields_for(name:String, html_options:HashMap)
@@ -118,22 +126,16 @@ class FormHelper
     "<!-- soon -->"
   end
 
-#  def text_area(name:String, html_options:HashMap)
-#    add_default_name_and_id(name, html_options)
-#    html_options.put('cols', '40') unless html_options.containsKey('cols')
-#    html_options.put('rows', '20') unless html_options.containsKey('rows')
-#    value = @a.get(name) || ""
-#    @t.content_tag("textarea", value, html_options)
-#  end
-
-#  def text_area(name:String)
-#    text_area(name, HashMap.new)
-#  end
+  def text_area(name:String, html_options:HashMap)
+    add_default_name_and_id(name, html_options)
+    html_options.put('cols', '40') unless html_options.containsKey('cols')
+    html_options.put('rows', '20') unless html_options.containsKey('rows')
+    value = String(@a.get(name)) || "" # convert Text to String
+    @t.content_tag("textarea", value , html_options)
+  end
 
   def text_area(name:String)
-    return <<EOF
-<textarea cols="40" id="#{@kind}_#{name}" name="#{@kind}[#{name}]" rows="20">#{@a.get(name) || ""}</textarea> 
-EOF
+    text_area(name, HashMap.new)
   end
 
   def text_field(name:String, html_options:HashMap)

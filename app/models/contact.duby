@@ -11,6 +11,7 @@ class Contact < Model
   property :summary,  Text
   property :address,  PostalAddress
   property :phone,    PhoneNumber
+  property :private,  Boolean
 
   def coerce_date(o:Object)
     TimeConversion.new('jsdate').parse(String(o))
