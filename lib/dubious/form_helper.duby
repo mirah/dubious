@@ -93,7 +93,6 @@ class FormHelper
   end
 
   def label(name:String, html_options:HashMap)
-    add_default_name_and_id(name, html_options)
     html_options.put('for', "#{@kind}_#{name}")
     html_options.put('value', @a.get(name) || "")
     @t.content_tag("label", Inflections.titleize(name), html_options)
