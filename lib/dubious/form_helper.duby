@@ -1,5 +1,7 @@
 import com.google.appengine.ext.duby.db.Model
+import java.lang.StringBuilder
 import dubious.TimeConversion
+import java.util.List
 import java.util.Map
 import stdlib.Array
 import java.util.Date
@@ -13,6 +15,17 @@ class FormHelper
     @action = params.action.equals('edit') ? params.show : params.index
     @formatter = TimeConversion.new('jsdate')
     @token = '123456'
+  end
+
+  def select(name:String, choices:List)
+    out = StringBuilder.new
+    selected = @a.get(name) || ""
+    out.append "<select id=\"#{@kind}_#{name}\" name=\"#{@kind}[#{name}]\">"
+    choices.each do |s|
+      x = String(s).equals(selected) ? " selected=\"selected\"" : ""
+      out.append("<option value=\"#{s}\"#{x}>#{s}</option>")
+    end
+    out.append("</select>").toString
   end
 
   def start_form
@@ -90,7 +103,7 @@ EOF
     date = @formatter.format(Date(@a.get(name)))
     return <<EOF
 <script type="text/javascript"> $(function() { $("##{@kind}_#{name}").datepicker(); }); </script> 
-<input id="#{@kind}_#{name}" name="#{@kind}[#{name}]" size="30" type="text" value="#{date}"/> 
+<input id="#{@kind}_#{name}" name="#{@kind}[#{name}]" size="10" type="text" value="#{date}"/> 
 EOF
   end
 

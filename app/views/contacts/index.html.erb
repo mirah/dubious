@@ -5,7 +5,8 @@
     <th>Title</th>
     <th>Summary</th>
     <th>Birthday</th><% terse = TimeConversion.new('terse') %>
-    <th>Url</th>
+    <th>URL</th>
+    <th>Editor</th>
     <th>Address</th>
     <th>Phone</th>
   </tr>
@@ -15,7 +16,8 @@
     <td><%=h contact.title %></td>
     <td><%=h contact.summary %></td>
     <td><%= terse.format(contact.birthday) %></td>
-    <td><%=h contact.url %></td>
+    <td><%= contact.url %></td>
+    <td><%= contact.editor %></td>
     <td><%=h contact.address %></td>
     <td><%=h contact.phone %></td>
     <td><%= link_to 'Show', params.show(contact.key.getId) %></td>

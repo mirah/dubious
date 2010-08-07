@@ -5,9 +5,10 @@ import java.util.Date
 
 class Contact < Model
   property :title,    String
-  property :summary,  Text
   property :birthday, Date
   property :url,      Link
+  property :editor,   String
+  property :summary,  Text
   property :address,  PostalAddress
   property :phone,    PhoneNumber
 

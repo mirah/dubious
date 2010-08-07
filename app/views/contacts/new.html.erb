@@ -16,6 +16,10 @@
     <%= f.date_select :birthday %>
   </p>
   <p>
+    <%= f.label :editor%><br />
+    <%= f.select :editor, ['Vim','Emacs','TextMate','Other'] %>
+  </p>
+  <p>
     <%= f.label :url %><br />
     <%= f.text_field :url %>
   </p>
