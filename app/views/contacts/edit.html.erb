@@ -16,6 +16,12 @@
     <%= f.date_select :birthday %>
   </p>
   <p>
+    <%= f.label :platform %><br />
+    <%= f.radio_button :platform, 'Mac'   %>Mac
+    <%= f.radio_button :platform, 'PC'    %>PC
+    <%= f.radio_button :platform, 'Linux' %>Linux
+  </p>
+  <p>
     <%= f.label :editor %><br />
     <%= f.select :editor, ['Vim','Emacs','TextMate','Other'] %>
   </p>

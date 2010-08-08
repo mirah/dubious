@@ -7,6 +7,7 @@ class Contact < Model
   property :title,    String
   property :birthday, Date
   property :url,      Link
+  property :platform, String
   property :editor,   String
   property :summary,  Text
   property :address,  PostalAddress

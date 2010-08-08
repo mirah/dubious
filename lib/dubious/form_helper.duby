@@ -15,7 +15,8 @@ class FormHelper
     @params = params
     @method = params.action.equals('edit') ? 'put' : 'post'
     @action = params.action.equals('edit') ? params.show : params.index
-    @formatter = TimeConversion.new('jsdate')
+    @date_formatter = TimeConversion.new('jsdate')
+    @time_formatter = TimeConversion.new('clock')
     @token = '333313d4774617f95de1'
     @dsize = '30'
   end
@@ -39,14 +40,14 @@ class FormHelper
   def start_form
     method = ["get" ,"post"].contains(@method) ? "" : @t.tag("input",
         :name => "_method", :type => "hidden", :value => @method)
-    h1 = {:action => @action, :method => "post"}
-    h1.put('id', "#{@params.action}_#{@kind}")
-    h1.put('class', @params.action)
-    h2 = HashMap.new; h2.put('style', "margin:0;padding:0;display:inline")
-    h3 = {:name => "authenticity_token", :type => "hidden"}
-    h3.put('value', @token)
-    @t.tag("form", h1, true) + method + @t.tag("div", h2, true) +
-    @t.tag("input", h3) + "</div>"
+    hm1 = {:action => @action, :method => "post"}
+    hm1.put('id', "#{@params.action}_#{@kind}")
+    hm1.put('class', @params.action)
+    hm2 = HashMap.new; hm2.put('style', "margin:0;padding:0;display:inline")
+    hm3 = {:name => "authenticity_token", :type => "hidden"}
+    hm3.put('value', @token)
+    @t.tag("form", hm1, true) + method + @t.tag("div", hm2, true) +
+    @t.tag("input", hm3) + "</div>"
   end
 
   def end_form
@@ -61,7 +62,7 @@ class FormHelper
   end
 
   def error_messages
-    "<!-- soon -->"
+    "<!-- unsupported -->"
   end
 
   def check_box(name:String, html_options:HashMap)
@@ -77,19 +78,21 @@ class FormHelper
   end
 
   def fields_for(name:String, html_options:HashMap)
-    add_default_name_and_id(name, html_options)
-    html_options.put('type', 'text')
-    html_options.put('size', @dsize) unless html_options.containsKey('size')
-    html_options.put('value', @a.get(name) || "")
-    @t.tag("input", html_options)
+    "<!-- unsupported -->"
   end
 
   def fields_for(name:String)
     fields_for(name, HashMap.new)
   end
 
+  def file_field(name:String, html_options:HashMap)
+    add_default_name_and_id(name, html_options)
+    html_options.put('type', 'file')
+    @t.tag("input", html_options)
+  end
+
   def file_field(name:String)
-    "<!-- soon -->"
+    file_field(name, HashMap.new)
   end
 
   def hidden_field(name:String)
@@ -122,8 +125,16 @@ class FormHelper
     password_field(name, HashMap.new)
   end
 
-  def radio_button(name:String)
-    "<!-- soon -->"
+  def radio_button(name:String, value:String, html_options:HashMap)
+    add_default_name_and_id(name, value, html_options)
+    html_options.put('type', 'radio')
+    html_options.put('value', value)
+    html_options.put('checked', 'checked') if value.equals(String(@a.get(name)))
+    @t.tag("input", html_options)
+  end
+
+  def radio_button(name:String, value:String)
+    radio_button(name, value, HashMap.new)
   end
 
   def text_area(name:String, html_options:HashMap)
@@ -154,10 +165,8 @@ class FormHelper
     add_default_name_and_id(name, html_options)
     html_options.put('type', 'text')
     html_options.put('size', '10') unless html_options.containsKey('size')
-    html_options.put('value', @formatter.format(Date(@a.get(name))))
-    js = <<JS
-$(function() { $("##{@kind}_#{name}").datepicker(); });
-JS
+    html_options.put('value', @date_formatter.format(Date(@a.get(name))))
+    js = "$(function() { $(\"##{@kind}_#{name}\").datepicker(); });"
     hm = HashMap.new; hm.put('type', "text/javascript")
     @t.content_tag("script", js, hm, false, false) +
     @t.tag("input", html_options)
@@ -167,14 +176,31 @@ JS
     date_select(name, HashMap.new)
   end
 
-  def time_select(name:String)
-    "<!-- soon -->"
+  def time_select(name:String, html_options:HashMap)
+    add_default_name_and_id(name, html_options)
+    html_options.put('type', 'text')
+    html_options.put('size', '10') unless html_options.containsKey('size')
+    html_options.put('value', @time_formatter.format(Date(@a.get(name))))
+    @t.tag("input", html_options)
   end
+
+  def time_select(name:String)
+    time_select(name, HashMap.new)
+  end
+
+  # consider: http://wiki.jqueryui.com/TimePicker
 
   private
 
-  def add_default_name_and_id(name:String, map:HashMap) returns :void
-    map.put('id', "#{@kind}_#{name}")
-    map.put('name', "#{@kind}[#{name}]")
+  def add_default_name_and_id(name:String, sub:String, html_options:HashMap)
+    returns :void
+    key = sub.nil? ? name: "#{name}_#{sub}"
+    html_options.put('id', "#{@kind}_#{key}")
+    html_options.put('name', "#{@kind}[#{name}]")
+  end
+
+  def add_default_name_and_id(name:String, html_options:HashMap)
+    add_default_name_and_id(name, nil, html_options)
   end
 end
+
