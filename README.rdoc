@@ -4,7 +4,7 @@ See the published demo: http://dubious-demo.appspot.com
 
 ===Introducing Dubious
 This is s starter project for Mirah on App Engine. Dubious provide a way to 
-build apps in Mirah, with conventions familiar to Rails and Sinatra developers. 
+build apps in Mirah, with conventions familiar to Rails developers. 
 Mirah has no runtime dependencies, everything is compiled ahead-of-time. 
 Mirah apps have none of the initialization costs associated with JRuby. 
 Dubious supports ERb and has a simple datastore adapter that uses a syntax 
@@ -64,13 +64,13 @@ Compile the Mirah files and populate the WEB-INF/lib dir
 
 Now run the app locally
 
-   rake server
+   jruby -S rake server
 
 If you are using jruby's rake, the task will watch for source file changes and update the running class files. Otherwise, you need to restart the server when you have changes.
 
 Edit the app-id in app.yaml, then publish to appspot.com
 
-   rake publish
+   jruby -S rake publish
 
 ===Apache License 2.0
 

@@ -7,7 +7,6 @@ of features I see as most critical.
 
 * Cookie-based sessions with support for flash[:notice]
 * Create and Validate csrf tokens (some plumbing is in place)
-* Rake task for continuous build and integrated testing tools
 * Packaging system (we could use gems that include jar files)
 * Generators for scaffold (as well as controllers and models)
 * Command to generate a new dubious app
@@ -18,12 +17,12 @@ of features I see as most critical.
 We also need some new features from Mirah and MirahModel
 
 ====MirahModel
+* The coerce_date methods should accept/parse strings
 * Validations starting with syntax for :required => true
 * Integrated JSON support for: respons_to :json
 
 ====Mirah
-* Support for Hash Literals and symbols
+* Fix issues with Hash Literals
 * Ability to add new methods to Java classes
 * Strategy to generate/publish documentation
-* Echo Java source fragments on compile errors
-* Better syntax for 'returns' and warning when Object
+* Better syntax for 'returns' 
