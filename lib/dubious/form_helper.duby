@@ -23,10 +23,9 @@ class FormHelper
   def select(name:String, choices:List, html_options:HashMap)
     add_default_name_and_id(name, html_options)
     options = StringBuilder.new
-    selected = @a.get(name) || ""
     choices.each do |s|
-      opts = {'value' => s} # TODO: support pairs
-      opts.put('selected', "selected") if String(s).equals(selected)
+      opts = {:value => s} # TODO: support pairs
+      opts.put(:selected, "selected") if String(s).equals(@a.get(name))
       options.append @t.content_tag("option", String(s), opts)
     end
     @t.content_tag("select", options.toString, html_options, false, false)
@@ -54,7 +53,7 @@ class FormHelper
   def submit(name:String)
     @commit = @params.action.equals('edit') ? 'Update' : 'Create'
     options = {:name => "commit", :type => "submit", :value => @commit}
-    options.put('id', "#{@kind}_submit")
+    options.put(:id, "#{@kind}_submit")
     @t.tag("input", options)
   end
 
@@ -64,9 +63,9 @@ class FormHelper
 
   def check_box(name:String, html_options:HashMap)
     add_default_name_and_id(name, html_options)
-    html_options.put('type', 'checkbox')
-    html_options.put('value', 'TRUE') unless html_options.containsKey('value')
-    html_options.put('checked', 'checked') if Boolean(@a.get(name)).booleanValue
+    html_options.put(:type, 'checkbox')
+    html_options.put(:value, 'TRUE') unless html_options.containsKey(:value)
+    html_options.put(:checked, 'checked') if Boolean(@a.get(name)).booleanValue
     @t.tag("input", html_options)
   end
 
@@ -84,7 +83,7 @@ class FormHelper
 
   def file_field(name:String, html_options:HashMap)
     add_default_name_and_id(name, html_options)
-    html_options.put('type', 'file')
+    html_options.put(:type, 'file')
     @t.tag("input", html_options)
   end
 
@@ -92,17 +91,20 @@ class FormHelper
     file_field(name, HashMap.new)
   end
 
-  def hidden_field(name:String)
-    html_options = HashMap.new
-    html_options.put('type', 'hidden')
+  def hidden_field(name:String, html_options:HashMap)
     add_default_name_and_id(name, html_options)
-    html_options.put('value', @a.get(name) || "")
+    html_options.put(:type, 'hidden')
+    html_options.put(:value, @a.get(name) || "")
     @t.tag("input", html_options)
   end
 
+  def hidden_field(name:String)
+    hidden_field(name, HashMap.new)
+  end
+
   def label(name:String, html_options:HashMap)
-    html_options.put('for', "#{@kind}_#{name}")
-    html_options.put('value', @a.get(name) || "")
+    html_options.put(:for, "#{@kind}_#{name}")
+    html_options.put(:value, @a.get(name) || "")
     @t.content_tag("label", Inflections.titleize(name), html_options)
   end
 
@@ -112,9 +114,9 @@ class FormHelper
 
   def password_field(name:String, html_options:HashMap)
     add_default_name_and_id(name, html_options)
-    html_options.put('type', 'password')
-    html_options.put('size', @dsize) unless html_options.containsKey('size')
-    html_options.put('value', @a.get(name) || "")
+    html_options.put(:type, 'password')
+    html_options.put(:size, @dsize) unless html_options.containsKey(:size)
+    html_options.put(:value, @a.get(name) || "")
     @t.tag("input", html_options)
   end
 
@@ -123,10 +125,10 @@ class FormHelper
   end
 
   def radio_button(name:String, value:String, html_options:HashMap)
-    add_default_name_and_id(name, value, html_options)
-    html_options.put('type', 'radio')
-    html_options.put('value', value)
-    html_options.put('checked', 'checked') if value.equals(String(@a.get(name)))
+    add_default_name_and_id(name, html_options, value)
+    html_options.put(:type, 'radio')
+    html_options.put(:checked, 'checked') if value.equals(String(@a.get(name)))
+    html_options.put(:value, value)
     @t.tag("input", html_options)
   end
 
@@ -136,8 +138,8 @@ class FormHelper
 
   def text_area(name:String, html_options:HashMap)
     add_default_name_and_id(name, html_options)
-    html_options.put('cols', '40') unless html_options.containsKey('cols')
-    html_options.put('rows', '20') unless html_options.containsKey('rows')
+    html_options.put(:cols, '40') unless html_options.containsKey('cols')
+    html_options.put(:rows, '20') unless html_options.containsKey('rows')
     value = String(@a.get(name)) || "" # convert Text to String
     @t.content_tag("textarea", value , html_options)
   end
@@ -148,9 +150,9 @@ class FormHelper
 
   def text_field(name:String, html_options:HashMap)
     add_default_name_and_id(name, html_options)
-    html_options.put('type', 'text')
-    html_options.put('size', @dsize) unless html_options.containsKey('size')
-    html_options.put('value', @a.get(name) || "")
+    html_options.put(:type, 'text')
+    html_options.put(:size, @dsize) unless html_options.containsKey(:size)
+    html_options.put(:value, @a.get(name) || "")
     @t.tag("input", html_options)
   end
 
@@ -160,11 +162,11 @@ class FormHelper
 
   def date_select(name:String, html_options:HashMap)
     add_default_name_and_id(name, html_options)
-    html_options.put('type', 'text')
-    html_options.put('size', '10') unless html_options.containsKey('size')
-    html_options.put('value', @date_formatter.format(Date(@a.get(name))))
+    html_options.put(:type, 'text')
+    html_options.put(:size, '10') unless html_options.containsKey(:size)
+    html_options.put(:value, @date_formatter.format(Date(@a.get(name))))
     js = "$(function() { $(\"##{@kind}_#{name}\").datepicker(); });"
-    hm = HashMap.new; hm.put('type', "text/javascript")
+    hm = HashMap.new; hm.put(:type, "text/javascript")
     @t.content_tag("script", js, hm, false, false) +
     @t.tag("input", html_options)
   end
@@ -175,9 +177,9 @@ class FormHelper
 
   def time_select(name:String, html_options:HashMap)
     add_default_name_and_id(name, html_options)
-    html_options.put('type', 'text')
-    html_options.put('size', '10') unless html_options.containsKey('size')
-    html_options.put('value', @time_formatter.format(Date(@a.get(name))))
+    html_options.put(:type, 'text')
+    html_options.put(:size, '10') unless html_options.containsKey(:size)
+    html_options.put(:value, @time_formatter.format(Date(@a.get(name))))
     @t.tag("input", html_options)
   end
 
@@ -189,15 +191,15 @@ class FormHelper
 
   private
 
-  def add_default_name_and_id(name:String, sub:String, html_options:HashMap)
+  def add_default_name_and_id(name:String, html_options:HashMap, sub:String)
     returns :void
-    key = sub.nil? ? name: "#{name}_#{sub}"
-    html_options.put('id', "#{@kind}_#{key}")
-    html_options.put('name', "#{@kind}[#{name}]")
+    html_options.put(:name, "#{@kind}[#{name}]")
+    name += "_#{sub}" unless sub.nil? 
+    html_options.put(:id, "#{@kind}_#{name}")
   end
 
   def add_default_name_and_id(name:String, html_options:HashMap)
-    add_default_name_and_id(name, nil, html_options)
+    add_default_name_and_id(name, html_options, nil)
   end
 end
 
