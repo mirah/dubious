@@ -138,8 +138,8 @@ class FormHelper
 
   def text_area(name:String, html_options:HashMap)
     add_default_name_and_id(name, html_options)
-    html_options.put(:cols, '40') unless html_options.containsKey('cols')
-    html_options.put(:rows, '20') unless html_options.containsKey('rows')
+    html_options.put(:cols, '40') unless html_options.containsKey(:cols)
+    html_options.put(:rows, '20') unless html_options.containsKey(:rows)
     @t.content_tag("textarea", String(@a.get(name)) || "", html_options)
   end
 

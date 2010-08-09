@@ -4,12 +4,10 @@ import javax.servlet.http.*
 import java.util.regex.Pattern
 import java.util.Arrays
 import java.util.HashMap
-import dubious.SanitizeHelper
-import dubious.InstanceTag
-import dubious.FormHelper
-import dubious.Params
 import java.io.File
 import java.net.URI
+import dubious.*
+import stdlib.*
 
 class ActionController < HttpServlet
 
@@ -122,15 +120,7 @@ class ActionController < HttpServlet
     FormHelper.new(model, params)
   end
 
-  # ActionView::Helpers::UrlHelper
-  #
-  # button_to
-  # current_page?
-  # link_to_if
-  # link_to_unless
-  # link_to_unless_current
-  # mail_to
-  # url_for
+  # UrlHelper
 
   def link_to(value:String, options:HashMap, html_options:HashMap)
     # TODO: parse options (:confirm, :popup, :method)
@@ -142,7 +132,7 @@ class ActionController < HttpServlet
   end
 
   def link_to(value:String, url:String, html_options:HashMap)
-    html_options.put("href", url)
+    html_options.put(:href, url)
     link_to(value, html_options, html_options)
   end
 
@@ -150,19 +140,7 @@ class ActionController < HttpServlet
     link_to(value, url, HashMap.new)
   end
 
-# "<a #{href_attr}#{tag_options}>#{name || url}</a>".html_safe
-
-  # ActionView::Helpers::AssetTagHelper
-  #
-  # cache_asset_timestamps
-  # cache_asset_timestamps=
-  # auto_discovery_link_tag
-  # path_to_image
-  # path_to_javascript
-  # path_to_stylesheet
-  # register_javascript_expansion
-  # register_javascript_include_default
-  # register_stylesheet_expansion
+  # AssetTagHelper
 
   # always use AssetTimestampsCache
   def add_asset_timestamp(source:String)
@@ -188,13 +166,13 @@ class ActionController < HttpServlet
 
   def image_tag(source:String, options:HashMap)
     source = source.startsWith('http') ? source : image_path(source)
-    options.put("src", source)
-    options.put("alt", "") unless options.containsKey("alt")
+    options.put(:src, source)
+    options.put(:alt, "") unless options.containsKey("alt")
     if options.containsKey("size") &&
         String(options.get("size")).matches("\\d+x\\d+")
       values = String(options.get("size")).split("x")
-      options.put("width", values[0])
-      options.put("height", values[1])
+      options.put(:width, values[0])
+      options.put(:height, values[1])
       options.remove("size") 
     end
     @instance_tag.tag("img", options)
@@ -206,20 +184,15 @@ class ActionController < HttpServlet
 
   def javascript_include_tag(text:String)
     text = javascript_path(text) unless text.startsWith("http")
-    options = HashMap.new
-    options.put("src", text)
-    options.put("type", "text/javascript")
+    options = Ha.sh [:src, text, :type, "text/javascript"]
     @instance_tag.content_tag("script", "", options)
   end
 
   def stylesheet_link_tag(text:String)
     text = stylesheet_path(text) unless text.startsWith("http")
-    options = HashMap.new
-    options.put("href", text)
-    options.put("rel", "stylesheet")
-    options.put("type", "text/css")
-    options.put("media", "screen")
-    @instance_tag.tag("link", options)
+    opts = Ha.sh [:href, text, :rel, "stylesheet",
+                  :type, "text/css", :media, "screen"]
+    @instance_tag.tag("link", opts)
   end
 
   # init the servlet
