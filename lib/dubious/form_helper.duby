@@ -16,23 +16,8 @@ class FormHelper
     @action = params.action.equals('edit') ? params.show : params.index
     @date_formatter = TimeConversion.new('jsdate')
     @time_formatter = TimeConversion.new('clock')
-    @token = '333313d4774617f95de1'
+    @token = '123456789' # TODO generate properly
     @dsize = '30'
-  end
-
-  def select(name:String, choices:List, html_options:HashMap)
-    add_default_name_and_id(name, html_options)
-    options = StringBuilder.new
-    choices.each do |s|
-      opts = {:value => s} # TODO: support pairs
-      opts.put(:selected, "selected") if String(s).equals(@a.get(name))
-      options.append @t.content_tag("option", String(s), opts)
-    end
-    @t.content_tag("select", options.toString, html_options, false, false)
-  end
-
-  def select(name:String, choices:List)
-    select(name, choices, HashMap.new)
   end
 
   def start_form
@@ -59,6 +44,21 @@ class FormHelper
 
   def error_messages
     "<!-- unsupported -->"
+  end
+
+  def select(name:String, choices:List, html_options:HashMap)
+    add_default_name_and_id(name, html_options)
+    options = StringBuilder.new
+    choices.each do |s|
+      opts = {:value => s} # TODO: support pairs
+      opts.put(:selected, "selected") if String(s).equals(@a.get(name))
+      options.append @t.content_tag("option", String(s), opts)
+    end
+    @t.content_tag("select", options.toString, html_options, false, false)
+  end
+
+  def select(name:String, choices:List)
+    select(name, choices, HashMap.new)
   end
 
   def check_box(name:String, html_options:HashMap)
@@ -140,8 +140,7 @@ class FormHelper
     add_default_name_and_id(name, html_options)
     html_options.put(:cols, '40') unless html_options.containsKey('cols')
     html_options.put(:rows, '20') unless html_options.containsKey('rows')
-    value = String(@a.get(name)) || "" # convert Text to String
-    @t.content_tag("textarea", value , html_options)
+    @t.content_tag("textarea", String(@a.get(name)) || "", html_options)
   end
 
   def text_area(name:String)
@@ -166,7 +165,7 @@ class FormHelper
     html_options.put(:size, '10') unless html_options.containsKey(:size)
     html_options.put(:value, @date_formatter.format(Date(@a.get(name))))
     js = "$(function() { $(\"##{@kind}_#{name}\").datepicker(); });"
-    hm = HashMap.new; hm.put(:type, "text/javascript")
+    hm = Ha.sh [:type, "text/javascript"]
     @t.content_tag("script", js, hm, false, false) +
     @t.tag("input", html_options)
   end
@@ -186,8 +185,6 @@ class FormHelper
   def time_select(name:String)
     time_select(name, HashMap.new)
   end
-
-  # consider: http://wiki.jqueryui.com/TimePicker
 
   private
 

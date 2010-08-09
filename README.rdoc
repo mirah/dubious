@@ -58,15 +58,31 @@ Until be have generators, just start by altering the main dubious app.
 
    cd ~/mystuff/dubious
 
+There are two ways to develop the app. The first way is to run the build script each time you make a change. The new way is to use the Rakefile. If you are using jruby's rake, the task will watch for source file changes and update the running class files. Otherwise, you need to restart the server when you have changes.
+
+=== Use the Original Scripts
+
 Compile the Mirah files and populate the WEB-INF/lib dir
 
    ./script/build.sh
 
-Now run the app locally
+Run the app locally
+
+   ./script/server.sh
+
+Edit the app-id in app.yaml, then publish to appspot.com
+
+   ./script/publish.sh
+
+=== Use the New Rakefile
+
+Populate the WEB-INF/lib dir
+
+   ./script/environment.rb
+
+Run the app locally
 
    jruby -S rake server
-
-If you are using jruby's rake, the task will watch for source file changes and update the running class files. Otherwise, you need to restart the server when you have changes.
 
 Edit the app-id in app.yaml, then publish to appspot.com
 
