@@ -30,11 +30,13 @@ mirahc -c $CP -d $OUTDIR stdlib/io.duby
 mirahc -c $CP -d $OUTDIR stdlib/ha.duby
 javac -classpath $CP -d $OUTDIR dubious/ScopedParameterMap.java
 javac -classpath $CP -d $OUTDIR dubious/Inflection.java
+mirahc -c $CP -d $OUTDIR dubious/sanitize_helper.duby
 mirahc -c $CP -d $OUTDIR dubious/asset_timestamps_cache.duby
 mirahc -c $CP -d $OUTDIR dubious/inflections.duby
 mirahc -c $CP -d $OUTDIR dubious/time_conversion.duby
 mirahc -c $CP -d $OUTDIR dubious/text_helper.duby
 mirahc -c $CP -d $OUTDIR dubious/params.duby
+mirahc -c $CP -d $OUTDIR dubious/instance_tag.duby
 mirahc -c $CP -d $OUTDIR dubious/form_helper.duby
 mirahc -c $CP -d $OUTDIR dubious/action_controller.duby
 
@@ -42,11 +44,13 @@ mirahc -c $CP -d $OUTDIR dubious/action_controller.duby
 
 cd ../app
 mirahc -c $CP -d $OUTDIR models/contact.duby
+#mirahc -c $CP -j         models/contact.duby
 mirahc -c $CP -d $OUTDIR controllers/application_controller.duby
 mirahc -c $CP -d $OUTDIR controllers/shout_controller.duby
 mirahc -c $CP -d $OUTDIR controllers/source_controller.duby
 mirahc -c $CP -d $OUTDIR controllers/info_properties_controller.duby
 mirahc -c $CP -d $OUTDIR controllers/contacts_controller.duby
+#mirahc -c $CP -j         controllers/contacts_controller.duby
 
 cd $OUTDIR
 jar -cf ../WEB-INF/lib/application.jar models/* controllers/*

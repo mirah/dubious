@@ -4,24 +4,42 @@
   <%= f.start_form %>
   <%= f.error_messages %>
   <p>
-    <%= f.label 'title' %><br />
-    <%= f.text_field 'title' %>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
   </p>
   <p>
-    <%= f.label 'summary' %><br />
-    <%= f.text_area 'summary' %>
+    <%= f.label :summary %><br />
+    <%= f.text_area :summary %>
   </p>
   <p>
-    <%= f.label 'url' %><br />
-    <%= f.text_field 'url' %>
+    <%= f.label :birthday %><br />
+    <%= f.date_select :birthday %>
   </p>
   <p>
-    <%= f.label 'address' %><br />
-    <%= f.text_field 'address' %>
+    <%= f.label :platform %><br />
+    <%= f.radio_button :platform, 'Mac'   %>Mac
+    <%= f.radio_button :platform, 'PC'    %>PC
+    <%= f.radio_button :platform, 'Linux' %>Linux
   </p>
   <p>
-    <%= f.label 'phone' %><br />
-    <%= f.text_field 'phone' %>
+    <%= f.label :editor %><br />
+    <%= f.select :editor, ['Vim','Emacs','TextMate','Other'] %>
+  </p>
+  <p>
+    <%= f.label :url %><br />
+    <%= f.text_field :url, :size => '60' %>
+  </p>
+  <p>
+    <%= f.label :address %><br />
+    <%= f.text_field :address %>
+  </p>
+  <p>
+    <%= f.label :phone %><br />
+    <%= f.text_field :phone %>
+  </p>
+  <p>
+    <%= f.label :private%><br />
+    <%= f.check_box :private %>
   </p>
   <p>
     <%= f.submit 'Create' %>

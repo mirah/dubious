@@ -9,6 +9,21 @@
 </p>
 
 <p>
+  <b>Birthday:</b>
+  <%=h @contact.birthday %>
+</p>
+
+<p>
+  <b>Platform:</b>
+  <%=h @contact.platform %>
+</p>
+
+<p>
+  <b>Editor:</b>
+  <%=h @contact.editor %>
+</p>
+
+<p>
   <b>Url:</b>
   <%=h @contact.url %>
 </p>
@@ -21,6 +36,11 @@
 <p>
   <b>Phone:</b>
   <%=h @contact.phone %>
+</p>
+
+<p>
+  <b>Private:</b>
+  <%= @contact.private %>
 </p>
 
 <%= link_to 'Edit', params.edit %> |
