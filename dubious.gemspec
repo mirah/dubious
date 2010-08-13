@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.date = Time.now.strftime("YYYY-MM-DD")
   s.description = %q{Dubious is a web framework written in Mirah.}
   s.executables = ["dubious"]
-  files = Dir["{bin,lib,test,examples,javalib}/**/*"] + Dir["{*.txt,Rakefile}"]
+  s.files = Dir["{bin,lib,test,examples,javalib}/**/*"] + Dir["{*.txt,Rakefile}"]
   s.homepage = %q{http://github.com/mirah/dubious/}
   s.extra_rdoc_files = ["LICENSE", "ROADMAP.rdoc", "README.rdoc"]
   s.rdoc_options = ["--main", "README.rdoc"]
