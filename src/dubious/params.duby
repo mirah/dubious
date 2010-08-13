@@ -5,11 +5,9 @@ import java.util.Map
 class Params
   def initialize(request:HttpServletRequest)
     @request = request
-    @controller = request.getServletPath
-    uri = request.getRequestURI # PathInfo cannot be trusted
-    path_info = uri.substring(@controller.length, uri.length)
-    path_info = "/" if path_info.equals("")
+    path_info = request.getPathInfo || "/"
     uri_parts = path_info.substring(1, path_info.length).split('/')
+    @controller = request.getServletPath
     @action = @id = "" # initialize as String
     if uri_parts.length == 0
       # index
@@ -90,10 +88,9 @@ class Params
   end
 
   def delete(id:long, confirm:String)
-    hm = {:rel => 'nofollow'}
-    hm.put("href", show(id))
-    hm.put("data-confirm", confirm)
-    hm.put("data-method", "delete")
+    hm = {:rel => 'nofollow', 'data-method' => 'delete'}
+    hm.put('data-confirm', confirm)
+    hm.put('href', show(id))
     hm
   end
 end
