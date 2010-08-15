@@ -38,7 +38,7 @@
     <%= f.text_field :phone %>
   </p>
   <p>
-    <%= f.label :private%><br />
+    <%= f.label :private %><br />
     <%= f.check_box :private %>
   </p>
   <p>
@@ -46,5 +46,5 @@
   </p>
   <%= f.end_form %>
 
-<%= link_to 'Show', params.show %> |
-<%= link_to 'Back', params.index %>
+<%= link_to 'Show', resource(@contact, :show) %> |
+<%= link_to 'Back', resource(:contacts) %>

@@ -123,21 +123,62 @@ class ActionController < HttpServlet
   # UrlHelper
 
   def link_to(value:String, options:HashMap, html_options:HashMap)
-    # TODO: parse options (:confirm, :popup, :method)
+    # TODO: parse option :popup
+    if String.valueOf(options.get(:method)).equals(:delete)
+      html_options.put(:rel, 'nofollow')
+      html_options.put('data-method', 'delete')
+      if options.containsKey(:confirm)
+        html_options.put('data-confirm', options.get(:confirm))
+      end
+    end
     @instance_tag.content_tag("a", value, html_options, false, false)
   end
 
-  def link_to(value:String, options:HashMap)
-    link_to(value, options, HashMap.new)
+  def link_to(value:String, url:String, options:HashMap, html_options:HashMap)
+    html_options.put(:href, url)
+    link_to(value, options, html_options)
   end
 
-  def link_to(value:String, url:String, html_options:HashMap)
+  def link_to(value:String, url:String, options:HashMap)
+    html_options = HashMap.new
     html_options.put(:href, url)
-    link_to(value, html_options, html_options)
+    link_to(value, options, html_options)
   end
 
   def link_to(value:String, url:String)
     link_to(value, url, HashMap.new)
+  end
+
+  # Homage to Merb
+
+  def resource(kind:String, action:String, id:String)
+    # TODO: check router
+    controller = Inflections.pluralize kind.toLowerCase
+    if action.equals(:new)
+      "/#{controller}/new"
+    elsif action.nil?
+      "/#{controller}"   
+    elsif action.equals(:show)
+      "/#{controller}/#{id}"
+    else
+      "/#{controller}/#{id}/#{action}"
+    end
+  end
+
+  def resource(kind:String, action:String)
+    resource(kind, action, nil)
+  end
+
+  def resource(kind:String)
+    resource(kind, :new, nil)
+  end
+
+  def resource(model:Model, action:String)
+    resource(model.kind, action, String.valueOf(model.key.getId))
+  end
+
+  def resource(model:Model)
+    resource(model, :show)
   end
 
   # AssetTagHelper
