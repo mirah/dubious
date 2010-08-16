@@ -156,7 +156,7 @@ class ActionController < HttpServlet
     controller = Inflections.pluralize kind.toLowerCase
     if action.equals(:new)
       "/#{controller}/new"
-    elsif action.nil?
+    elsif id.nil? # index
       "/#{controller}"   
     elsif action.equals(:show)
       "/#{controller}/#{id}"
@@ -170,7 +170,7 @@ class ActionController < HttpServlet
   end
 
   def resource(kind:String)
-    resource(kind, :new, nil)
+    resource(kind, :index, nil)
   end
 
   def resource(model:Model, action:String)
