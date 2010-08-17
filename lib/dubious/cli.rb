@@ -11,20 +11,22 @@ module Dubious
     def init
       directory '.', "#{name}/"
     end
-
-    def self.subcommand_help command_name
-      'init a new project'
+    def self.subcommand_help *args
+%Q(
+Creates a new dubious project application structure in the NAME directory.
+Uses NAME as the appengine app name.
+)
     end
   end
 
   class Generator < Thor
     include Thor::Actions
     source_root File.dirname(__FILE__)+"/templates/generator"
+    argument :name
+
 
     desc "model NAME", "creates model file" 
-    argument :name
     def model#(name)
-      
       template "model.mirah.tt", "app/models/#{name.underscore}.mirah"
     end
 
