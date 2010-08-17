@@ -1,5 +1,6 @@
 WEB-INF/appengine-generated/*
 WEB-INF/lib/*.jar
+WEB-INF/classes/**/*
 config/build.properties
 build/**
 app/controllers/ContactsController.java

@@ -64,7 +64,7 @@ There are two ways to develop the app. The first way is to run the build script 
 
 Compile the Mirah files and populate the WEB-INF/lib dir
 
-   ./script/build.sh
+   ./script/environment.rb
 
 Run the app locally
 
