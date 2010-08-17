@@ -122,27 +122,35 @@ class ActionController < HttpServlet
 
   # UrlHelper
 
-  def link_to(value:String, options:HashMap, html_options:HashMap)
+  def link_to(value:String, options:HashMap)
     # TODO: parse option :popup
     if String.valueOf(options.get(:method)).equals(:delete)
-      html_options.put(:rel, 'nofollow')
-      html_options.put('data-method', 'delete')
+      options.put(:rel, 'nofollow')
+      options.put('data-method', 'delete')
+      options.remove(:method) 
       if options.containsKey(:confirm)
-        html_options.put('data-confirm', options.get(:confirm))
+        options.put('data-confirm', options.get(:confirm))
+        options.remove(:confirm) 
       end
     end
-    @instance_tag.content_tag("a", value, html_options, false, false)
+    @instance_tag.content_tag("a", value, options, false, false)
   end
 
-  def link_to(value:String, url:String, options:HashMap, html_options:HashMap)
-    html_options.put(:href, url)
-    link_to(value, options, html_options)
+  def link_to(value:String, args:HashMap, options:HashMap)
+    # TODO: support additional args ?foo=1&bar=2&baz=3
+    url = args.containsKey(:controller) ?
+        "/#{args.get(:controller)}" : params.controller
+    if args.containsKey(:action)
+      url += "/#{args.get(:action)}"
+      url += "/#{args.get(:id)}" if args.containsKey(:id)
+    end
+    options.put(:href, url)
+    link_to(value, options)
   end
 
   def link_to(value:String, url:String, options:HashMap)
-    html_options = HashMap.new
-    html_options.put(:href, url)
-    link_to(value, options, html_options)
+    options.put(:href, url)
+    link_to(value, options)
   end
 
   def link_to(value:String, url:String)
