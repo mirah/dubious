@@ -18,19 +18,20 @@
     <td><%=h contact.title %></td>
     <td><%=h contact.summary %></td>
     <td><%= terse.format(contact.birthday) %></td>
-    <td><%= contact.url %></td>
-    <td><%=h contact.platform || "" %></td>
-    <td><%=h contact.editor || "" %></td>
+    <td><%=h contact.url %></td>
+    <td><%=h contact.platform %></td>
+    <td><%=h contact.editor %></td>
     <td><%=h contact.address %></td>
     <td><%=h contact.phone %></td>
-    <td><%= contact.private %></td>
-    <td><%= link_to 'Show', params.show(contact.key.getId) %></td>
-    <td><%= link_to 'Edit', params.edit(contact.key.getId) %></td>
-    <td><%= link_to 'Delete', {}, params.delete(contact.key.getId) %></td>
+    <td><%= contact.private ? :true : :false %></td>
+    <td><%= link_to 'Show', resource(contact) %></td>
+    <td><%= link_to 'Edit', resource(contact, :edit) %></td>
+    <td><%= link_to 'Destroy', resource(contact),
+            :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New contact', params.new %>
+<%= link_to 'New contact', resource(:contacts, :new) %>

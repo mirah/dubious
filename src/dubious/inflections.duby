@@ -1,18 +1,29 @@
 import java.util.StringTokenizer
-import java.lang.StringBuffer
 
 class Inflections
 
   # camelize
   # classify
   # constantize
-  # dasherize
   # demodulize
-  # foreign_key
-  # humanize
   # parameterize
   # tableize
-  # underscore
+
+  def self.foreign_key(word:String)
+    underscore(word.toLowerCase) +"_id"
+  end
+
+  def self.humanize(word:String)
+    TextHelper.capitalize(word.replaceAll("_id$", "").replaceAll("_", " "))
+  end
+
+  def self.dasherize(word:String)
+    word.replaceAll("\\W","-").toLowerCase
+  end
+
+  def self.underscore(word:String)
+    word.replaceAll("\\W","_").toLowerCase
+  end
 
   def self.pluralize(word:String)
     Inflection.pluralize(word)
