@@ -8,15 +8,21 @@ module Dubious
     argument :name
     source_root File.dirname(__FILE__)+"/templates/base"
 
-    def init
-      directory '.', "#{name}/"
-    end
     def self.subcommand_help *args
 %Q(
 Creates a new dubious project application structure in the NAME directory.
 Uses NAME as the appengine app name.
 )
     end
+
+    def init
+      directory '.', "#{name}/"
+    end
+
+    def cp_dubious_jar
+      copy_file '../../../dubious.jar', "#{name}/WEB-INF/lib/dubious.jar"
+    end
+
   end
 
   class Generator < Thor
@@ -34,6 +40,7 @@ Uses NAME as the appengine app name.
     def controller#(name)
       template "controller.mirah.tt", "app/controllers/#{name.underscore}_controller.mirah"
       empty_directory "app/views/#{name.underscore}"
+      inject_into_file "app.yaml", "  - url: /#{name.underscore}/*\n    servlet: controller.#{name.classify}Controller\n    name: #{name.underscore}\n",:after => "handlers:\n"
     end
   end
 

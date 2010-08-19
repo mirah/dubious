@@ -7,6 +7,3 @@ resource_files:
   - exclude: /build/**
 
 handlers:
-  - url: /info/properties
-    servlet: controllers.InfoPropertiesController
-    name: info_properties

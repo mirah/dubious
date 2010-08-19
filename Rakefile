@@ -1,3 +1,5 @@
+require 'rake/clean'
+
 begin
   require 'ant'
 rescue LoadError
@@ -5,18 +7,18 @@ rescue LoadError
   exit 1
 end
 
-if  ENV['MIRAH_HOME'] && File.exist?(ENV['MIRAH_HOME'] +'/lib/mirah.rb')
+if ENV['MIRAH_HOME'] && File.exist?(ENV['MIRAH_HOME'] +'/lib/mirah.rb')
   $: << File.expand_path(ENV['MIRAH_HOME'] +'/lib')
 end
 
 if File.exist?('../bitescript/lib/bitescript.rb')
    $: << File.expand_path('../bitescript/lib/')
 end
-require 'rake/clean'
 
+require 'mirah_task'
 
-OUTDIR = 'WEB-INF/classes'
-
+OUTDIR = File.expand_path 'build'
+SRCDIR = File.expand_path 'src'
 
 def class_files_for files
   files.map do |f|
@@ -27,13 +29,16 @@ def class_files_for files
   end
 end
 
-MODEL_JAR = "WEB-INF/lib/dubydatastore.jar"
-LIB_MIRAH_SRC = Dir["lib/**/*.duby"]
-LIB_JAVA_SRC  = Dir["lib/**/*.java"]
+#MODEL_JAR = "#{OUTDIR}/dubydatastore.jar"
+LIB_MIRAH_SRC = Dir["src/**/*.duby"]
+LIB_JAVA_SRC  = Dir["src/**/*.java"]
 LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
 LIB_CLASSES = class_files_for LIB_SRC
-
 STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'}
+
+Duby.dest_paths << OUTDIR
+Duby.source_paths << SRCDIR
+Duby.compiler_options << '--classpath' << [File.expand_path(OUTDIR), *FileList["lib/*.jar", "javalib/*.jar"].map{|f|File.expand_path(f)}].join(':')
 
 
 file "#{OUTDIR}/dubious/Inflection.class" => :'compile:java'
@@ -41,102 +46,61 @@ file "#{OUTDIR}/dubious/ScopedParameterMap.class" => :'compile:java'
 file "#{OUTDIR}/dubious/ActionController.class" => ["#{OUTDIR}/dubious/Params.class",
                                                     "#{OUTDIR}/dubious/FormHelper.class", 
                                                     "#{OUTDIR}/dubious/AssetTimestampsCache.class"]
-file "#{OUTDIR}/dubious/Inflections.class" => "#{OUTDIR}/dubious/Inflection.class"
-file "#{OUTDIR}/dubious/FormHelper.class" => ["#{OUTDIR}/dubious/Inflections.class", *STDLIB_CLASSES]
+file "#{OUTDIR}/dubious/Inflections.class" => "#{OUTDIR}/dubious/TextHelper.class"
+file "#{OUTDIR}/dubious/FormHelper.class" => [
+     					      "#{OUTDIR}/dubious/Inflections.class",
+     					      "#{OUTDIR}/dubious/InstanceTag.class",
+					      "#{OUTDIR}/dubious/TimeConversion.class",
+					      *STDLIB_CLASSES]
+file "#{OUTDIR}/dubious/InstanceTag.class" => "#{OUTDIR}/dubious/SanitizeHelper.class"
 file "#{OUTDIR}/dubious/Params.class" => "#{OUTDIR}/dubious/ScopedParameterMap.class"
-require 'mirah_task'
 
 
-
-
-file "WEB-INF/lib/dubious.jar" => [MODEL_JAR] + LIB_CLASSES do
+file "lib/dubious.jar" => LIB_CLASSES do
   includes =  FileList[OUTDIR+'/dubious/**/*', OUTDIR+'/stdlib/**/*', OUTDIR + '/testing/**/*'].map {|d|d.sub "#{OUTDIR}/",''}.join(',')
-  ant.jar :destfile => "WEB-INF/lib/dubious.jar", 
+  ant.jar :destfile => "lib/dubious.jar", 
           :basedir => OUTDIR,
           :includes => includes
 end
 
+desc "compiles mirah & java lib files"
+task :compile => LIB_CLASSES
+
+desc "compiles jar for gemification"
+task :jar => "lib/dubious.jar"
 
 namespace :compile do
-  task :dubious => "WEB-INF/lib/dubious.jar"
+  task :dubious => "lib/dubious.jar"
   task :java => OUTDIR do
-    ant.javac :srcdir => 'lib', :destdir => OUTDIR, :classpath => CLASSPATH
+    ant.javac :srcdir => SRCDIR, 
+    	      :destdir => OUTDIR, 
+	      :classpath => CLASSPATH
   end
 end
-
-Duby.dest_paths << OUTDIR
-Duby.source_paths << 'lib'
-Duby.compiler_options << '--classpath' << [File.expand_path(OUTDIR),*FileList["WEB-INF/lib/*.jar"].map{|f|File.expand_path(f)}].join(':')
-
-
-
-
-
-
-
-
-
 
 
 require 'mirah/appengine_tasks'
 
 CLEAN.include(OUTDIR)
-CLOBBER.include("WEB-INF/lib/dubious.jar", 'WEB-INF/appengine-generated')
-
-
-APP_SRC = Dir["app/**/{*.duby,*.mirah}"]
-APP_CLASSES = class_files_for APP_SRC
-APP_MODEL_CLASSES = APP_CLASSES.select {|app| app.include? '/models' }
-APP_CONTROLLER_CLASSES = APP_CLASSES.select {|app| app.include? '/controllers' }
-TEMPLATES = Dir["app/views/**/*.erb"]
+CLOBBER.include("lib/dubious.jar")
 
 CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR].join(":")
 
-appengine_app :app, 'app', '' => APP_CLASSES+LIB_CLASSES
-
-#there is an upload task in appengine_tasks, but I couldn't get it to work
-desc "publish to appengine"
-task :publish => 'compile:app' do
-  sh "appcfg.sh update ."
-end
-
-Rake::Task[:app].enhance(APP_CLASSES+LIB_CLASSES)
-
-Duby.dest_paths << OUTDIR
-Duby.source_paths << 'lib'
-Duby.compiler_options << '--classpath' << [File.expand_path(OUTDIR),*FileList["WEB-INF/lib/*.jar"].map{|f|File.expand_path(f)}].join(':')
-
 directory OUTDIR
 
-(APP_CLASSES+LIB_CLASSES).zip(APP_SRC+LIB_SRC).each do |klass,src|
+(LIB_CLASSES).zip(LIB_SRC).each do |klass,src|
   file klass => src
 end
 
-APP_CONTROLLER_CLASSES.each do |f|
-  file f => APP_MODEL_CLASSES + TEMPLATES
-end
-
-APP_CLASSES.each do |f|
-  file f => LIB_CLASSES
-end
-
-namespace :compile do
-  task :app => [:dubious, *APP_CLASSES]
-end
-
-desc "compile app"
-task :compile => 'compile:app'
-
-task :default => :server
 
 MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').first.sub(/lib\/mirah.rb/,'')
  
-MODEL_SRC_JAR =  File.join(MIRAH_HOME, 'examples', 'appengine', 'war',
-                                 'WEB-INF', 'lib', 'dubydatastore.jar')
-
-file MODEL_JAR => MODEL_SRC_JAR do |t|
-  cp MODEL_SRC_JAR, MODEL_JAR
-end
+#MODEL_SRC_JAR =  File.join(MIRAH_HOME, 'examples', 'appengine', 'war',
+#                                 'WEB-INF', 'lib', 'dubydatastore.jar')
+#
+#file MODEL_JAR => [ 'build', MODEL_SRC_JAR] do |t|
+#  cp MODEL_SRC_JAR, MODEL_JAR
+#end
 
 task :generate_build_properties do
   def git_data(dir, file='')
@@ -170,5 +134,4 @@ model.version.commit=#{model_data[0][7..-1]}
 model.version.time=#{Time.parse(model_data[1]).xmlschema}
     EOF
   end
-
 end
