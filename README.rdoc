@@ -52,6 +52,10 @@ that script/build.sh has the correct path to the SDK.
    which mirah
    which jruby
 
+After that you should install the appengine-sdk gem
+
+   jgem install appengine-sdk
+
 ===Developing your App
 
 Until be have generators, just start by altering the main dubious app.
