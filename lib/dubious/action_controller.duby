@@ -160,8 +160,9 @@ class ActionController < HttpServlet
   # Homage to Merb
 
   def resource(kind:String, action:String, id:String)
-    # TODO: check router
-    controller = Inflections.pluralize kind.toLowerCase
+    default = Inflections.pluralize kind.toLowerCase
+    custom = @custom_routes.get(default)
+    controller = custom ? custom : default 
     if action.equals(:new)
       "/#{controller}/new"
     elsif id.nil? # index
@@ -249,6 +250,7 @@ class ActionController < HttpServlet
   def init(config:ServletConfig)
     @asset_timestamps_cache = AssetTimestampsCache.new
     @instance_tag = InstanceTag.new
+    @custom_routes = CustomRoutes.new
   end
 
   # escape special characters
