@@ -23,6 +23,10 @@ Uses NAME as the appengine app name.
       copy_file '../../../dubious.jar', "#{name}/WEB-INF/lib/dubious.jar"
     end
 
+    def cp_dubydatastore_jar
+      copy_file '../../../../javalib/dubydatastore.jar', "#{name}/WEB-INF/lib/dubydatastore.jar"
+    end
+
   end
 
   class Generator < Thor

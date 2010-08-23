@@ -95,13 +95,6 @@ end
 
 MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').first.sub(/lib\/mirah.rb/,'')
  
-#MODEL_SRC_JAR =  File.join(MIRAH_HOME, 'examples', 'appengine', 'war',
-#                                 'WEB-INF', 'lib', 'dubydatastore.jar')
-#
-#file MODEL_JAR => [ 'build', MODEL_SRC_JAR] do |t|
-#  cp MODEL_SRC_JAR, MODEL_JAR
-#end
-
 task :generate_build_properties do
   def git_data(dir, file='')
     returning = nil
