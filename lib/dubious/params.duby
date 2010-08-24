@@ -9,6 +9,7 @@ class Params
     uri_parts = path_info.substring(1, path_info.length).split('/')
     @controller = request.getServletPath
     @action = @id = "" # initialize as String
+    @params = HashMap.new
     if uri_parts.length == 0
       # index
     elsif uri_parts[0].matches("^\\d+$")
@@ -37,16 +38,25 @@ class Params
     @id.equals("") ? long(0) : Long.parseLong(@id)
   end
 
-  # query params
-
-  def for(model:String)
-    ScopedParameterMap.params(request, model)
-  end
-
   #  request helpers
 
   def request
     @request
+  end
+
+  # query params
+
+  def get(name:String)
+    values = array(name)
+    values[0] if values && values.length > 0
+  end
+
+  def array(name:String)
+    @request.getParameterValues(name)
+  end
+
+  def for(model:String)
+    ScopedParameterMap.params(request, model)
   end
 
   # path helpers
@@ -73,24 +83,5 @@ class Params
 
   def edit(id:long)
     "#{@controller}/#{String.valueOf(id)}/edit"
-  end
-
-  def delete
-    delete(id)
-  end
-
-  def delete(confirm:String)
-    delete(id, confirm)
-  end
-
-  def delete(id:long)
-    delete(id, "Are you sure?")
-  end
-
-  def delete(id:long, confirm:String)
-    hm = {:rel => 'nofollow', 'data-method' => 'delete'}
-    hm.put('data-confirm', confirm)
-    hm.put('href', show(id))
-    hm
   end
 end
