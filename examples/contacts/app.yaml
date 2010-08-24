@@ -35,10 +35,6 @@ handlers:
     servlet: controllers.SourceController
     name: source
 
-  - url: /shout/*
-    servlet: controllers.ShoutController
-    name: shout
-
   - url: /simple_duby/*
     servlet: testing.SimpleDuby
     name: dimple_duby

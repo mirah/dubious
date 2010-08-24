@@ -25,14 +25,6 @@
     <url-pattern>/source/*</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>shout</servlet-name>
-    <servlet-class>controllers.ShoutController</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>shout</servlet-name>
-    <url-pattern>/shout/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
     <servlet-name>dimple_duby</servlet-name>
     <servlet-class>testing.SimpleDuby</servlet-class>
   </servlet>
