@@ -79,7 +79,7 @@ class ActionController < HttpServlet
     end
   end
 
-  # route request to the approprite action
+  # route request to the appropriate action
   def action_request(request:HttpServletRequest, method:String) returns Object
     set_params Params.new(request)
     method = request.getParameter('_method') || method
