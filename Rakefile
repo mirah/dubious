@@ -53,12 +53,17 @@ task :publish => 'compile:app' do
   sh "appcfg.sh update ."
 end
 
-CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR, File.expand_path(OUTDIR), *FileList["#{LIBOUTDIR}/*.jar"]].join(":")
+CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR, File.expand_path(OUTDIR)]
 
-Duby.dest_paths << OUTDIR
-Duby.source_paths << 'lib'
-Duby.source_paths << 'app'
-Duby.compiler_options << '--classpath' << CLASSPATH
+task :setup_mirah_compilation_options => MODEL_JAR do
+     CLASSPATH += FileList["#{LIBOUTDIR}/*.jar"]
+     Duby.dest_paths << OUTDIR
+     Duby.source_paths << 'lib'
+     Duby.source_paths << 'app'
+     Duby.compiler_options << '--classpath' << CLASSPATH.join(":")
+end
+
+
 
 directory OUTDIR
 directory LIBOUTDIR
@@ -139,7 +144,7 @@ namespace :compile do
   task :app => [:dubious, :java, *APP_CLASSES]
   task :dubious => "#{LIBOUTDIR}/dubious.jar"
   task :java => OUTDIR do
-    ant.javac :srcdir => 'lib', :destdir => OUTDIR, :classpath => CLASSPATH
+    ant.javac :srcdir => 'lib', :destdir => OUTDIR, :classpath => CLASSPATH.join(":")
   end
 end
 
@@ -147,12 +152,14 @@ end
 desc "compile app"
 task :compile => 'compile:app'
 
-file "#{LIBOUTDIR}/dubious.jar" => [MODEL_JAR] + LIB_CLASSES do
+file "#{LIBOUTDIR}/dubious.jar" => LIB_CLASSES do
   includes =  FileList[OUTDIR+'/dubious/**/*', OUTDIR+'/stdlib/**/*', OUTDIR + '/testing/**/*'].map {|d|d.sub "#{OUTDIR}/",''}.join(',')
   ant.jar :destfile => "#{LIBOUTDIR}/dubious.jar", 
           :basedir => OUTDIR,
           :includes => includes
 end
+
+LIB_CLASSES.each {|c| Rake.application[c].enhance [:setup_mirah_compilation_options]}
 
 task :default => :server
 
