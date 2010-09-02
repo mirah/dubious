@@ -10,7 +10,7 @@ class Shout < Model
   property 'body',  Text
 end
 
-class ShoutController < ApplicationController
+class ShoutController < ActionController
 
   # GET /shout
   def doGet(request, response)
@@ -30,6 +30,6 @@ class ShoutController < ApplicationController
     doGet(request, response)
   end
 
-  def_edb(list_erb, 'views/shout/list.html.erb')
-  def_edb(main_erb, 'views/layouts/application.html.erb')
+  def_edb(list_erb, 'views/list.html.erb')
+  def_edb(main_erb, 'views/application.html.erb')
 end
