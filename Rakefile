@@ -7,6 +7,8 @@ rescue LoadError
   exit 1
 end
 
+MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').first.sub(/lib\/mirah.rb/,'')
+
 if ENV['MIRAH_HOME'] && File.exist?(ENV['MIRAH_HOME'] +'/lib/mirah.rb')
   $: << File.expand_path(ENV['MIRAH_HOME'] +'/lib')
 end
@@ -15,10 +17,13 @@ if File.exist?('../bitescript/lib/bitescript.rb')
    $: << File.expand_path('../bitescript/lib/')
 end
 
-require 'mirah_task'
+require 'mirah/appengine_tasks'
 
 OUTDIR = File.expand_path 'build'
 SRCDIR = File.expand_path 'src'
+
+CLEAN.include(OUTDIR)
+CLOBBER.include("lib/dubious.jar")
 
 def class_files_for files
   files.map do |f|
@@ -32,6 +37,7 @@ end
 #MODEL_JAR = "#{OUTDIR}/dubydatastore.jar"
 LIB_MIRAH_SRC = Dir["src/**/*.duby"]
 LIB_JAVA_SRC  = Dir["src/**/*.java"]
+ 
 LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
 LIB_CLASSES = class_files_for LIB_SRC
 STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'}
@@ -45,8 +51,12 @@ file "#{OUTDIR}/dubious/Inflection.class" => :'compile:java'
 file "#{OUTDIR}/dubious/ScopedParameterMap.class" => :'compile:java'
 file "#{OUTDIR}/dubious/ActionController.class" => ["#{OUTDIR}/dubious/Params.class",
                                                     "#{OUTDIR}/dubious/FormHelper.class", 
-                                                    "#{OUTDIR}/dubious/AssetTimestampsCache.class"]
-file "#{OUTDIR}/dubious/Inflections.class" => "#{OUTDIR}/dubious/TextHelper.class"
+                                                    "#{OUTDIR}/dubious/AssetTimestampsCache.class",
+						    "#{OUTDIR}/dubious/CustomRoutes.class",
+						    ]
+
+file "#{OUTDIR}/dubious/Inflections.class" => ["#{OUTDIR}/dubious/TextHelper.class",
+      					       "#{OUTDIR}/dubious/Inflection.class"]
 file "#{OUTDIR}/dubious/FormHelper.class" => [
      					      "#{OUTDIR}/dubious/Inflections.class",
      					      "#{OUTDIR}/dubious/InstanceTag.class",
@@ -54,7 +64,6 @@ file "#{OUTDIR}/dubious/FormHelper.class" => [
 					      *STDLIB_CLASSES]
 file "#{OUTDIR}/dubious/InstanceTag.class" => "#{OUTDIR}/dubious/SanitizeHelper.class"
 file "#{OUTDIR}/dubious/Params.class" => "#{OUTDIR}/dubious/ScopedParameterMap.class"
-
 
 file "lib/dubious.jar" => LIB_CLASSES do
   includes =  FileList[OUTDIR+'/dubious/**/*', OUTDIR+'/stdlib/**/*', OUTDIR + '/testing/**/*'].map {|d|d.sub "#{OUTDIR}/",''}.join(',')
@@ -78,12 +87,6 @@ namespace :compile do
   end
 end
 
-
-require 'mirah/appengine_tasks'
-
-CLEAN.include(OUTDIR)
-CLOBBER.include("lib/dubious.jar")
-
 CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR].join(":")
 
 directory OUTDIR
@@ -91,9 +94,6 @@ directory OUTDIR
 (LIB_CLASSES).zip(LIB_SRC).each do |klass,src|
   file klass => src
 end
-
-
-MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').first.sub(/lib\/mirah.rb/,'')
  
 task :generate_build_properties do
   def git_data(dir, file='')
