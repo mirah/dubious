@@ -55,8 +55,8 @@ class ContactsController < ApplicationController
 
   # render templates
   def_edb(index_erb, 'views/contacts/index.html.erb')
-  def_edb(show_erb, 'views/contacts/show.html.erb')
-  def_edb(new_erb, 'views/contacts/new.html.erb')
-  def_edb(edit_erb, 'views/contacts/edit.html.erb')
-  def_edb(main_erb, 'views/layouts/contacts.html.erb')
+  def_edb(show_erb,  'views/contacts/show.html.erb')
+  def_edb(new_erb,   'views/contacts/new.html.erb')
+  def_edb(edit_erb,  'views/contacts/edit.html.erb')
+  def_edb(main_erb,  'views/layouts/contacts.html.erb')
 end
