@@ -13,7 +13,6 @@ class Contact < Model
   property :address,  PostalAddress
   property :phone,    PhoneNumber
   property :private,  Boolean
-  property :happy,    Boolean
 
   # timestamps
   property :created_at, Date
