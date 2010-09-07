@@ -6,21 +6,29 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css"> 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script> 
     <script type="text/javascript">
-      $(document).ready(function() {
-        $("#about-content").ajaxError(function(event, request, settings) {
-          $(this).append("<p>Error requesting " + settings.url + "</p>");
-          $('#about-content').addClass('failure').slideToggle("fast");
+      $(function(){
+        var about_content = $('#about-content');
+        var about_link = $('#about-link');
+        var url = about_link.attr('href');
+
+        about_link.click(function(){
+          if (about_content.children().length > 0){ // has children
+            about_content.slideToggle('fast');
+          } else { // does not have children
+            $.ajax({
+              url: url,
+              datatype: 'html',
+              success: function(data){
+                about_content.html(data).slideToggle('fast');
+              },
+              error: function(){
+                about_content.html('<p>Error requesting ' + url + '</p>').slideToggle('fast');
+              }
+            });
+          }
+          return false;
         });
       });
-      function about() {
-        if ($('#about-content').empty()) {
-          $.get('info/properties', function(data) {
-            $('#about-content').html(data).slideToggle("fast");
-          });
-        } else {
-          $('#about-content').slideToggle("fast");
-        }
-      }
     </script>
   </head>
   <body>
@@ -97,7 +105,7 @@
         </div>
 
         <div id="about">
-          <h3><a href="javascript:void(0);" onclick="about(); return false">About this app&rsquo;s environment</a> or
+          <h3><a href="info/properties" id="about-link">About this app&rsquo;s environment</a> or
           <a href="/source/">view source</a></h3>
           <div id="about-content" style="display: none"></div>
         </div>
