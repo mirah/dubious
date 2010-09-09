@@ -4,20 +4,21 @@
   <tr>
     <th>Title</th>
     <th>Summary</th>
-    <th>Birthday</th><% terse = TimeConversion.new('terse') %>
+    <th>Birthday</th>
     <th>URL</th>
     <th>Platform</th>
     <th>Editor</th>
     <th>Address</th>
     <th>Phone</th>
     <th>Private</th>
+    <th>Happy</th>
   </tr>
 
 <% @contacts.each do |contact| %>
   <tr>
     <td><%=h contact.title %></td>
     <td><%=h contact.summary %></td>
-    <td><%= terse.format(contact.birthday) %></td>
+    <td><%= terse_date(contact.birthday) %></td>
     <td><%=h contact.url %></td>
     <td><%=h contact.platform %></td>
     <td><%=h contact.editor %></td>
