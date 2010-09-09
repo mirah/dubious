@@ -27,12 +27,12 @@ involved: http://kenai.com/projects/duby/lists/dev/archive
 
 Fetch App Engine Java SDK and JRuby, then install them into /usr/local
 
-* http://googleappengine.googlecode.com/files/appengine-java-sdk-1.3.5.zip
+* http://googleappengine.googlecode.com/files/appengine-java-sdk-1.3.7.zip
 * http://jruby.org.s3.amazonaws.com/downloads/1.5.1/jruby-bin-1.5.1.tar.gz
 
 Make sure the appengine tools are executable
 
-   sudo chmod a+x /usr/local/appengine-java-sdk-1.3.5/bin/*.sh
+   sudo chmod a+x /usr/local/appengine-java-sdk-1.3.7/bin/*.sh
 
 Now git clone bitescript, mirah and dubious to your drive
 
@@ -45,7 +45,7 @@ Edit .bash_profile to find these tools
 
    export JRUBY_HOME=/usr/local/jruby-1.5.1
    export MIRAH_HOME=~/mystuff/mirah
-   export APPENGINE_JAVA_SDK=/usr/local/appengine-java-sdk-1.3.5
+   export APPENGINE_JAVA_SDK=/usr/local/appengine-java-sdk-1.3.7
    export PATH=$PATH:$JRUBY_HOME/bin:$MIRAH_HOME/bin:$APPENGINE_JAVA_SDK/bin
 
 Verify tools are configured properly, and check to see

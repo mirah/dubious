@@ -20,15 +20,15 @@ class ActionController < HttpServlet
   def create; Object(Integer.valueOf(404)); end
   def update; Object(Integer.valueOf(404)); end
 
-  def set_params(params:Params); returns :void
+  def set_params(params:Params) returns :void
     @params_obj = params
   end
 
-  def params; returns Params
+  def params
     @params_obj
   end
 
-  def set_flash_notice(content:String); returns :void
+  def set_flash_notice(content:String) returns :void
     @flash_str = content
   end
 
@@ -39,20 +39,20 @@ class ActionController < HttpServlet
   # for simplicity, we split on this token
   def yield_body; "@@_YIELD_BODY_@@"; end
 
-  def render(content:String, layout:String); returns String
+  def render(content:String, layout:String)
     wrapper = layout.split(yield_body)
     if wrapper.length == 2
-      wrapper[0] + content + wrapper[1]
+      "#{wrapper[0]}#{content}#{wrapper[1]}"
     else
-       layout + "\n\n<!-- Oops, yield_body missing -->"
+      "#{layout}\n\n<!-- Oops, yield_body missing -->"
     end
   end
 
-  def render(content:String); returns String
+  def render(content:String)
     content
   end
 
-  def redirect_to(link:String); returns URI
+  def redirect_to(link:String)
     URI.new(link)
   end
 
@@ -247,7 +247,10 @@ class ActionController < HttpServlet
 
   # init the servlet
 
+  def controller_init; returns :void; end
+
   def init(config:ServletConfig)
+    controller_init
     @asset_timestamps_cache = AssetTimestampsCache.new
     @instance_tag = InstanceTag.new
     @custom_routes = CustomRoutes.new

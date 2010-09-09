@@ -14,6 +14,14 @@ class Contact < Model
   property :phone,    PhoneNumber
   property :private,  Boolean
 
+  # timestamps
+  property :created_at, Date
+  property :updated_at, Date
+  def before_save
+    @updated_at = Date.new
+    @created_at = updated_at if @created_at.nil?
+  end
+
   def coerce_date(o:Object)
     TimeConversion.new('jsdate').parse(String(o))
   end
