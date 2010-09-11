@@ -19,10 +19,6 @@ looks like Ruby, but reference the Java docs to find out what method calls to
 make. Mirah uses the Java type system. Join the duby-dev mailing list to get 
 involved: http://kenai.com/projects/duby/lists/dev/archive
 
-===Creating a new Dubious Application
-
-    dubious init app-name
-
 ===Setup the Mirah development environment 
 
 Fetch App Engine Java SDK and JRuby, then install them into /usr/local
@@ -60,11 +56,20 @@ After that you should install the appengine-sdk gem
 
    jgem install appengine-sdk
 
+To build the gem
+
+  jgem build dubious.gemspec
+
 ===Developing your App
 
-Until be have generators, just start by altering the main dubious app.
+Install the gem
 
-   cd ~/mystuff/dubious
+   jgem install dubious
+
+Generate your app
+
+   dubious new my-app
+   cd my-app
 
 There are two ways to develop the app. The first way is to run the build script each time you make a change. The new way is to use the Rakefile. If you are using jruby's rake, the task will watch for source file changes and update the running class files. Otherwise, you need to restart the server when you have changes.
 
