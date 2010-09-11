@@ -49,8 +49,8 @@ Uses NAME as the appengine app name.
   end
 
   class CLI < Thor
-    desc "init NAME", "initializes a new dubious project in NAME"
-    subcommand :init, Init
+    desc "new NAME", "creates a new dubious project in NAME"
+    subcommand :new, Init
 
     desc "generate GENERATOR", "run generator GENERATOR"
     subcommand :generate, Generator
