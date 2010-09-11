@@ -44,7 +44,7 @@ Uses NAME as the appengine app name.
     def controller#(name)
       template "controller.mirah.tt", "app/controllers/#{name.underscore}_controller.mirah"
       empty_directory "app/views/#{name.underscore}"
-      inject_into_file "app.yaml", "  - url: /#{name.underscore}/*\n    servlet: controller.#{name.classify}Controller\n    name: #{name.underscore}\n",:after => "handlers:\n"
+      inject_into_file "WEB-INF/app.yaml", "  - url: /#{name.underscore}/*\n    servlet: controller.#{name.classify}Controller\n    name: #{name.underscore}\n",:after => "handlers:\n"
     end
   end
 
