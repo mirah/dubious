@@ -3,7 +3,7 @@
 See the published demo: http://dubious-demo.appspot.com
 
 ===Introducing Dubious
-This is s starter project for Mirah on App Engine. Dubious provide a way to 
+This is a starter project for Mirah on App Engine. Dubious provide a way to 
 build apps in Mirah, with conventions familiar to Rails developers. 
 Mirah has no runtime dependencies, everything is compiled ahead-of-time. 
 Mirah apps have none of the initialization costs associated with JRuby. 
@@ -16,14 +16,60 @@ Mirah is statically typed, with local type inference, and a simple macro system.
 The goal is to make Mirah as expressive as Ruby without introducing any runtime
 library and while maintaining Java's level of performance. Just write code that
 looks like Ruby, but reference the Java docs to find out what method calls to 
-make. Mirah uses the Java type system. Join the duby-dev mailing list to get 
-involved: http://kenai.com/projects/duby/lists/dev/archive
+make. Mirah uses the Java type system. Join the mirah mailing list to get 
+involved: http://groups.google.com/group/mirah
 
+=== Getting Started
+Since Dubious relies on features of Mirah and Bitescript that have not been released yet, you need to clone the repositories and manually build and install the gems for each of them.
+
+  #assuming you are in a workspace directory.
+  git clone http://github.com/headius/bitescript.git
+  git clone http://github.com/mirah/mirah.git
+  git clone http://github.com/baroquebobcat/dubious.git #change to mirah when gemification is folded in
+
+  #assuming your gem command is the one from jruby
+  cd bitescript
+  gem build bitescript.gemspec
+  gem install bitescript-*
+  cd ../mirah
+  gem build mirah.gemspec
+  gem install mirah-* 
+  cd ../dubious
+  gem build dubious.gemspec
+  gem install dubious-*
+
+In the future, you will be able to simply install Dubious as a JRuby gem. That will look likke the following:
+
+If your gem command is the JRuby one, run
+
+  gem install dubious
+
+If not run
+
+  jruby -S gem install dubious
+
+This will add a `dubious` command that you can create new apps, generate controllers and models etc with.
+
+Once dubious is installed, you can generate an app skeleton.
+
+  dubious new my-app
+  cd my-app
+
+===Directory Layout
+
+The layout is based on Rails' with some Java WAR directories, and files geared towards deploying on AppEngine.
+
+* WEB-INF/app.yaml
+contains handlers for different routes. It's like a lightweight version of web.xml--I think it actually generates it
+
+http://code.google.com/appengine/docs/python/config/appconfig.html#About_app_yaml
+
+==Hacking on Dubious
 ===Setup the Mirah development environment 
 
 Fetch App Engine Java SDK and JRuby, then install them into /usr/local
 
-* http://googleappengine.googlecode.com/files/appengine-java-sdk-1.3.7.zip
+//-included in the gem-* http://googleappengine.googlecode.com/files/appengine-java-sdk-1.3.7.zip
 * http://jruby.org.s3.amazonaws.com/downloads/1.5.1/jruby-bin-1.5.1.tar.gz
 
 Make sure the appengine tools are executable
@@ -34,7 +80,7 @@ Now git clone bitescript, mirah and dubious to your drive
 
    mkdir -p ~/mystuff; cd ~/mystuff
    git clone http://github.com/headius/bitescript.git
-   git clone http://github.com/headius/mirah.git
+   git clone http://github.com/mirah/mirah.git
    git clone http://github.com/mirah/dubious.git
 
 Edit .bash_profile to find these tools
