@@ -5,8 +5,14 @@ require 'active_support'
 module Dubious
   class Init < Thor::Group
     include Thor::Actions
-    argument :name
+    argument :name, :required => true, :desc => "Name of the application/directory"
     source_root File.dirname(__FILE__)+"/templates/base"
+
+    no_tasks do
+      def name= name
+        @name = name.sub /\/$/,'' #remove trailing slash
+      end
+    end
 
     def self.subcommand_help *args
 %Q(
