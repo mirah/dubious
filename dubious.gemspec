@@ -16,5 +16,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
   s.platform = "java"
+  s.add_dependency("thor","0.13.8")
+  s.add_dependency("activesupport")
   s.add_dependency("mirah", ">= 0.0.4")
+  s.add_dependency("appengine-sdk", "~> 1.3")
 end
