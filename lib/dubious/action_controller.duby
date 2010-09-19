@@ -4,6 +4,7 @@ import javax.servlet.http.*
 import java.util.regex.Pattern
 import java.util.Arrays
 import java.util.HashMap
+import java.util.Date
 import java.io.File
 import java.net.URI
 import dubious.*
@@ -254,6 +255,21 @@ class ActionController < HttpServlet
     @asset_timestamps_cache = AssetTimestampsCache.new
     @instance_tag = InstanceTag.new
     @custom_routes = CustomRoutes.new
+    @date_formatters = HashMap.new
+  end
+
+  # format and parse date
+
+  def date_format(date:Date, token:string = 'terse')
+    @date_formatters.put(token, TimeConversion.new(token)) unless
+        @date_formatters.containsKey(token)
+    TimeConversion(@date_formatters.get(token)).format(date)
+  end
+
+  def date_parse(str:String, token:string = 'terse')
+    @date_formatters.put(token, TimeConversion.new(token)) unless
+        @date_formatters.containsKey(token)
+    TimeConversion(@date_formatters.get(token)).parse(str)
   end
 
   # escape special characters
