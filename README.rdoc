@@ -3,11 +3,12 @@
 See the published demo: http://dubious-demo.appspot.com
 
 ===Introducing Dubious
-This is a starter project for Mirah on App Engine. Dubious provide a way to 
-build apps in Mirah, with conventions familiar to Rails developers. 
+This is a web framework written in Mirah geared towards running on App Engine.
+Dubious provide a way to build apps in Mirah, with conventions familiar to
+Rails developers. 
 Mirah has no runtime dependencies, everything is compiled ahead-of-time. 
-Mirah apps have none of the initialization costs associated with JRuby. 
-Dubious supports ERb and has a simple datastore adapter that uses a syntax 
+So, Mirah apps have none of the initialization costs associated with JRuby. 
+Dubious supports ERb and uses a simple datastore adapter that uses a syntax 
 similar to DataMapper.
 
 ===Introducing Mirah
@@ -20,12 +21,14 @@ make. Mirah uses the Java type system. Join the mirah mailing list to get
 involved: http://groups.google.com/group/mirah
 
 === Getting Started
-Since Dubious relies on features of Mirah and Bitescript that have not been released yet, you need to clone the repositories and manually build and install the gems for each of them.
+Since Dubious relies on features of Mirah and Bitescript that have not been 
+released yet, you need to clone the repositories and manually build and install
+the gems for each of them.
 
   #assuming you are in a workspace directory.
   git clone http://github.com/headius/bitescript.git
   git clone http://github.com/mirah/mirah.git
-  git clone http://github.com/baroquebobcat/dubious.git #change to mirah when gemification is folded in
+  git clone http://github.com/mirah/dubious.git
 
   #assuming your gem command is the one from jruby
   cd bitescript
