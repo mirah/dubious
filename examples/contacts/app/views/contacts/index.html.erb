@@ -27,8 +27,7 @@
     <td><%= contact.private ? :true : :false %></td>
     <td><%= link_to 'Show', resource(contact) %></td>
     <td><%= link_to 'Edit', resource(contact, :edit) %></td>
-    <td><%= link_to 'Destroy', resource(contact),
-            :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Destroy', resource(contact), {:confirm => 'Are you sure?', :method => :delete} %></td>
   </tr>
 <% end %>
 </table>
