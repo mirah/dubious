@@ -19,9 +19,3 @@ class Ha
     m
   end
 end
-
-__END__
-
-$ mirah -e 'import stdlib.Ha
-puts Ha.sh ["color", "red", "size", "XL", "parrern", "camouflage"]'
-{color=red, parrern=camouflage, size=XL}

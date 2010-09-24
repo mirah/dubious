@@ -261,14 +261,12 @@ class ActionController < HttpServlet
   # format and parse date
 
   def date_format(date:Date, token:string = 'terse')
-    @date_formatters.put(token, TimeConversion.new(token)) unless
-        @date_formatters.containsKey(token)
+    @date_formatters.put(token, TimeConversion.new(token)) unless @date_formatters.containsKey(token)
     TimeConversion(@date_formatters.get(token)).format(date)
   end
 
   def date_parse(str:String, token:string = 'terse')
-    @date_formatters.put(token, TimeConversion.new(token)) unless
-        @date_formatters.containsKey(token)
+    @date_formatters.put(token, TimeConversion.new(token)) unless @date_formatters.containsKey(token)
     TimeConversion(@date_formatters.get(token)).parse(str)
   end
 

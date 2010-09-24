@@ -21,8 +21,9 @@ class FormHelper
   end
 
   def start_form
-    _method = ["get" ,"post"].contains(@method) ? "" : @t.tag("input",
-        :name => "_method", :type => "hidden", :value => @method)
+    _method = ["get" ,"post"].contains(@method) ? "" : @t.tag("input", { :name => "_method",
+                                                                         :type => "hidden",
+                                                                         :value => @method })
     hm1 = Ha.sh [:action, @action, :id, "#{@params.action}_#{@kind}",
                  :method, "post",  :class, @params.action]
     hm2 = Ha.sh [:style, "margin:0;padding:0;display:inline"]

@@ -56,15 +56,3 @@ class TimeConversion
     hm.containsKey(token) ? String(hm.get(token)) : String(hm.get('time'))
   end
 end
-
-__END__
-
-$ mirah -e 'import dubious.*
-import java.util.Date
-date = Date.new
-puts TimeConversion.new("month").format(date)'
-Jul 2010
-
-$ mirah -e 'import dubious.*
-puts TimeConversion.new("terse").parse("1967-03-02")'
-Thu Mar 02 00:00:00 PST 1967
