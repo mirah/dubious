@@ -30,14 +30,16 @@ the gems for each of them.
   git clone http://github.com/mirah/mirah.git
   git clone http://github.com/mirah/dubious.git
 
-  #assuming your gem command is the one from jruby
+  #assuming your gem and rake commands are from jruby
   cd bitescript
   gem build bitescript.gemspec
   gem install bitescript-*
   cd ../mirah
+  rake jar:bootstrap
   gem build mirah.gemspec
   gem install mirah-* 
   cd ../dubious
+  rake jar #compile the mirah src and put the jar in lib
   gem build dubious.gemspec
   gem install dubious-*
 
