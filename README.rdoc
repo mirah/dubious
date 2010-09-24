@@ -44,11 +44,13 @@ the gems for each of them.
   gem build dubious.gemspec
   gem install dubious-*
 
-In the future, you will be able to simply install Dubious as a JRuby gem. That will look likke the following:
+In the future, you will be able to simply install Dubious as a JRuby gem. That will look like the following:
 
 If your gem command is the JRuby one, run
 
   gem install dubious
+
+* this currently only installs Dubious and not Mirah.
 
 If not run
 
