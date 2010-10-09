@@ -35,7 +35,7 @@ def class_files_for files
 end
 
 #MODEL_JAR = "#{OUTDIR}/dubydatastore.jar"
-LIB_MIRAH_SRC = Dir["src/**/*.duby"]
+LIB_MIRAH_SRC = Dir["src/**/*{.duby,.mirah}"]
 LIB_JAVA_SRC  = Dir["src/**/*.java"]
  
 LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
