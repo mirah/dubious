@@ -5,6 +5,9 @@ rescue LoadError
   exit 1
 end
 
+require 'rake/clean'
+require 'mirah/appengine_tasks'
+
 if  ENV['MIRAH_HOME'] && File.exist?(ENV['MIRAH_HOME'] +'/lib/mirah.rb')
   $: << File.expand_path(ENV['MIRAH_HOME'] +'/lib')
 end
@@ -18,9 +21,6 @@ MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').fir
 MODEL_SRC_JAR =  File.join(MIRAH_HOME, 'examples', 'appengine', 'war',
                                  'WEB-INF', 'lib', 'dubydatastore.jar')
 
-
-require 'rake/clean'
-require 'mirah/appengine_tasks'
 
 def mirahc *files
   if files[-1].kind_of?(Hash)
@@ -45,7 +45,6 @@ def mirahc *files
   end
 end
 
-
 OUTDIR = 'WEB-INF/classes'
 
 def class_files_for files
@@ -59,17 +58,14 @@ end
 
 MODEL_JAR = "WEB-INF/lib/dubydatastore.jar"
 
-LIB_MIRAH_SRC = Dir["lib/**/*.duby"]
+LIB_MIRAH_SRC = Dir["lib/**/*.{duby,mirah}"]
 LIB_JAVA_SRC  = Dir["lib/**/*.java"]
 LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
 LIB_CLASSES = class_files_for LIB_SRC
 
 STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'}
 
-
 CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR].join(":")
-
-
 
 Duby.dest_paths << OUTDIR
 Duby.source_paths << 'lib'
