@@ -11,7 +11,7 @@ end
 neighbor_mirah = File.expand_path '../mirah'
 
 if File.exists?(neighbor_mirah)
-  ENV['MIRAH_HOME'] = neighbor_mirah
+  ENV['MIRAH_HOME'] ||= neighbor_mirah
 end
 
 
