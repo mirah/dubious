@@ -5,12 +5,20 @@ rescue LoadError
   exit 1
 end
 
-require 'rake/clean'
-require 'mirah/appengine_tasks'
+
+neighbor_mirah = File.expand_path '../mirah'
+
+if File.exists?(neighbor_mirah)
+  ENV['MIRAH_HOME'] ||= neighbor_mirah
+end
 
 if  ENV['MIRAH_HOME'] && File.exist?(ENV['MIRAH_HOME'] +'/lib/mirah.rb')
   $: << File.expand_path(ENV['MIRAH_HOME'] +'/lib')
 end
+
+require 'rake/clean'
+require 'mirah/appengine_tasks'
+
 
 if File.exist?('../bitescript/lib/bitescript.rb')
    $: << File.expand_path('../bitescript/lib/')
