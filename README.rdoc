@@ -35,7 +35,6 @@ the gems for each of them.
   gem build bitescript.gemspec
   gem install bitescript-*
   cd ../mirah
-  git checkout 5e98ddab33ee4d581881f7822f8148704426af1a #checkout mirah before the new parser.
   rake jar:bootstrap
   gem build mirah.gemspec
   gem install mirah-* 
