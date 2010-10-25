@@ -7,6 +7,14 @@ rescue LoadError
   exit 1
 end
 
+
+neighbor_mirah = File.expand_path '../mirah'
+
+if File.exists?(neighbor_mirah)
+  ENV['MIRAH_HOME'] ||= neighbor_mirah
+end
+
+
 MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').first.sub(/lib\/mirah.rb/,'')
 
 if ENV['MIRAH_HOME'] && File.exist?(ENV['MIRAH_HOME'] +'/lib/mirah.rb')
@@ -55,11 +63,20 @@ file "#{OUTDIR}/dubious/ActionController.class" => ["#{OUTDIR}/dubious/Params.cl
 						    "#{OUTDIR}/dubious/CustomRoutes.class",
 						    ]
 
-file "#{OUTDIR}/dubious/Inflections.class" => ["#{OUTDIR}/dubious/TextHelper.class",
-      					       "#{OUTDIR}/dubious/Inflection.class"]
+file "#{OUTDIR}/dubious/Inflections.class" => [
+        "#{OUTDIR}/dubious/TextHelper.class",
+      	"#{OUTDIR}/dubious/Inflection.class"
+      ]
+
+file "#{OUTDIR}/dubious/TextHelper.class" => [
+   			"#{OUTDIR}/dubious/Inflection.class",
+      ]
+
+                      
 file "#{OUTDIR}/dubious/FormHelper.class" => [
      					      "#{OUTDIR}/dubious/Inflections.class",
      					      "#{OUTDIR}/dubious/InstanceTag.class",
+     					      "#{OUTDIR}/dubious/Params.class",
 					      "#{OUTDIR}/dubious/TimeConversion.class",
 					      *STDLIB_CLASSES]
 file "#{OUTDIR}/dubious/InstanceTag.class" => "#{OUTDIR}/dubious/SanitizeHelper.class"
