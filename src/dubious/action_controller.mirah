@@ -79,6 +79,14 @@ class ActionController < HttpServlet
       response.getWriter.write("Unsupported Response Type")
     end
   end
+  
+  def doGet(request, response)
+    action_response(response, action_request(request, 'get'))
+  end
+
+  def doPost(request, response)
+    action_response(response, action_request(request, 'post'))
+  end
 
   # route request to the appropriate action
   def action_request(request:HttpServletRequest, method:String) returns Object

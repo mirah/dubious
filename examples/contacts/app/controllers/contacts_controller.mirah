@@ -45,14 +45,6 @@ class ContactsController < ApplicationController
     redirect_to params.show
   end
 
-  def doGet(request, response)
-    action_response(response, action_request(request, 'get'))
-  end
-
-  def doPost(request, response)
-    action_response(response, action_request(request, 'post'))
-  end
-
   # render templates
   def_edb(index_erb, 'views/contacts/index.html.erb')
   def_edb(show_erb,  'views/contacts/show.html.erb')
