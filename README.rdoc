@@ -28,7 +28,7 @@ the gems for each of them.
     # assuming you are in a workspace directory.
     # and your gem and rake are from JRuby,
     # otherwise prefix the commands with jruby -S
-    git clone http://github.com/headius/bitescript.git
+    git clone http://github.com/baroquebobcat/bitescript.git
     git clone http://github.com/mirah/mirah.git
     cd bitescript
     gem build bitescript.gemspec
