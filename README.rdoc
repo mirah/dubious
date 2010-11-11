@@ -28,16 +28,10 @@ the gems for each of them.
     # assuming you are in a workspace directory.
     # and your gem and rake are from JRuby,
     # otherwise prefix the commands with jruby -S
-    git clone http://github.com/baroquebobcat/bitescript.git
-    git clone http://github.com/mirah/mirah.git
-    cd bitescript
-    gem build bitescript.gemspec
-    gem install bitescript-*
-    cd -
+    gem install bitescript
     cd mirah
-    rake jar:bootstrap
-    gem build mirah.gemspec
-    gem install mirah-*
+      gem build mirah.gemspec
+      gem install mirah-*
     cd -
 
 Then you can install Dubious.
