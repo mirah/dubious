@@ -1,6 +1,6 @@
 require 'thor'
 require 'thor/group'
-require 'active_support'
+require 'active_support/core_ext'
 
 module Dubious
   class Init < Thor::Group
