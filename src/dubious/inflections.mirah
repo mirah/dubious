@@ -46,5 +46,5 @@ class Inflections
           s.substring(0, 1).toUpperCase) + " ")
     end
     sb.toString
-   end 
+  end 
 end
