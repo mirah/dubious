@@ -21,20 +21,8 @@ make. Mirah uses the Java type system. Join the mirah mailing list to get
 involved: http://groups.google.com/group/mirah
 
 === Getting Started
-Since Dubious relies on features of Mirah and Bitescript that have not been 
-released yet, you need to clone the repositories and manually build and install
-the gems for each of them.
 
-    # assuming you are in a workspace directory.
-    # and your gem and rake are from JRuby,
-    # otherwise prefix the commands with jruby -S
-    gem install bitescript
-    cd mirah
-      gem build mirah.gemspec
-      gem install mirah-*
-    cd -
-
-Then you can install Dubious.
+Install Dubious.
 
     gem install dubious
 
