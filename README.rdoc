@@ -38,9 +38,9 @@ Once dubious is installed, you can generate an app skeleton.
 The layout is based on Rails' with some Java WAR directories, and files geared towards deploying on AppEngine.
 
 * WEB-INF/app.yaml
-contains handlers for different routes. It's like a lightweight version of web.xml--I think it actually generates it
+contains handlers for different routes, as well as filters and settings for serving static files.
 
-http://code.google.com/appengine/docs/python/config/appconfig.html#About_app_yaml
+http://code.google.com/appengine/docs/java/configyaml/appconfig_yaml.html
 
 ==Hacking on Dubious
 ===Setup the Mirah development environment 
