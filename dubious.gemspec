@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.summary = %q{A web framework for Mirah, running on appengine.}
   s.authors = ["John Woodell",      "Nick Howard"]
   s.email   = ["woodie@netpress.com", "ndh@baroquebobcat.com"]
-  s.version = "0.0.0"
+  s.version = "0.0.1"
   s.license = "Apache-2.0"
   s.date = Time.now.strftime("YYYY-MM-DD")
   s.description = %q{Dubious is a web framework written in Mirah.}
