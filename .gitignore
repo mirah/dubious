@@ -3,3 +3,5 @@ lib/dubious.jar
 */**/WEB-INF
 *.gem
 spec/temp
+.bundle
+Gemfile.lock
