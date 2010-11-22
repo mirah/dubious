@@ -22,7 +22,7 @@ involved: http://groups.google.com/group/mirah
 
 === Getting Started
 
-Install Dubious.
+Install Dubious(Note: Dubious requires JRuby).
 
     gem install dubious
 
