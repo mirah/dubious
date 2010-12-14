@@ -37,7 +37,13 @@ if JRUBY_VERSION < "1.5.6"
   end
 end
 
-CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR].join(":")
+SERVLET_JAR = AppEngine::SDK::SDK_ROOT + '/lib/shared/servlet-api.jar'
+
+unless $CLASSPATH.include? SERVLET_JAR
+  $CLASSPATH << SERVLET_JAR
+end
+
+CLASSPATH = [SERVLET_JAR, AppEngine::SDK::API_JAR].join(":")
 
 MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').first.sub(/lib\/mirah.rb/,'')
 
