@@ -12,10 +12,10 @@ OUTDIR = 'WEB-INF/classes'
 CLEAN.include(OUTDIR)
 CLOBBER.include("WEB-INF/lib/dubious.jar", 'WEB-INF/appengine-generated')
 
-Duby.dest_paths << OUTDIR
-Duby.source_paths << 'lib'
-Duby.source_paths << 'app'
-Duby.compiler_options << '--classpath' << [File.expand_path(OUTDIR), *FileList["WEB-INF/lib/*.jar"].map{|f|File.expand_path(f)}].join(':') + ':' + CLASSPATH
+
+mirah_compile_options :dest_path => OUTDIR,
+                      :source_paths => ['lib', 'app' ],
+                      :compiler_options => ['--classpath', [File.expand_path(OUTDIR), *FileList["WEB-INF/lib/*.jar"].map{|f|File.expand_path(f)}].join(':') + ':' + CLASSPATH ]
 
 def class_files_for files
   files.map do |f|
@@ -31,7 +31,6 @@ MODEL_JAR = "WEB-INF/lib/dubydatastore.jar"
 LIB_MIRAH_SRC = Dir["lib/**/*.{duby,mirah}"]
 LIB_JAVA_SRC  = Dir["lib/**/*.java"]
 LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
-
 
 APP_SRC = Dir["app/**/{*.duby,*.mirah}"]
 TEMPLATES = Dir["app/views/**/*.erb"]

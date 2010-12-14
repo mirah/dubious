@@ -6,35 +6,28 @@ rescue LoadError
 end
 
 require 'dubious_tasks'
-
 require 'rake/clean'
 
 OUTDIR = 'WEB-INF/classes'
 
-def class_files_for files
-  files.map do |f|
-    explode = f.split('/')[1..-1]
-    explode.last.gsub!(/(^[a-z]|_[a-z])/) {|m|m.sub('_','').upcase}
-    explode.last.sub! /\.(duby|java|mirah)$/, '.class'
-    OUTDIR + '/' + explode.join('/')
-  end
-end
+mirah_compile_options :dest_path => OUTDIR,
+		      :source_paths => '.',
+		      :compiler_options => ['--classpath', [File.expand_path(OUTDIR), *FileList["WEB-INF/lib/*.jar"].map{|f|File.expand_path(f)}].join(':') + ':' + CLASSPATH]
 
-Duby.dest_paths << OUTDIR
-Duby.source_paths << '.'
-Duby.compiler_options << '--classpath' << [File.expand_path(OUTDIR), *FileList["WEB-INF/lib/*.jar"].map{|f|File.expand_path(f)}].join(':') + ':' + CLASSPATH
+MODEL_JAR = "WEB-INF/lib/dubydatastore.jar"
 
 CLEAN.include(OUTDIR)
 CLOBBER.include("WEB-INF/lib/dubious.jar", 'WEB-INF/appengine-generated')
 
-APP_SRC = [File.expand_path "app.mirah"]
+APP_SRC = ["app.mirah"]
 APP_CLASSES = ["#{OUTDIR}/ShoutController.class","#{OUTDIR}/Shout.class"]
 TEMPLATES = Dir["views/**/*.erb"]
 
 directory OUTDIR
 
 APP_CLASSES.each do |klass|
-  file klass => APP_SRC do
+p klass 
+ file klass => APP_SRC do
     mirahc *APP_SRC
   end
 end

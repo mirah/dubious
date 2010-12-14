@@ -1,5 +1,17 @@
 require 'mirah/appengine_tasks'
 
+
+# sets mirah compile opts
+# @param [Hash] opts
+# @option opts [String] :dest_path
+# @option opts [Array<String>] :source_paths 
+# @option opts [Array<String>] :compiler_options commandline style options 
+def mirah_compile_options opts
+  Mirah.dest_paths << opts[:dest_path]
+  Mirah.source_paths.push *opts[:source_paths]
+  Mirah.compiler_options.push *opts[:compiler_options]
+end
+
 if JRUBY_VERSION < "1.5.6"
   def mirahc *files
     if files[-1].kind_of?(Hash)
