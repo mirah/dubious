@@ -1,11 +1,11 @@
 <!-- Generated from app.yaml. Do not edit. -->
 <web-app version='2.5' xmlns='http://java.sun.com/xml/ns/javaee'>
   <servlet>
-    <servlet-name>ShoutController</servlet-name>
+    <servlet-name>shout</servlet-name>
     <servlet-class>ShoutController</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>ShoutController</servlet-name>
-    <url-pattern>/*</url-pattern>
+    <servlet-name>shout</servlet-name>
+    <url-pattern>/shout/*</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -11,4 +11,5 @@
   <ssl-enabled>true</ssl-enabled>
   <precompilation-enabled>true</precompilation-enabled>
   <sessions-enabled>false</sessions-enabled>
+  <warmup-requests-enabled>false</warmup-requests-enabled>
 </appengine-web-app>
