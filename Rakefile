@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'rubygems/package_task'
 require 'rake/clean'
 
 begin
@@ -7,6 +9,12 @@ rescue LoadError
   exit 1
 end
 
+Gem::PackageTask.new Gem::Specification.load('dubious.gemspec') do |pkg|
+  pkg.need_zip = true
+  pkg.need_tar = true
+end
+
+task :gem => :jar
 
 neighbor_mirah = File.expand_path '../mirah'
 
@@ -50,9 +58,9 @@ LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
 LIB_CLASSES = class_files_for LIB_SRC
 STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'}
 
-Duby.dest_paths << OUTDIR
-Duby.source_paths << SRCDIR
-Duby.compiler_options << '--classpath' << [File.expand_path(OUTDIR), *FileList["lib/*.jar", "javalib/*.jar"].map{|f|File.expand_path(f)}].join(':')
+Mirah.dest_paths << OUTDIR
+Mirah.source_paths << SRCDIR
+Mirah.compiler_options << '--classpath' << [File.expand_path(OUTDIR), *FileList["lib/*.jar", "javalib/*.jar"].map{|f|File.expand_path(f)}].join(':')
 
 
 file "#{OUTDIR}/dubious/Inflection.class" => :'compile:java'
