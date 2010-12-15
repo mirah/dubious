@@ -67,9 +67,8 @@ http://code.google.com/appengine/docs/java/configyaml/appconfig_yaml.html
     gem install mirah-*
     cd -
     cd dubious
-    rake jar
-    gem build dubious.gemspec
-    gem install dubious-*
+    rake gem
+    gem install pkg/dubious-*
     cd -
 
 
