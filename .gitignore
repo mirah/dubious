@@ -1,6 +1,8 @@
 build/**
 lib/dubious.jar
-*/**/WEB-INF
+*/**/WEB-INF/lib
+*/**/WEB-INF/classes
+*/**/WEB-INF/appengine-generated
 *.gem
 spec/temp
 .bundle

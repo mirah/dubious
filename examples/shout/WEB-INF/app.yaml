@@ -1,0 +1,12 @@
+application: shout
+version: duby
+runtime: java
+public_root: /public
+
+resource_files:
+  - exclude: /build/**
+
+handlers:
+  - url: /shout/*
+    servlet: ShoutController
+    name: shout
