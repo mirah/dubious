@@ -37,7 +37,7 @@ if JRUBY_VERSION < "1.5.6"
   end
 end
 
-SERVLET_JAR = AppEngine::SDK::SDK_ROOT + '/lib/shared/servlet-api.jar'
+SERVLET_JAR = File.join(AppEngine::SDK::SDK_ROOT, *%w{lib shared servlet-api.jar}) 
 
 unless $CLASSPATH.include? SERVLET_JAR
   $CLASSPATH << SERVLET_JAR
