@@ -4,8 +4,8 @@ require 'mirah/appengine_tasks'
 # sets mirah compile opts
 # @param [Hash] opts
 # @option opts [String] :dest_path
-# @option opts [Array<String>] :source_paths 
-# @option opts [Array<String>] :compiler_options commandline style options 
+# @option opts [Array<String>] :source_paths
+# @option opts [Array<String>] :compiler_options commandline style options
 def mirah_compile_options opts
   Mirah.dest_paths << opts[:dest_path]
   Mirah.source_paths.push *opts[:source_paths]
@@ -19,10 +19,10 @@ if JRUBY_VERSION < "1.5.6"
     else
       options = {}
     end
-    source_dir = options.fetch(:dir, Duby.source_path)
-    dest = File.expand_path(options.fetch(:dest, Duby.dest_path))
+    source_dir = options.fetch(:dir, Mirah.source_path)
+    dest = File.expand_path(options.fetch(:dest, Mirah.dest_path))
     files = files.map {|f| f.sub(/^#{source_dir}\//, '')}
-    flags = options.fetch(:options, Duby.compiler_options)
+    flags = options.fetch(:options, Mirah.compiler_options)
     args = ['-d', dest, *flags] + files
     chdir(source_dir) do
       cmd = "mirahc #{args.join ' '}"
@@ -30,14 +30,14 @@ if JRUBY_VERSION < "1.5.6"
       if files.any? {|f|f.include? 'controllers'}
         system cmd
       else
-        Duby.compile(*args)
-        Duby.reset
+        Mirah.compile(*args)
+        Mirah.reset
       end
     end
   end
 end
 
-SERVLET_JAR = File.join(AppEngine::SDK::SDK_ROOT, *%w{lib shared servlet-api.jar}) 
+SERVLET_JAR = File.join(AppEngine::SDK::SDK_ROOT, *%w{lib shared servlet-api.jar})
 
 unless $CLASSPATH.include? SERVLET_JAR
   $CLASSPATH << SERVLET_JAR
@@ -79,7 +79,7 @@ task :generate_build_properties do
   model_data = git_data(File.dirname(MODEL_SRC_JAR),File.basename(MODEL_SRC_JAR))
 
   prop_file = "config/build.properties"
-  File.open(prop_file, 'w') do |f| 
+  File.open(prop_file, 'w') do |f|
     f.write <<-EOF
 # the current build environment
 application.build.time=#{Time.now.xmlschema}
