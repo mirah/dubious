@@ -60,7 +60,7 @@ STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'}
 
 Mirah.dest_paths << OUTDIR
 Mirah.source_paths << SRCDIR
-Mirah.compiler_options << '--classpath' << [File.expand_path(OUTDIR), *FileList["lib/*.jar", "javalib/*.jar"].map{|f|File.expand_path(f)}].join(':')
+Mirah.compiler_options << '--classpath' << [OUTDIR + '/', *FileList["lib/*.jar", "javalib/*.jar"].map{|f|File.expand_path(f)}].join(':')
 
 
 file "#{OUTDIR}/dubious/Inflection.class" => :'compile:java'
