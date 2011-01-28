@@ -41,13 +41,19 @@ module AppEngine::Rake
 
       task :server => [name] do
         check_for_updates
-        $CLASSPATH << AppEngine::SDK::TOOLS_JAR
-        Java.ComGoogleAppengineToolsAdmin.AppCfg.main([])
+        args = [
+          'java', '-cp', TOOLS,
+          'com.google.appengine.tools.KickStart',
+          'com.google.appengine.tools.development.DevAppServerMain',
+          @war]
+        system *args
         @done = true
         @update_thread.join
       end
-      task :upload => [name] do
-        Java::ComGoogleAppengineTools::AppCfg.main(
+
+      desc "publish to appengine"
+      task :upload => ['compile:app', name] do
+        Java::ComGoogleAppengineToolsAdmin::AppCfg.main(
             ['update', @war].to_java(:string))
       end
 
@@ -188,11 +194,7 @@ MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').fir
 MODEL_SRC_JAR =  File.join(MIRAH_HOME, 'examples', 'appengine', 'war',
                                  'WEB-INF', 'lib', 'dubydatastore.jar')
 
-#there is an upload task in appengine_tasks, but I couldn't get it to work
-desc "publish to appengine"
-task :publish => 'compile:app' do
-  sh "appcfg.sh update ."
-end
+task :publish => :upload
 
 desc "run development server"
 task :server
