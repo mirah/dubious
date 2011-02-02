@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'rubygems/package_task'
 require 'rake/clean'
+require 'bundler/setup'
+Bundler.setup
 
 begin
   require 'ant'
@@ -16,24 +18,7 @@ end
 
 task :gem => :jar
 
-neighbor_mirah = File.expand_path '../mirah'
-
-if File.exists?(neighbor_mirah)
-  ENV['MIRAH_HOME'] ||= neighbor_mirah
-end
-
-
-MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').first.sub(/lib\/mirah.rb/,'')
-
-if ENV['MIRAH_HOME'] && File.exist?(ENV['MIRAH_HOME'] +'/lib/mirah.rb')
-  $: << File.expand_path(ENV['MIRAH_HOME'] +'/lib')
-end
-
-if File.exist?('../bitescript/lib/bitescript.rb')
-   $: << File.expand_path('../bitescript/lib/')
-end
-
-require 'mirah/appengine_tasks'
+require 'dubious_tasks'
 
 OUTDIR = File.expand_path 'build'
 SRCDIR = File.expand_path 'src'
@@ -58,10 +43,9 @@ LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
 LIB_CLASSES = class_files_for LIB_SRC
 STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'}
 
-Mirah.dest_paths << OUTDIR
-Mirah.source_paths << SRCDIR
-Mirah.compiler_options << '--classpath' << [OUTDIR + '/', *FileList["lib/*.jar", "javalib/*.jar"].map{|f|File.expand_path(f)}].join(':')
-
+mirah_compile_options :compiler_options => ['--classpath', [OUTDIR+'/', SERVLET_JAR,*FileList["lib/*.jar", "javalib/*.jar"].map{|f|File.expand_path(f)}].join(':')],
+                      :dest_path => OUTDIR,
+                      :source_paths => SRCDIR
 
 file "#{OUTDIR}/dubious/Inflection.class" => :'compile:java'
 file "#{OUTDIR}/dubious/ScopedParameterMap.class" => :'compile:java'
@@ -107,12 +91,11 @@ namespace :compile do
   task :dubious => "lib/dubious.jar"
   task :java => OUTDIR do
     ant.javac :srcdir => SRCDIR, 
-    	      :destdir => OUTDIR, 
-	      :classpath => CLASSPATH
+    	        :destdir => OUTDIR, 
+	            :classpath => CLASSPATH,
+              :includeantruntime => true
   end
 end
-
-CLASSPATH = [AppEngine::Rake::SERVLET, AppEngine::SDK::API_JAR].join(":")
 
 directory OUTDIR
 
