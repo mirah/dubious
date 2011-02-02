@@ -72,9 +72,9 @@ http://code.google.com/appengine/docs/java/configyaml/appconfig_yaml.html
     cd -
 
 
-To build the gem
+To build the gem (requires RubyGems ~> 1.5.0 to build)
 
-  gem build dubious.gemspec
+  rake package
 
 ===Developing your App
 
