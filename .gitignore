@@ -7,3 +7,4 @@ lib/dubious.jar
 spec/temp
 .bundle
 Gemfile.lock
+pkg/
