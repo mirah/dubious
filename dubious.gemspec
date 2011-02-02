@@ -1,9 +1,10 @@
 # -*- encoding: utf-8 -*-
-require 'lib/dubious/version'
+$: << './lib'
+require 'dubious/version'
 
 Gem::Specification.new do |s|
   s.name = 'dubious'
-  s.summary = %q{A web framework for Mirah, running on appengine.}
+  s.summary = %q{A web framework for Mirah, running on Google App Engine.}
   s.authors = ["John Woodell",      "Nick Howard"]
   s.email   = ["woodie@netpress.com", "ndh@baroquebobcat.com"]
   s.version = Dubious::VERSION
@@ -11,7 +12,7 @@ Gem::Specification.new do |s|
   s.date = Time.now.strftime("YYYY-MM-DD")
   s.description = %q{Dubious is a web framework written in Mirah.}
   s.executables = ["dubious"]
-  s.files = Dir["{bin,lib,test,examples,javalib}/**/*"] + Dir["{*.txt,Rakefile}"]
+  s.files = Dir["{bin,lib,test,examples,javalib}/**/*","{*.txt,Rakefile}"]
   s.homepage = %q{http://github.com/mirah/dubious/}
   s.extra_rdoc_files = ["LICENSE", "ROADMAP.rdoc", "README.rdoc"]
   s.rdoc_options = ["--main", "README.rdoc"]
