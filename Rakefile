@@ -89,7 +89,10 @@ task :jar => "lib/dubious.jar"
 desc "pull dependencies"
 task :dependencies => 'javalib/mirahdatastore.jar'
 
-file 'javalib/mirahdatastore.jar' do
+directory 'javalib'
+
+file 'javalib/mirahdatastore.jar' => 'javalib' do
+  
   cp Gem.find_files('mirahdatastore.jar'), 'javalib/'
 end
 
