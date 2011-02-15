@@ -1,6 +1,7 @@
 require 'thor'
 require 'thor/group'
 require 'active_support/core_ext'
+require 'active_support'
 
 require File.dirname(__FILE__) + '/cli/init'
 require File.dirname(__FILE__) + '/cli/generator'
