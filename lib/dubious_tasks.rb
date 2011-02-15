@@ -148,7 +148,7 @@ end
 # @option opts [Array<String>] :compiler_options commandline style options
 def mirah_compile_options opts
   Mirah.dest_paths << opts[:dest_path]
-  Mirah.source_paths.push *opts[:source_paths]
+  Mirah.source_paths.unshift *opts[:source_paths]
   Mirah.compiler_options.push *opts[:compiler_options]
 end
 

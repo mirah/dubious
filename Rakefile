@@ -40,9 +40,11 @@ LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
 LIB_CLASSES = class_files_for LIB_SRC
 STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'}
 
-mirah_compile_options :compiler_options => ['--classpath', [OUTDIR+'/', SERVLET_JAR,*FileList["lib/*.jar", "javalib/*.jar"].map{|f|File.expand_path(f)}].join(':')],
-                      :dest_path => OUTDIR,
-                      :source_paths => SRCDIR
+task :set_compile_options do
+  mirah_compile_options :compiler_options => ['--classpath', [OUTDIR+'/', SERVLET_JAR,*FileList["lib/*.jar", "javalib/*.jar"].map{|f|File.expand_path(f)}].join(':')],
+                        :dest_path => OUTDIR,
+                        :source_paths => SRCDIR
+end
 
 file "#{OUTDIR}/dubious/Inflection.class" => :'compile:java'
 file "#{OUTDIR}/dubious/ScopedParameterMap.class" => :'compile:java'
@@ -104,7 +106,7 @@ end
 directory OUTDIR
 
 (LIB_CLASSES).zip(LIB_SRC).each do |klass,src|
-  file klass => [:dependencies, src]
+  file klass => [:dependencies, :set_compile_options, src]
 end
  
 task :generate_build_properties do
