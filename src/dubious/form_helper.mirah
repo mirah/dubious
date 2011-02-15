@@ -1,4 +1,4 @@
-import com.google.appengine.ext.duby.db.Model
+import com.google.appengine.ext.mirah.db.Model
 import dubious.TimeConversion
 import dubious.InstanceTag
 import java.util.HashMap

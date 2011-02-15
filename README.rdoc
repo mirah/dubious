@@ -53,6 +53,7 @@ http://code.google.com/appengine/docs/java/configyaml/appconfig_yaml.html
    mkdir -p ~/mystuff; cd ~/mystuff
    git clone http://github.com/headius/bitescript.git
    git clone http://github.com/mirah/mirah.git
+   git clone http://github.com/mirah/mirah_model.git
    git clone http://github.com/mirah/dubious.git
 
 * Then build and install the gems for Mirah, Bitescript and Dubious

@@ -14,7 +14,7 @@ mirah_compile_options :dest_path => OUTDIR,
 		      :source_paths => '.',
 		      :compiler_options => ['--classpath', [File.expand_path(OUTDIR), *FileList["WEB-INF/lib/*.jar"].map{|f|File.expand_path(f)}].join(':') + ':' + CLASSPATH]
 
-MODEL_JAR = "WEB-INF/lib/dubydatastore.jar"
+MODEL_JAR = "WEB-INF/lib/mirahdatastore.jar"
 
 CLEAN.include(OUTDIR)
 CLOBBER.include("WEB-INF/lib/dubious.jar", 'WEB-INF/appengine-generated')

@@ -26,8 +26,8 @@ Uses NAME as the appengine app name.
         copy_file '../../../dubious.jar', "#{name}/WEB-INF/lib/dubious.jar"
       end
       
-      def cp_dubydatastore_jar
-        copy_file '../../../../javalib/dubydatastore.jar', "#{name}/WEB-INF/lib/dubydatastore.jar"
+      def cp_mirahdatastore_jar
+        copy_file '../../../../javalib/mirahdatastore.jar', "#{name}/WEB-INF/lib/mirahdatastore.jar"
       end
       
     end

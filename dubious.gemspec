@@ -12,7 +12,10 @@ Gem::Specification.new do |s|
   s.date = Time.now.strftime("YYYY-MM-DD")
   s.description = %q{Dubious is a web framework written in Mirah.}
   s.executables = ["dubious"]
-  s.files = Dir["{bin,lib,test,examples,javalib}/**/*","{*.txt,Rakefile}"]
+  s.files = Dir["{bin,lib,test,examples,javalib}/**/*","{*.txt,Rakefile}"] + [
+    'lib/dubious.jar',
+    'javalib/mirahdatastore.jar'
+  ]
   s.homepage = %q{http://github.com/mirah/dubious/}
   s.extra_rdoc_files = ["LICENSE", "ROADMAP.rdoc", "README.rdoc"]
   s.rdoc_options = ["--main", "README.rdoc"]
@@ -22,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency("thor","0.13.8")
   s.add_dependency("activesupport")
   s.add_dependency("i18n")
-  s.add_dependency("mirah", "0.0.5") 
+  s.add_dependency("mirah", "0.0.5")
+  s.add_dependency("mirah_model", "0.0.1")
   s.add_dependency("appengine-sdk", "~> 1.4.0")
 end

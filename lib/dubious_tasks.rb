@@ -82,6 +82,7 @@ module AppEngine::Rake
         timestamp = app_yaml_timestamp
         @last_app_yaml_timestamp ||= timestamp
         updated = false
+        names = real_prerequisites.select {|r|r.needed?}.map &:name
         real_prerequisites.each do |dep|
           if dep.needed?
             puts "Executing #{dep.name}"
@@ -129,15 +130,10 @@ module AppEngine::Rake
   end
 end
 
-def appengine_app(*args, &block)
-  deps = []
-  if args[-1].kind_of?(Hash)
-    hash = args.pop
-    arg = hash.keys[0]
-    deps = hash[arg]
-    args << arg
-  end
-  name, src, war = args
+def appengine_app(name,src,hash={}, &block)
+  war = hash.keys.first
+  deps = hash[war] || []
+  
   task = AppEngine::Rake::AppEngineTask.define_task(name => deps, &block)
   src = File.expand_path(src || 'src')
   war = File.expand_path(war || 'war')
@@ -189,10 +185,9 @@ end
 
 CLASSPATH = [SERVLET_JAR, AppEngine::SDK::API_JAR].join(":")
 
-MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').first.sub(/lib\/mirah.rb/,'')
+MODEL_SRC_JAR = File.dirname(Gem.find_files('dubious.rb').first) + '/../javalib/mirahdatastore.jar'
 
-MODEL_SRC_JAR =  File.join(MIRAH_HOME, 'examples', 'appengine', 'war',
-                                 'WEB-INF', 'lib', 'dubydatastore.jar')
+MIRAH_HOME = ENV['MIRAH_HOME'] ? ENV['MIRAH_HOME'] : Gem.find_files('mirah').first.sub(/lib\/mirah.rb/,'')
 
 task :publish => :upload
 

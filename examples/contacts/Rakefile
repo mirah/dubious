@@ -26,7 +26,7 @@ def class_files_for files
   end
 end
 
-MODEL_JAR = "WEB-INF/lib/dubydatastore.jar"
+MODEL_JAR = "WEB-INF/lib/mirahdatastore.jar"
 
 LIB_MIRAH_SRC = Dir["lib/**/*.{duby,mirah}"]
 LIB_JAVA_SRC  = Dir["lib/**/*.java"]

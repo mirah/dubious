@@ -1,4 +1,4 @@
-import com.google.appengine.ext.duby.db.Model
+import com.google.appengine.ext.mirah.db.Model
 import javax.servlet.ServletConfig
 import javax.servlet.http.*
 import java.util.regex.Pattern

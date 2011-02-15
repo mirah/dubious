@@ -16,15 +16,13 @@ Gem::PackageTask.new Gem::Specification.load('dubious.gemspec') do |pkg|
   pkg.need_tar = true
 end
 
-task :gem => :jar
-
 require 'dubious_tasks'
 
 OUTDIR = File.expand_path 'build'
 SRCDIR = File.expand_path 'src'
 
 CLEAN.include(OUTDIR)
-CLOBBER.include("lib/dubious.jar")
+CLOBBER.include("lib/dubious.jar", "javalib/mirahdatastore.jar")
 
 def class_files_for files
   files.map do |f|
@@ -35,7 +33,6 @@ def class_files_for files
   end
 end
 
-#MODEL_JAR = "#{OUTDIR}/dubydatastore.jar"
 LIB_MIRAH_SRC = Dir["src/**/*{.duby,.mirah}"]
 LIB_JAVA_SRC  = Dir["src/**/*.java"]
  
@@ -87,6 +84,13 @@ task :compile => LIB_CLASSES
 desc "compiles jar for gemification"
 task :jar => "lib/dubious.jar"
 
+desc "pull dependencies"
+task :dependencies => 'javalib/mirahdatastore.jar'
+
+file 'javalib/mirahdatastore.jar' do
+  cp Gem.find_files('mirahdatastore.jar'), 'javalib/'
+end
+
 namespace :compile do
   task :dubious => "lib/dubious.jar"
   task :java => OUTDIR do
@@ -100,7 +104,7 @@ end
 directory OUTDIR
 
 (LIB_CLASSES).zip(LIB_SRC).each do |klass,src|
-  file klass => src
+  file klass => [:dependencies, src]
 end
  
 task :generate_build_properties do
@@ -118,7 +122,7 @@ task :generate_build_properties do
   dubious_data = git_data(".")
   mirah_data = git_data(MIRAH_HOME)
   bite_data = git_data(MIRAH_HOME + '/../bitescript')
-  model_data = git_data(File.dirname(MODEL_SRC_JAR),File.basename(MODEL_SRC_JAR))
+  model_data = git_data(File.dirname(Gem.find_files('mirahdatastore.jar')),'mirahdatastore.jar')
 
   prop_file = "config/build.properties"
   File.open(prop_file, 'w') do |f| 

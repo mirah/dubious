@@ -10,7 +10,7 @@ require 'dubious_tasks'
 
 OUTDIR = 'WEB-INF/classes'
 CLEAN.include(OUTDIR)
-CLOBBER.include("WEB-INF/lib/dubious.jar", 'WEB-INF/appengine-generated')
+CLOBBER.include('WEB-INF/appengine-generated')
 
 
 mirah_compile_options :dest_path => OUTDIR,
@@ -26,7 +26,7 @@ def class_files_for files
   end
 end
 
-MODEL_JAR = "WEB-INF/lib/dubydatastore.jar"
+MODEL_JAR = "WEB-INF/lib/mirahdatastore.jar"
 
 LIB_MIRAH_SRC = Dir["lib/**/*.{duby,mirah}"]
 LIB_JAVA_SRC  = Dir["lib/**/*.java"]
@@ -63,7 +63,7 @@ file MODEL_JAR => MODEL_SRC_JAR do |t|
   cp MODEL_SRC_JAR, MODEL_JAR
 end
 
-appengine_app :app, 'app', '' => APP_CLASSES+LIB_CLASSES
+appengine_app :app, '', '.' => APP_CLASSES+LIB_CLASSES
 
 namespace :compile do
   task :app => APP_CLASSES
