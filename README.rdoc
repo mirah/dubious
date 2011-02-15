@@ -68,7 +68,8 @@ http://code.google.com/appengine/docs/java/configyaml/appconfig_yaml.html
     cd -
     cd dubious
     rake gem
-    gem install pkg/dubious-*
+    gem build dubious.gemspec
+	gem install dubious-0.0.2-java.gem
     cd -
 
 
