@@ -1,5 +1,5 @@
 import com.google.appengine.api.datastore.Text
-import com.google.appengine.ext.duby.db.Model
+import com.google.appengine.ext.mirah.db.Model
 import com.google.appengine.api.datastore.*
 import java.util.HashMap
 import dubious.*
