@@ -35,7 +35,7 @@ module AppEngine::Rake
       directory(webinf_lib)
 
       file_create api_jar => webinf_lib do
-        puts 'Coping apis'
+        puts 'Copying api jars'
         cp APIS, api_jar
       end
 
