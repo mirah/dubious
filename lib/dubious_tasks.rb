@@ -81,16 +81,11 @@ module AppEngine::Rake
       begin
         timestamp = app_yaml_timestamp
         @last_app_yaml_timestamp ||= timestamp
-        updated = false
-        names = real_prerequisites.select {|r|r.needed?}.map &:name
-        real_prerequisites.each do |dep|
-          if dep.needed?
-            puts "Executing #{dep.name}"
-            dep.execute
-            updated = true
-          end
-        end
-        if updated || (timestamp != @last_app_yaml_timestamp)
+        
+        needed_prerequisites = real_prerequisites.select {|r|r.needed?}
+        
+        needed_prerequisites.each {|dep| dep.execute }
+        unless needed_prerequisites.empty? && timestamp == @last_app_yaml_timestamp
           begin
             open('http://localhost:8080/_ah/reloadwebapp')
             @last_app_yaml_timestamp = timestamp

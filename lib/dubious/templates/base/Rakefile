@@ -12,10 +12,13 @@ OUTDIR = 'WEB-INF/classes'
 CLEAN.include(OUTDIR)
 CLOBBER.include('WEB-INF/appengine-generated')
 
-
-mirah_compile_options :dest_path => OUTDIR,
-                      :source_paths => ['lib', 'app' ],
-                      :compiler_options => ['--classpath', [File.expand_path(OUTDIR), *FileList["WEB-INF/lib/*.jar"].map{|f|File.expand_path(f)}].join(':') + ':' + CLASSPATH ]
+task :set_compile_options do |t|
+  def t.needed?;false;end
+  
+  mirah_compile_options :dest_path => OUTDIR,
+                        :source_paths => [File.expand_path('lib'), File.expand_path('app') ],
+                        :compiler_options => ['--classpath', [File.expand_path(OUTDIR), *FileList["WEB-INF/lib/*.jar"].map{|f|File.expand_path(f)}].join(':') + ':' + CLASSPATH ]
+end
 
 def class_files_for files
   files.map do |f|
@@ -63,7 +66,7 @@ file MODEL_JAR => MODEL_SRC_JAR do |t|
   cp MODEL_SRC_JAR, MODEL_JAR
 end
 
-appengine_app :app, '', '.' => APP_CLASSES+LIB_CLASSES
+appengine_app :app, '', '.' => [:set_compile_options] + APP_CLASSES + LIB_CLASSES
 
 namespace :compile do
   task :app => APP_CLASSES
