@@ -46,8 +46,8 @@ module AppEngine::Rake
           'java', '-cp', TOOLS,
           'com.google.appengine.tools.KickStart',
           'com.google.appengine.tools.development.DevAppServerMain',
-          '--address=#{args.address}",
-          '--port=#{args.port}",
+          "--address=#{args.address}",
+          "--port=#{args.port}",
           @war]
         system *args
         @done = true
