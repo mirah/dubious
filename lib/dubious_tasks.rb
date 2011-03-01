@@ -39,12 +39,15 @@ module AppEngine::Rake
         cp APIS, api_jar
       end
 
-      task :server => [name] do
+      task :server , :address ,  :port , :needs => [name] do |t, args|
+        args.with_defaults(:address => '0.0.0.0', :port => '8080')
         check_for_updates
         args = [
           'java', '-cp', TOOLS,
           'com.google.appengine.tools.KickStart',
           'com.google.appengine.tools.development.DevAppServerMain',
+          '--address=#{args.address}",
+          '--port=#{args.port}",
           @war]
         system *args
         @done = true
