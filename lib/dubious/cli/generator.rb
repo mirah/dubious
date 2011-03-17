@@ -4,9 +4,9 @@ module Dubious
       include Thor::Actions
       source_root File.dirname(__FILE__)+"/../templates/generator"
       argument :name
+      add_runtime_options!
       
-      
-      desc "model NAME", "creates model file" 
+      desc "model NAME", "creates model file"
       def model#(name)
         template "model.mirah.tt", "app/models/#{name.underscore}.mirah"
       end

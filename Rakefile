@@ -2,6 +2,8 @@ require 'rubygems'
 require 'rubygems/package_task'
 require 'rake/clean'
 require 'bundler/setup'
+require 'rspec/core/rake_task'
+
 Bundler.setup
 
 begin
@@ -15,6 +17,10 @@ Gem::PackageTask.new Gem::Specification.load('dubious.gemspec') do |pkg|
   pkg.need_zip = true
   pkg.need_tar = true
 end
+
+Rspec::Core::RakeTask.new
+
+task :default => :spec
 
 require 'dubious_tasks'
 

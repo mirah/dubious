@@ -1,9 +1,12 @@
 require 'java'
+require 'bundler/setup'
 require 'mirah'
 require 'appengine-sdk'
-require 'rspec'
+require 'rspec/core'
+require 'mocha'
 
-require AppEngine::SDK::SDK_ROOT + '/lib/shared/geronimo-servlet_2.5_spec-1.2.jar'
+
+require AppEngine::SDK::SDK_ROOT + '/lib/shared/servlet-api.jar'
 require File.dirname(__FILE__)+'/../lib/dubious.jar'
 require File.dirname(__FILE__)+'/../javalib/mirahdatastore.jar'
 
