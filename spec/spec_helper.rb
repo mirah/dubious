@@ -11,7 +11,6 @@ require File.dirname(__FILE__)+'/../lib/dubious.jar'
 require File.dirname(__FILE__)+'/../javalib/mirahdatastore.jar'
 
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import javax.servlet.Filter
