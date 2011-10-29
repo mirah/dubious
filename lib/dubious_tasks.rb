@@ -15,6 +15,8 @@ module AppEngine::Rake
   $CLASSPATH << TOOLS
 
   class AppEngineTask < Rake::Task
+    include Rake::DSL
+
     def initialize(*args, &block)
       super
       AppEngineTask.tasks << self
@@ -39,7 +41,7 @@ module AppEngine::Rake
         cp APIS, api_jar
       end
 
-      task :server , :address ,  :port , :needs => [name] do |t, args|
+      task :server, [:address, :port]  => [name] do |t, args|
         args.with_defaults(:address => '0.0.0.0', :port => '8080')
         check_for_updates
         args = [
@@ -84,9 +86,9 @@ module AppEngine::Rake
       begin
         timestamp = app_yaml_timestamp
         @last_app_yaml_timestamp ||= timestamp
-        
+
         needed_prerequisites = real_prerequisites.select {|r|r.needed?}
-        
+
         needed_prerequisites.each {|dep| dep.execute }
         unless needed_prerequisites.empty? && timestamp == @last_app_yaml_timestamp
           begin
@@ -131,7 +133,7 @@ end
 def appengine_app(name,src,hash={}, &block)
   war = hash.keys.first
   deps = hash[war] || []
-  
+
   task = AppEngine::Rake::AppEngineTask.define_task(name => deps, &block)
   src = File.expand_path(src || 'src')
   war = File.expand_path(war || 'war')

@@ -3,4 +3,4 @@
 # must be unique per application
 session.key=_<%= name %>_session
 # be wary of changing this on a live site, it will invalidate your session cookies
-session.secret=<%= ActiveSupport::SecureRandom.hex(64) %>
+session.secret=<%= SecureRandom.hex(64) %>
