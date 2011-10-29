@@ -137,8 +137,8 @@ task :generate_build_properties do
   prop_file = "config/build.properties"
   File.open(prop_file, 'w') do |f|
     f.write <<-EOF
-    # the current build environment
-    application.build.time=#{Time.now.xmlschema}
+      # the current build environment
+      application.build.time=#{Time.now.xmlschema}
       dubious.version.commit=#{dubious_data[0][7..-1]}
       dubious.version.time=#{Time.parse(dubious_data[1]).xmlschema}
       mirah.version.commit=#{mirah_data[0][7..-1]}
@@ -147,6 +147,6 @@ task :generate_build_properties do
       bitescript.version.time=#{Time.parse(bite_data[1]).xmlschema}
       model.version.commit=#{model_data[0][7..-1]}
       model.version.time=#{Time.parse(model_data[1]).xmlschema}
-      EOF
+    EOF
   end
 end
