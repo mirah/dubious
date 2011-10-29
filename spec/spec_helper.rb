@@ -18,7 +18,7 @@ import javax.servlet.FilterChain
 import javax.servlet.FilterConfig
 
 
-Rspec.configure do |config|
+RSpec.configure do |config|
   config.mock_with :mocha
 end
 
