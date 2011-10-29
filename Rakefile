@@ -18,7 +18,7 @@ Gem::PackageTask.new Gem::Specification.load('dubious.gemspec') do |pkg|
   pkg.need_tar = true
 end
 
-Rspec::Core::RakeTask.new
+RSpec::Core::RakeTask.new
 
 task :default => :spec
 
@@ -41,49 +41,49 @@ end
 
 LIB_MIRAH_SRC = Dir["src/**/*{.duby,.mirah}"]
 LIB_JAVA_SRC  = Dir["src/**/*.java"]
- 
+
 LIB_SRC = LIB_MIRAH_SRC + LIB_JAVA_SRC
 LIB_CLASSES = class_files_for LIB_SRC
 STDLIB_CLASSES= LIB_CLASSES.select{|l|l.include? 'stdlib'}
 
 task :set_compile_options do
   mirah_compile_options :compiler_options => ['--classpath', [OUTDIR+'/', SERVLET_JAR,*FileList["lib/*.jar", "javalib/*.jar"].map{|f|File.expand_path(f)}].join(':')],
-                        :dest_path => OUTDIR,
-                        :source_paths => SRCDIR
+    :dest_path => OUTDIR,
+    :source_paths => SRCDIR
 end
 
 file "#{OUTDIR}/dubious/Inflection.class" => :'compile:java'
 file "#{OUTDIR}/dubious/ScopedParameterMap.class" => :'compile:java'
 file "#{OUTDIR}/dubious/ActionController.class" => ["#{OUTDIR}/dubious/Params.class",
-                                                    "#{OUTDIR}/dubious/FormHelper.class", 
+                                                    "#{OUTDIR}/dubious/FormHelper.class",
                                                     "#{OUTDIR}/dubious/AssetTimestampsCache.class",
-						    "#{OUTDIR}/dubious/CustomRoutes.class",
-						    ]
+                                                    "#{OUTDIR}/dubious/CustomRoutes.class",
+                                                    ]
 
 file "#{OUTDIR}/dubious/Inflections.class" => [
-        "#{OUTDIR}/dubious/TextHelper.class",
-      	"#{OUTDIR}/dubious/Inflection.class"
-      ]
+  "#{OUTDIR}/dubious/TextHelper.class",
+  "#{OUTDIR}/dubious/Inflection.class"
+]
 
 file "#{OUTDIR}/dubious/TextHelper.class" => [
-   			"#{OUTDIR}/dubious/Inflection.class",
-      ]
+  "#{OUTDIR}/dubious/Inflection.class",
+]
 
-                      
+
 file "#{OUTDIR}/dubious/FormHelper.class" => [
-     					      "#{OUTDIR}/dubious/Inflections.class",
-     					      "#{OUTDIR}/dubious/InstanceTag.class",
-     					      "#{OUTDIR}/dubious/Params.class",
-					      "#{OUTDIR}/dubious/TimeConversion.class",
-					      *STDLIB_CLASSES]
+  "#{OUTDIR}/dubious/Inflections.class",
+  "#{OUTDIR}/dubious/InstanceTag.class",
+  "#{OUTDIR}/dubious/Params.class",
+  "#{OUTDIR}/dubious/TimeConversion.class",
+*STDLIB_CLASSES]
 file "#{OUTDIR}/dubious/InstanceTag.class" => "#{OUTDIR}/dubious/SanitizeHelper.class"
 file "#{OUTDIR}/dubious/Params.class" => "#{OUTDIR}/dubious/ScopedParameterMap.class"
 
 file "lib/dubious.jar" => LIB_CLASSES do
   includes =  FileList[OUTDIR+'/dubious/**/*', OUTDIR+'/stdlib/**/*', OUTDIR + '/testing/**/*'].map {|d|d.sub "#{OUTDIR}/",''}.join(',')
-  ant.jar :destfile => "lib/dubious.jar", 
-          :basedir => OUTDIR,
-          :includes => includes
+  ant.jar :destfile => "lib/dubious.jar",
+    :basedir => OUTDIR,
+    :includes => includes
 end
 
 desc "compiles mirah & java lib files"
@@ -98,17 +98,16 @@ task :dependencies => 'javalib/mirahdatastore.jar'
 directory 'javalib'
 
 file 'javalib/mirahdatastore.jar' => 'javalib' do
-  
   cp Gem.find_files('mirahdatastore.jar'), 'javalib/'
 end
 
 namespace :compile do
   task :dubious => "lib/dubious.jar"
   task :java => OUTDIR do
-    ant.javac :srcdir => SRCDIR, 
-    	        :destdir => OUTDIR, 
-	            :classpath => CLASSPATH,
-              :includeantruntime => true
+    ant.javac :srcdir => SRCDIR,
+      :destdir => OUTDIR,
+      :classpath => CLASSPATH,
+      :includeantruntime => true
   end
 end
 
@@ -117,7 +116,7 @@ directory OUTDIR
 (LIB_CLASSES).zip(LIB_SRC).each do |klass,src|
   file klass => [:dependencies, :set_compile_options, src]
 end
- 
+
 task :generate_build_properties do
   def git_data(dir, file='')
     returning = nil
@@ -136,18 +135,18 @@ task :generate_build_properties do
   model_data = git_data(File.dirname(Gem.find_files('mirahdatastore.jar')),'mirahdatastore.jar')
 
   prop_file = "config/build.properties"
-  File.open(prop_file, 'w') do |f| 
+  File.open(prop_file, 'w') do |f|
     f.write <<-EOF
-# the current build environment
-application.build.time=#{Time.now.xmlschema}
-dubious.version.commit=#{dubious_data[0][7..-1]}
-dubious.version.time=#{Time.parse(dubious_data[1]).xmlschema}
-mirah.version.commit=#{mirah_data[0][7..-1]}
-mirah.version.time=#{Time.parse(mirah_data[1]).xmlschema}
-bitescript.version.commit=#{bite_data[0][7..-1]}
-bitescript.version.time=#{Time.parse(bite_data[1]).xmlschema}
-model.version.commit=#{model_data[0][7..-1]}
-model.version.time=#{Time.parse(model_data[1]).xmlschema}
-    EOF
+    # the current build environment
+    application.build.time=#{Time.now.xmlschema}
+      dubious.version.commit=#{dubious_data[0][7..-1]}
+      dubious.version.time=#{Time.parse(dubious_data[1]).xmlschema}
+      mirah.version.commit=#{mirah_data[0][7..-1]}
+      mirah.version.time=#{Time.parse(mirah_data[1]).xmlschema}
+      bitescript.version.commit=#{bite_data[0][7..-1]}
+      bitescript.version.time=#{Time.parse(bite_data[1]).xmlschema}
+      model.version.commit=#{model_data[0][7..-1]}
+      model.version.time=#{Time.parse(model_data[1]).xmlschema}
+      EOF
   end
 end
