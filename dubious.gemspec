@@ -31,5 +31,5 @@ Gem::Specification.new do |s|
   s.add_dependency("appengine-sdk", "~> 1.4.0")
 
   s.add_development_dependency("rspec")
-  s.add_development_dependency("mocha", "0.9.12")
+  s.add_development_dependency("mocha")
 end
